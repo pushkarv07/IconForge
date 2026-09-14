@@ -1,0 +1,42 @@
+import type { IconName } from "./types";
+
+export const iconPaths: Record<IconName, string> = {
+  home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M8 21v-8h8v8"/>',
+  search: '<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>',
+  calendar: '<rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M16 2v5M8 2v5M3 10h18"/>',
+  settings: '<path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"/><path d="m19.4 15 .1.1a2 2 0 0 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4v.2a2 2 0 0 1-4 0v-.2a2 2 0 0 0-3.4-1.4l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1A2 2 0 0 0 1.6 12a2 2 0 0 1 0-4h.2a2 2 0 0 0 1.4-3.4l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1A2 2 0 0 0 9.4.4h.2a2 2 0 0 1 4 0v.2A2 2 0 0 0 17 2l.1-.1a2 2 0 0 1 2.8 2.8l-.1.1A2 2 0 0 0 21.2 8h.2a2 2 0 0 1 0 4h-.2a2 2 0 0 0-1.8 3Z"/>',
+  bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  heart: '<path d="M20.8 8.6c0 5.5-8.8 10.4-8.8 10.4S3.2 14.1 3.2 8.6A4.6 4.6 0 0 1 12 6.3a4.6 4.6 0 0 1 8.8 2.3Z"/>',
+  wallet: '<path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H19a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5.5A2.5 2.5 0 0 1 3 17.5v-11Z"/><path d="M3 7h18v4h-5a2 2 0 0 0 0 4h5"/>',
+  check: '<path d="m4 12 5 5L20 6"/>',
+  close: '<path d="M5 5l14 14M19 5 5 19"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  star: '<path d="m12 3 2.8 5.8 6.2.9-4.5 4.5 1.1 6.3-5.6-3-5.6 3 1.1-6.3L3 9.7l6.2-.9L12 3Z"/>',
+  bookmark: '<path d="M6 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18l-6-4-6 4V4Z"/>',
+  filter: '<path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z"/>',
+  download: '<path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/>',
+  upload: '<path d="M12 16V4m0 0L7 9m5-5 5 5M4 21h16"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+  chart: '<path d="M4 19V5M4 19h17"/><path d="m7 15 3-4 3 2 5-7"/>',
+  bank: '<path d="m3 9 9-6 9 6M4 10h16M5 10v8m4-8v8m6-8v8m4-8v8M3 21h18"/>',
+  receipt: '<path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3Z"/><path d="M8 8h8M8 12h8M8 16h4"/>',
+  phone: '<path d="M6.7 3.5 9.8 3l2 4.7-2.1 1.7a14.8 14.8 0 0 0 5 5l1.7-2.1 4.7 2-.5 3.1a2 2 0 0 1-2.2 1.7C10.5 18.2 5.8 13.5 4.9 5.7a2 2 0 0 1 1.8-2.2Z"/>',
+  laptop: '<path d="M5 5.5A1.5 1.5 0 0 1 6.5 4h11A1.5 1.5 0 0 1 19 5.5V16H5V5.5Z"/><path d="M3 19h18"/>',
+  monitor: '<rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8m-4-4v4"/>',
+  camera: '<path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.5"/>',
+  video: '<path d="M4 7h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path d="m16 11 5-3v10l-5-3"/>',
+  microphone: '<rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"/>',
+  location: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+  map: '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  coffee: '<path d="M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V9Z"/><path d="M17 11h2a3 3 0 0 1 0 6h-2M8 5c0 1 1 1 1 2M12 5c0 1 1 1 1 2"/>',
+  'shopping-cart': '<path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 1.9-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/>',
+  'cloud-upload': '<path d="M7 18a5 5 0 1 1 1.2-9.8A6 6 0 0 1 20 11a4 4 0 0 1-1 7H7Z"/><path d="M12 17V11m0 0-2.5 2.5M12 11l2.5 2.5"/>',
+  generic: '<circle cx="12" cy="12" r="8"/><path d="M12 8v5m0 3h.01"/>',
+};
+
+export const iconLabels: Record<IconName, string> = {
+  home: "Home", search: "Search", calendar: "Calendar", settings: "Settings", bell: "Bell", user: "User", mail: "Mail", heart: "Heart", wallet: "Wallet", check: "Check", close: "Close", menu: "Menu", star: "Star", bookmark: "Bookmark", filter: "Filter", download: "Download", upload: "Upload", card: "Card", chart: "Chart", bank: "Bank", receipt: "Receipt", phone: "Phone", laptop: "Laptop", monitor: "Monitor", camera: "Camera", video: "Video", microphone: "Microphone", location: "Location", map: "Map", clock: "Clock", coffee: "Coffee cup", "shopping-cart": "Shopping cart", "cloud-upload": "Cloud upload", generic: "Generic fallback",
+};
