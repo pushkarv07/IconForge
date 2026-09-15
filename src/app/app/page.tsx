@@ -61,7 +61,8 @@ export default function GeneratorPage() {
   );
   const [zoom, setZoom] = useState(1);
   const [grid, setGrid] = useState(false);
-  const [background, setBackground] = useState<PreviewBackground>("light");
+  const [background, setBackground] = useState<PreviewBackground>("dark");
+  const [userBgSelection, setUserBgSelection] = useState<PreviewBackground | null>(null);
   const [status, setStatus] = useState("");
   const [generating, setGenerating] = useState(false);
   const [mode, setMode] = useState<GenerationMode>("ai");
@@ -77,7 +78,28 @@ export default function GeneratorPage() {
   const selected =
     candidates.find((candidate) => candidate.id === selectedId) ??
     candidates[0];
-  useEffect(() => setSets(loadSets()), []);
+
+  useEffect(() => {
+    setSets(loadSets());
+
+    const syncThemeBg = () => {
+      if (userBgSelection) return;
+      const isDark = document.documentElement.dataset.theme === "dark";
+      setBackground(isDark ? "dark" : "light");
+    };
+
+    syncThemeBg();
+
+    const observer = new MutationObserver(() => {
+      syncThemeBg();
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, [userBgSelection]);
 
   function flash(message: string) {
     setStatus(message);
@@ -651,9 +673,11 @@ export default function GeneratorPage() {
                 style={{ width: 110, height: 34 }}
                 aria-label="Preview background"
                 value={background}
-                onChange={(event) =>
-                  setBackground(event.target.value as PreviewBackground)
-                }
+                onChange={(event) => {
+                  const next = event.target.value as PreviewBackground;
+                  setUserBgSelection(next);
+                  setBackground(next);
+                }}
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
