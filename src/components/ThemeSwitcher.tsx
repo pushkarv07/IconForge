@@ -65,9 +65,9 @@ export function ThemeSwitcher() {
         className={`theme-btn ${theme === "light" ? "active" : ""}`}
         onClick={() => updateTheme("light")}
         aria-label="Light theme"
+        title="Light theme"
       >
-        <Sun size={12} className="theme-icon" aria-hidden="true" />
-        <span className="theme-text">Light</span>
+        <Sun size={13} strokeWidth={1.8} className="theme-icon" aria-hidden="true" />
       </button>
       <button
         type="button"
@@ -76,9 +76,9 @@ export function ThemeSwitcher() {
         className={`theme-btn ${theme === "system" ? "active" : ""}`}
         onClick={() => updateTheme("system")}
         aria-label="Auto theme"
+        title="Auto (system) theme"
       >
-        <Monitor size={12} className="theme-icon" aria-hidden="true" />
-        <span className="theme-text">Auto</span>
+        <Monitor size={13} strokeWidth={1.8} className="theme-icon" aria-hidden="true" />
       </button>
       <button
         type="button"
@@ -87,9 +87,9 @@ export function ThemeSwitcher() {
         className={`theme-btn ${theme === "dark" ? "active" : ""}`}
         onClick={() => updateTheme("dark")}
         aria-label="Dark theme"
+        title="Dark theme"
       >
-        <Moon size={12} className="theme-icon" aria-hidden="true" />
-        <span className="theme-text">Dark</span>
+        <Moon size={13} strokeWidth={1.8} className="theme-icon" aria-hidden="true" />
       </button>
     </div>
   );
