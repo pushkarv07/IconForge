@@ -2,7 +2,7 @@
 
 import JSZip from "jszip";
 import Link from "next/link";
-import { Copy, Download, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Copy, Download, Layers, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { defaultStyleProfile, loadSets, makeSet, saveSets } from "@/lib/sets";
@@ -44,7 +44,7 @@ export default function SetsPage() {
           <div>
             <div className="eyebrow">Your library</div>
             <h1>Icon sets</h1>
-            <p className="muted" style={{ margin: 0 }}>
+            <p className="page-header-desc">
               Keep related icons together and consistent.
             </p>
           </div>
@@ -55,72 +55,121 @@ export default function SetsPage() {
 
         {sets.length ? (
           <div className="set-grid">
-            {sets.map((set) => (
-              <article className="set-card" key={set.id}>
-                <Link href={`/sets/${set.id}`} className="set-card-link">
-                  <div className="set-icons">
-                    {set.icons.slice(0, 5).map((icon) => (
-                      <span key={icon.id} dangerouslySetInnerHTML={{ __html: icon.svg }} />
-                    ))}
-                    {!set.icons.length && (
-                      <span className="muted" style={{ fontSize: 12 }}>
-                        No icons yet
-                      </span>
-                    )}
+            {sets.map((set) => {
+              const displayIcons =
+                set.icons.length > 5 ? set.icons.slice(0, 4) : set.icons.slice(0, 5);
+              const overflowCount = set.icons.length > 5 ? set.icons.length - 4 : 0;
+              return (
+                <article className="set-card" key={set.id}>
+                  <div className="set-card-body">
+                    <div className="set-card-header">
+                      <Link href={`/sets/${set.id}`} className="set-card-title-link">
+                        <h2 className="set-name">{set.name}</h2>
+                      </Link>
+                      <p className={`set-desc ${!set.description ? "muted-empty" : ""}`}>
+                        {set.description || "No description provided"}
+                      </p>
+                    </div>
+
+                    <div className="set-specs">
+                      <div className="set-spec-line">
+                        <span className="set-spec-count">
+                          {set.icons.length} {set.icons.length === 1 ? "icon" : "icons"}
+                        </span>
+                        <span className="spec-dot">·</span>
+                        <span className="set-spec-canvas">
+                          {set.profile.canvas} × {set.profile.canvas}
+                        </span>
+                      </div>
+                      <div className="set-spec-line">
+                        <span className="set-spec-stroke">{set.profile.stroke} px</span>
+                        <span className="spec-dot">·</span>
+                        <span className="set-spec-fill">{set.profile.fillMode}</span>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/sets/${set.id}`}
+                      className="set-preview-strip"
+                      aria-label={`Preview ${set.name}`}
+                    >
+                      {set.icons.length ? (
+                        <div className="set-preview-tiles">
+                          {displayIcons.map((icon) => (
+                            <div
+                              key={icon.id}
+                              className="set-preview-tile"
+                              dangerouslySetInnerHTML={{ __html: icon.svg }}
+                            />
+                          ))}
+                          {overflowCount > 0 && (
+                            <div className="set-preview-tile set-preview-more">
+                              <span>+{overflowCount}</span>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="set-preview-empty">
+                          <span>No icons yet</span>
+                        </div>
+                      )}
+                    </Link>
                   </div>
-                  <div className="set-name">{set.name}</div>
-                  {set.description && <div className="set-meta">{set.description}</div>}
-                  <div className="set-meta">
-                    {set.icons.length} icons · {set.profile.canvas} × {set.profile.canvas} ·{" "}
-                    {set.profile.stroke} px · {set.profile.fillMode}
+
+                  <div className="set-card-footer">
+                    <Link href={`/sets/${set.id}`} className="set-open-link">
+                      Open <ArrowRight size={13} />
+                    </Link>
+                    <div className="set-card-actions">
+                      <button
+                        className="icon-btn"
+                        onClick={() => rename(set)}
+                        aria-label={`Rename ${set.name}`}
+                        title="Rename set"
+                      >
+                        <Pencil size={13.5} />
+                      </button>
+                      <button
+                        className="icon-btn"
+                        onClick={() => duplicate(set)}
+                        aria-label={`Duplicate ${set.name}`}
+                        title="Duplicate set"
+                      >
+                        <Copy size={13.5} />
+                      </button>
+                      <button
+                        className="icon-btn"
+                        onClick={() => downloadZip(set)}
+                        aria-label={`Export ${set.name}`}
+                        title="Export set"
+                      >
+                        <Download size={13.5} />
+                      </button>
+                      <button
+                        className="icon-btn icon-btn-danger"
+                        onClick={() => remove(set)}
+                        aria-label={`Delete ${set.name}`}
+                        title="Delete set"
+                      >
+                        <Trash2 size={13.5} />
+                      </button>
+                    </div>
                   </div>
-                  <div className="set-meta">
-                    Updated{" "}
-                    {set.updatedAt ? new Date(set.updatedAt).toLocaleDateString() : "recently"}
-                  </div>
-                </Link>
-                <div className="set-card-actions">
-                  <Link href={`/sets/${set.id}`} className="btn btn-quiet">
-                    Open
-                  </Link>
-                  <button
-                    className="icon-btn"
-                    onClick={() => rename(set)}
-                    aria-label={`Rename ${set.name}`}
-                  >
-                    <Pencil size={14} />
-                  </button>
-                  <button
-                    className="icon-btn"
-                    onClick={() => duplicate(set)}
-                    aria-label={`Duplicate ${set.name}`}
-                  >
-                    <Copy size={14} />
-                  </button>
-                  <button
-                    className="icon-btn"
-                    onClick={() => downloadZip(set)}
-                    aria-label={`Export ${set.name}`}
-                  >
-                    <Download size={14} />
-                  </button>
-                  <button
-                    className="icon-btn"
-                    onClick={() => remove(set)}
-                    aria-label={`Delete ${set.name}`}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         ) : (
-          <div className="consistency">
-            <div className="eyebrow">Empty library</div>
-            <p className="muted">Create a set, then add generated icons from the workspace.</p>
+          <div className="sets-empty-state">
+            <div className="empty-state-badge">
+              <Layers size={24} strokeWidth={1.75} />
+            </div>
+            <h2 className="empty-state-title">Create your first icon set</h2>
+            <p className="empty-state-copy">
+              Group your generated icons into cohesive collections, check consistency across stroke weights and canvas dimensions, and export ready-to-use packages.
+            </p>
             <button className="btn btn-primary" onClick={() => setDialogOpen(true)}>
-              <Plus size={15} /> Create set
+              <Plus size={15} /> New set
             </button>
           </div>
         )}
