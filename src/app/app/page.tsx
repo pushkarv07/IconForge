@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   Check,
-  ChevronDown,
   Copy,
   Download,
   Grid3X3,
@@ -296,56 +295,151 @@ export default function GeneratorPage() {
         }`}
       >
         <aside className={`panel ${!leftPanelOpen ? "collapsed" : ""}`}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 20,
-            }}
-          >
-            <h1 className="property-title">Create icon</h1>
-            <span
-              className={`mode-badge ${
-                mode === "ai" ? "mode-badge-ai" : "mode-badge-mock"
-              }`}
-            >
-              {mode === "ai" ? (
-                <>
-                  <Sparkles
-                    size={11}
-                    style={{ marginRight: 4, verticalAlign: "-1px" }}
-                  />{" "}
-                  AI MODE
-                </>
-              ) : (
-                "MOCK FALLBACK"
-              )}
-            </span>
+          <div className="panel-header">
+            <div className="panel-header-top">
+              <h1 className="property-title">Create icon</h1>
+              <span
+                className={`mode-badge ${
+                  mode === "ai" ? "mode-badge-ai" : "mode-badge-mock"
+                }`}
+              >
+                {mode === "ai" ? (
+                  <>
+                    <Sparkles
+                      size={11}
+                      style={{ marginRight: 4, verticalAlign: "-1px" }}
+                    />{" "}
+                    AI MODE
+                  </>
+                ) : (
+                  "MOCK FALLBACK"
+                )}
+              </span>
+            </div>
+            <p className="panel-subtitle">
+              Generate vector icons with prompt-guided styling.
+            </p>
           </div>
 
           <div className="control-stack">
             {locked && (
               <div className="lock-banner">
-                <span>
-                  <LockKeyhole
-                    size={13}
-                    style={{ verticalAlign: "-2px", marginRight: 5 }}
-                  />{" "}
-                  <strong>Style locked</strong>
-                  <small className="lock-help">
-                    New icons will follow this visual language.
-                  </small>
-                </span>
+                <div className="lock-banner-content">
+                  <div className="lock-banner-heading">
+                    <LockKeyhole size={13} style={{ flexShrink: 0 }} />
+                    <span className="lock-banner-title">
+                      Style locked: <strong>{locked.name}</strong>
+                    </span>
+                  </div>
+                  <div className="lock-meta-strip">
+                    <span className="lock-meta-pill">{locked.canvas} × {locked.canvas}</span>
+                    <span className="lock-meta-pill">{locked.strokeWidth} px</span>
+                    <span className="lock-meta-pill">{locked.fillMode}</span>
+                    <span className="lock-meta-pill">{locked.complexity}</span>
+                  </div>
+                </div>
                 <button
-                  className="icon-btn"
+                  className="icon-btn lock-unlock-btn"
                   onClick={unlockStyle}
                   aria-label="Unlock style"
+                  title="Unlock style"
                 >
-                  <Unlock size={14} />
+                  <Unlock size={13} />
                 </button>
               </div>
             )}
+
+            <div className="prompt-field-group">
+              <div className="prompt-header-line">
+                <label className="field-label" htmlFor="prompt">
+                  Prompt
+                </label>
+                <span className="prompt-hint">Cmd + Enter to generate</span>
+              </div>
+              <textarea
+                id="prompt"
+                className="prompt-textarea"
+                placeholder="Describe the icon you want to forge..."
+                value={request.prompt}
+                onChange={(event) => updateValue("prompt", event.target.value)}
+                onKeyDown={(event) => {
+                  if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                    event.preventDefault();
+                    generate();
+                  }
+                }}
+                rows={3}
+              />
+              <div className="prompt-helper">
+                <span className="muted">Try</span>
+                <button
+                  type="button"
+                  className="prompt-chip-btn"
+                  onClick={() =>
+                    updateValue("prompt", "coffee cup with steam")
+                  }
+                  title="Click to use this prompt"
+                >
+                  &ldquo;coffee cup with steam&rdquo;
+                </button>
+              </div>
+
+              <div className="generate-action-bar">
+                <button
+                  className="btn-generate-main"
+                  onClick={() => generate()}
+                  disabled={generating}
+                >
+                  {generating ? (
+                    <>
+                      <Loader2
+                        size={15}
+                        style={{ animation: "spin 1s linear infinite" }}
+                      />
+                      <span>Generating variations…</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={15} />
+                      <span>
+                        Generate{" "}
+                        {mode === "ai" ? "AI Variations" : "Mock Variations"}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {generationError && (
+              <div className="lock-banner generation-error" role="alert">
+                <span>
+                  <strong>AI generation unavailable</strong>
+                  <small>{generationError}</small>
+                </span>
+                <span className="generation-actions">
+                  <button
+                    className="btn"
+                    onClick={() => generate(true)}
+                    disabled={retryUsed}
+                    aria-label="Retry"
+                  >
+                    Retry
+                  </button>
+                  <button
+                    className="btn"
+                    onClick={mockResult}
+                    aria-label="Use Mock Mode"
+                  >
+                    Use Mock Mode
+                  </button>
+                </span>
+              </div>
+            )}
+
+            <div className="panel-section-divider">
+              <span className="panel-section-label">Vector specs & mode</span>
+            </div>
 
             <div>
               <span className="field-label">Generation mode</span>
@@ -357,7 +451,7 @@ export default function GeneratorPage() {
                   className={mode === "ai" ? "mode-active-ai" : ""}
                 >
                   <Sparkles
-                    size={13}
+                    size={12}
                     style={{
                       display: "inline",
                       verticalAlign: "-1px",
@@ -378,43 +472,14 @@ export default function GeneratorPage() {
               <p className="mode-caption">
                 {mode === "ai" ? (
                   <>
-                    <strong>Primary AI:</strong> Generates unique vector concepts
-                    with Gemini.
+                    <strong>Gemini AI:</strong> Generates unique vector concepts.
                   </>
                 ) : (
                   <>
                     <strong>Local Fallback:</strong> Offline template generator.
-                    Instant results.
                   </>
                 )}
               </p>
-            </div>
-
-            <div className="prompt-field-group">
-              <label className="field-label" htmlFor="prompt">
-                Description
-              </label>
-              <textarea
-                id="prompt"
-                className="prompt-textarea"
-                placeholder="Describe the icon you want to forge..."
-                value={request.prompt}
-                onChange={(event) => updateValue("prompt", event.target.value)}
-                rows={3}
-              />
-              <div className="prompt-helper">
-                <span className="muted">Try</span>
-                <button
-                  type="button"
-                  className="prompt-chip-btn"
-                  onClick={() =>
-                    updateValue("prompt", "coffee cup with steam")
-                  }
-                  title="Click to use this prompt"
-                >
-                  &ldquo;coffee cup with steam&rdquo;
-                </button>
-              </div>
             </div>
 
             <div>
@@ -434,44 +499,46 @@ export default function GeneratorPage() {
               </div>
             </div>
 
-            <div>
-              <label className="field-label" htmlFor="canvas">
-                Canvas
-              </label>
-              <select
-                id="canvas"
-                className="select"
-                value={request.canvas}
-                onChange={(event) =>
-                  updateValue("canvas", Number(event.target.value))
-                }
-              >
-                {[16, 20, 24, 32].map((value) => (
-                  <option key={value} value={value}>
-                    {value} × {value}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="spec-controls-grid">
+              <div>
+                <label className="field-label" htmlFor="canvas">
+                  Canvas
+                </label>
+                <select
+                  id="canvas"
+                  className="select"
+                  value={request.canvas}
+                  onChange={(event) =>
+                    updateValue("canvas", Number(event.target.value))
+                  }
+                >
+                  {[16, 20, 24, 32].map((value) => (
+                    <option key={value} value={value}>
+                      {value} × {value}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div>
-              <label className="field-label" htmlFor="stroke">
-                Stroke
-              </label>
-              <select
-                id="stroke"
-                className="select"
-                value={request.stroke}
-                onChange={(event) =>
-                  updateValue("stroke", Number(event.target.value))
-                }
-              >
-                {[1, 1.5, 2].map((value) => (
-                  <option key={value} value={value}>
-                    {value} px
-                  </option>
-                ))}
-              </select>
+              <div>
+                <label className="field-label" htmlFor="stroke">
+                  Stroke
+                </label>
+                <select
+                  id="stroke"
+                  className="select"
+                  value={request.stroke}
+                  onChange={(event) =>
+                    updateValue("stroke", Number(event.target.value))
+                  }
+                >
+                  {[1, 1.5, 2].map((value) => (
+                    <option key={value} value={value}>
+                      {value} px
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div>
@@ -506,58 +573,6 @@ export default function GeneratorPage() {
                 <option>Custom</option>
               </select>
             </div>
-
-            <div className="generate-action-bar">
-              <button
-                className="btn-generate-main"
-                onClick={() => generate()}
-                disabled={generating}
-              >
-                {generating ? (
-                  <>
-                    <Loader2
-                      size={16}
-                      style={{ animation: "spin 1s linear infinite" }}
-                    />
-                    <span>Generating variations…</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={16} />
-                    <span>
-                      Generate{" "}
-                      {mode === "ai" ? "AI Variations" : "Mock Variations"}
-                    </span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {generationError && (
-              <div className="lock-banner generation-error" role="alert">
-                <span>
-                  <strong>AI generation unavailable</strong>
-                  <small>{generationError}</small>
-                </span>
-                <span className="generation-actions">
-                  <button
-                    className="btn"
-                    onClick={() => generate(true)}
-                    disabled={retryUsed}
-                    aria-label="Retry"
-                  >
-                    Retry
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={mockResult}
-                    aria-label="Use Mock Mode"
-                  >
-                    Use Mock Mode
-                  </button>
-                </span>
-              </div>
-            )}
           </div>
         </aside>
 
@@ -799,46 +814,37 @@ export default function GeneratorPage() {
           }`}
         >
           <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 16,
-              }}
-            >
-              <h2 className="property-title">Icon</h2>
-              <button className="icon-btn" aria-label="More icon options">
-                <ChevronDown size={16} />
-              </button>
+            <div className="properties-header">
+              <h2 className="property-title">Icon Inspector</h2>
             </div>
             <div className="icon-summary">
-              <span dangerouslySetInnerHTML={renderSvg(selected.svg)} />
-              <div>
-                <strong style={{ fontSize: 14 }}>{selected.name}</strong>
-                <div className="muted" style={{ fontSize: 11, marginTop: 4 }}>
-                  {selected.label}
-                </div>
+              <div
+                className="icon-summary-stage"
+                dangerouslySetInnerHTML={renderSvg(selected.svg)}
+              />
+              <div className="icon-summary-text">
+                <strong className="icon-summary-name">{selected.name}</strong>
+                <div className="icon-summary-label">{selected.label}</div>
               </div>
             </div>
-            <div className="stat-list" style={{ marginTop: 18 }}>
-              <div className="stat-row">
-                <span>Size</span>
-                <strong>
+            <div className="spec-table" style={{ marginTop: 16 }}>
+              <div className="spec-row">
+                <span className="spec-label">Size</span>
+                <span className="spec-val">
                   {selected.canvas} × {selected.canvas}
-                </strong>
+                </span>
               </div>
-              <div className="stat-row">
-                <span>Stroke</span>
-                <strong>{selected.stroke} px</strong>
+              <div className="spec-row">
+                <span className="spec-label">Stroke</span>
+                <span className="spec-val">{selected.stroke} px</span>
               </div>
-              <div className="stat-row">
-                <span>Fill</span>
-                <strong>{selected.style}</strong>
+              <div className="spec-row">
+                <span className="spec-label">Fill</span>
+                <span className="spec-val">{selected.style}</span>
               </div>
-              <div className="stat-row">
-                <span>Path count</span>
-                <strong>{selected.pathCount}</strong>
+              <div className="spec-row">
+                <span className="spec-label">Path count</span>
+                <span className="spec-val">{selected.pathCount}</span>
               </div>
             </div>
           </div>
@@ -848,45 +854,53 @@ export default function GeneratorPage() {
               className={`btn ${locked ? "btn-primary" : ""}`}
               onClick={locked ? unlockStyle : lockSelectedStyle}
             >
-              {locked ? (
-                <>
-                  <LockKeyhole size={14} /> Style locked
-                </>
-              ) : (
-                <>
-                  <LockKeyhole size={14} /> Lock style
-                </>
-              )}
+              <LockKeyhole size={14} />
+              {locked ? "Style locked" : "Lock style"}
             </button>
-            <button className="btn" onClick={copySvg}>
-              <Copy size={14} /> Copy SVG
+            <button className="btn btn-add-set" onClick={addToSet}>
+              <Plus size={14} /> Add to set
             </button>
             <button className="btn" onClick={downloadSvg}>
               <Download size={14} /> Download SVG
             </button>
-            <button className="btn" onClick={addToSet}>
-              <Plus size={14} /> Add to set
+            <button className="btn" onClick={copySvg}>
+              <Copy size={14} /> Copy SVG
             </button>
           </div>
 
           {locked && (
-            <details className="style-profile" open>
-              <summary>Style profile</summary>
-              <div className="style-profile-grid">
-                <span>Canvas</span>
-                <strong>
-                  {locked.canvas} × {locked.canvas}
-                </strong>
-                <span>Stroke</span>
-                <strong>{locked.strokeWidth} px</strong>
-                <span>Cap</span>
-                <strong>{locked.strokeLinecap}</strong>
-                <span>Join</span>
-                <strong>{locked.strokeLinejoin}</strong>
-                <span>Fill</span>
-                <strong>{locked.fillMode}</strong>
-                <span>Complexity</span>
-                <strong>{locked.complexity}</strong>
+            <div className="inspector-panel style-profile-card">
+              <div className="inspector-header">
+                <span className="eyebrow">Style profile</span>
+                <span className="profile-name-badge">{locked.name}</span>
+              </div>
+              <div className="spec-table">
+                <div className="spec-row">
+                  <span className="spec-label">Canvas</span>
+                  <span className="spec-val">
+                    {locked.canvas} × {locked.canvas}
+                  </span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Stroke</span>
+                  <span className="spec-val">{locked.strokeWidth} px</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Cap</span>
+                  <span className="spec-val">{locked.strokeLinecap}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Join</span>
+                  <span className="spec-val">{locked.strokeLinejoin}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Fill</span>
+                  <span className="spec-val">{locked.fillMode}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Complexity</span>
+                  <span className="spec-val">{locked.complexity}</span>
+                </div>
               </div>
               <div className="style-profile-actions">
                 <button className="btn" onClick={renameStyle}>
@@ -896,22 +910,13 @@ export default function GeneratorPage() {
                   Duplicate style
                 </button>
               </div>
-            </details>
+            </div>
           )}
 
-          <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 8,
-              }}
-            >
+          <div className="markup-section">
+            <div className="markup-header">
               <div className="kicker">SVG markup</div>
-              <span className="muted" style={{ fontSize: 10 }}>
-                {selected.svg.length} chars
-              </span>
+              <span className="meta-pill">{selected.svg.length} chars</span>
             </div>
             <pre className="code-viewer">{selected.svg}</pre>
           </div>
