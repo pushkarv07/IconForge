@@ -694,6 +694,10 @@ export default function GeneratorPage() {
 
           <div className={`preview-box preview-${background}`}>
             <div className="artboard-container">
+              <div className="artboard-frame-label">
+                <span className="frame-name">{selected.name}</span>
+                <span className="frame-bounds">{selected.canvas} × {selected.canvas}</span>
+              </div>
               <div
                 className="artboard-stage"
                 style={{
@@ -701,6 +705,10 @@ export default function GeneratorPage() {
                   height: `${previewSize + 48}px`,
                 }}
               >
+                <div className="artboard-corner-tl" />
+                <div className="artboard-corner-tr" />
+                <div className="artboard-corner-bl" />
+                <div className="artboard-corner-br" />
                 {grid && <div className="artboard-grid-overlay" />}
                 {grid && (
                   <>
@@ -719,11 +727,11 @@ export default function GeneratorPage() {
               </div>
               <div className="artboard-meta">
                 <span>viewBox {selected.canvas} × {selected.canvas}</span>
-                <span>•</span>
+                <span className="artboard-meta-dot">•</span>
                 <span title="Display zoom scale only; exported SVG dimensions are unchanged">
                   Preview {Math.round(zoom * 100)}%
                 </span>
-                <span>•</span>
+                <span className="artboard-meta-dot">•</span>
                 <span>{selected.stroke}px stroke</span>
               </div>
             </div>
