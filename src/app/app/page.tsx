@@ -9,7 +9,6 @@ import {
   Grid3X3,
   Loader2,
   LockKeyhole,
-  Moon,
   PanelLeftClose,
   PanelLeftOpen,
   PanelRightClose,
@@ -17,12 +16,12 @@ import {
   Plus,
   RotateCcw,
   Sparkles,
-  Sun,
   Unlock,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { mockGenerator, styleFromIcon } from "@/lib/generator";
 import { loadSets, makeSet, saveSets } from "@/lib/sets";
 import type {
@@ -45,54 +44,6 @@ const initialRequest = {
   complexity: "Simple" as Complexity,
   color: "Current Color" as "Current Color" | "Black" | "Custom",
 };
-
-function ThemeToggle() {
-  const [theme, setTheme] = useState("system");
-  useEffect(() => {
-    const saved = localStorage.getItem("iconforge-theme") ?? "system";
-    setTheme(saved);
-    document.documentElement.dataset.theme =
-      saved === "system"
-        ? matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : saved;
-  }, []);
-  function updateTheme(next: string) {
-    setTheme(next);
-    localStorage.setItem("iconforge-theme", next);
-    document.documentElement.dataset.theme =
-      next === "system"
-        ? matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : next;
-  }
-  return (
-    <div className="segmented" style={{ width: 130 }} aria-label="Theme">
-      <button
-        aria-pressed={theme === "light"}
-        onClick={() => updateTheme("light")}
-        aria-label="Light theme"
-      >
-        <Sun size={13} />
-      </button>
-      <button
-        aria-pressed={theme === "system"}
-        onClick={() => updateTheme("system")}
-      >
-        Auto
-      </button>
-      <button
-        aria-pressed={theme === "dark"}
-        onClick={() => updateTheme("dark")}
-        aria-label="Dark theme"
-      >
-        <Moon size={13} />
-      </button>
-    </div>
-  );
-}
 
 const renderSvg = (svg: string) => ({
   __html: svg.replace("<svg ", '<svg aria-hidden="true" '),
@@ -331,11 +282,11 @@ export default function GeneratorPage() {
         <Link href="/" className="brand">
           <span className="brand-mark">IF</span> IconForge
         </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <Link href="/app/sets" className="btn btn-quiet">
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <ThemeSwitcher />
+          <Link href="/sets" className="btn btn-quiet">
             Sets {sets.length ? `(${sets.length})` : ""}
           </Link>
-          <ThemeToggle />
         </div>
       </header>
 
