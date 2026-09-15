@@ -298,7 +298,7 @@ export default function GeneratorPage() {
   const previewSize = Math.round(basePreviewPx * zoom);
 
   return (
-    <main className="app-shell">
+    <main className="app-shell workspace-shell">
       <header className="topbar">
         <Link href="/" className="brand">
           <span className="brand-mark">IF</span> IconForge
