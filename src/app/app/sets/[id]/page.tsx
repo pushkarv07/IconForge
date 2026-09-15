@@ -2,7 +2,19 @@
 
 import JSZip from "jszip";
 import Link from "next/link";
-import { ArrowDown, ArrowLeft, ArrowUp, Download, Pencil, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  Check,
+  Download,
+  Layers,
+  Pencil,
+  Plus,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { use, useEffect, useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { consistencyScore, type ConsistencyFinding } from "@/lib/consistency";
@@ -72,5 +84,342 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
     }
   }
   const findings = result?.findings ?? [];
-  return <main className="app-shell"><header className="topbar"><Link href="/sets" className="brand"><ArrowLeft size={16} /> Icon sets</Link><div style={{ display: "flex", gap: 10, alignItems: "center" }}><ThemeSwitcher /><Link href="/create" className="btn btn-primary">Create icon</Link></div></header><div className="page-content"><div className="page-header"><div><div className="eyebrow">Icon set</div><h1>{set.name}</h1>{set.description && <p className="muted" style={{ margin: 0 }}>{set.description}</p>}<p className="muted" style={{ margin: "6px 0 0" }}>{set.icons.length} icons · {profile.canvas} × {profile.canvas} · {profile.stroke} px · {profile.fillMode}</p></div><div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}><button className="btn" onClick={renameSet}><Pencil size={14} /> Rename</button><button className="btn" onClick={() => downloadZip(set)}><Download size={14} /> Export set</button><button className="btn btn-primary" onClick={runConsistency} disabled={checking}>{checking ? "Checking..." : "Check consistency"}</button></div></div><div className="set-detail-layout"><section><div className="icon-grid">{set.icons.length ? set.icons.map((icon, index) => { const finding = findings.find((item) => item.iconId === icon.id); return <article className={`icon-card ${finding?.mismatch ? "icon-card-mismatch" : ""}`} key={icon.id}><div className="icon-card-preview" dangerouslySetInnerHTML={{ __html: icon.svg }} /><div className="set-name">{icon.name}</div><div className="set-meta">{icon.label} · {icon.canvas} × {icon.canvas} · {icon.stroke} px · {icon.style}</div>{finding?.mismatch && <div className="mismatch-label">Style mismatch{finding.reasons?.length ? ` · ${finding.reasons.join(", ")}` : ""}</div>}<div className="icon-card-actions"><button className="icon-btn" onClick={() => move(index, -1)} aria-label={`Move ${icon.name} up`}><ArrowUp size={13} /></button><button className="icon-btn" onClick={() => move(index, 1)} aria-label={`Move ${icon.name} down`}><ArrowDown size={13} /></button><button className="icon-btn" onClick={() => renameIcon(icon)} aria-label={`Rename ${icon.name}`}><Pencil size={13} /></button><button className="icon-btn" onClick={() => downloadSvg(icon)} aria-label={`Download ${icon.name}`}><Download size={13} /></button><button className="icon-btn" onClick={() => removeIcon(icon)} aria-label={`Remove ${icon.name}`}><Trash2 size={13} /></button>{finding?.mismatch && <button className="btn" onClick={() => regenerate(icon)} disabled={busy === icon.id}>{busy === icon.id ? "Regenerating..." : "Regenerate to match"}</button>}</div></article>; }) : <div className="consistency"><p className="muted">This set has no icons yet. Generate one in the workspace and add it here.</p><Link href="/create" className="btn btn-primary">Create icon</Link></div>}</div></section><aside className="consistency"><div className="eyebrow">Style system</div><h2 style={{ margin: "8px 0 12px", fontSize: 18 }}>{profile.name}</h2><div className="style-profile-grid"><span>Canvas</span><strong>{profile.canvas} × {profile.canvas}</strong><span>Stroke</span><strong>{profile.stroke} px</strong><span>Cap</span><strong>{profile.cap}</strong><span>Join</span><strong>{profile.join}</strong><span>Fill</span><strong>{profile.fillMode}</strong><span>Complexity</span><strong>{profile.complexity}</strong></div>{analysisError && <div className="generation-error lock-banner" role="alert"><span>{analysisError}</span><button className="btn" onClick={runConsistency}>Retry</button></div>}{result && <div className="consistency-report"><div className="eyebrow">Consistency</div><div className="score">{result.score} <span style={{ fontSize: 18, color: "var(--muted)", fontWeight: 500 }}>/ 100</span></div><p className="muted">Heuristic score</p><div className="check-grid">{result.checks.map((check) => <div className="check-item" key={check.label}><span>{check.label}</span><span>{check.status === "good" ? "✓" : "⚠"} {check.result}</span></div>)}</div><div className="finding-list">{result.findings.map((finding: ConsistencyFinding) => <div className={`finding ${finding.mismatch ? "finding-warn" : ""}`} key={finding.iconId}>{finding.message}{finding.mismatch && <span>Style mismatch</span>}</div>)}</div><button className="btn" onClick={runConsistency}>Run again</button></div>}<div className="actions" style={{ marginTop: 18 }}><button className="btn" onClick={runConsistency} disabled={checking}>{checking ? "Checking..." : "Check consistency"}</button><button className="btn" onClick={() => downloadZip(set)}><Download size={14} /> Download all SVGs</button></div></aside></div></div></main>;
+  return (
+    <main className="app-shell">
+      <header className="topbar">
+        <Link href="/sets" className="brand">
+          <ArrowLeft size={16} /> Icon sets
+        </Link>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <ThemeSwitcher />
+          <Link href="/create" className="btn btn-primary">
+            <Plus size={14} /> Create icon
+          </Link>
+        </div>
+      </header>
+
+      <div className="page-content">
+        <div className="page-header detail-header">
+          <div className="detail-header-main">
+            <div className="detail-header-eyebrow">
+              <span className="eyebrow">Icon set</span>
+              <span className="detail-badge">
+                {set.icons.length} {set.icons.length === 1 ? "icon" : "icons"}
+              </span>
+            </div>
+            <h1 className="detail-title">{set.name}</h1>
+            {set.description && (
+              <p className="detail-description">{set.description}</p>
+            )}
+            <div className="detail-meta-strip">
+              <span className="meta-pill">{profile.canvas} × {profile.canvas}</span>
+              <span className="meta-pill">{profile.stroke} px</span>
+              <span className="meta-pill">{profile.fillMode}</span>
+              <span className="meta-pill">{profile.cap} cap</span>
+              <span className="meta-pill">{profile.join} join</span>
+              <span className="meta-pill">{profile.complexity}</span>
+            </div>
+          </div>
+
+          <div className="detail-header-actions">
+            <button className="btn" onClick={renameSet}>
+              <Pencil size={13.5} /> Rename
+            </button>
+            <button className="btn" onClick={() => downloadZip(set)}>
+              <Download size={13.5} /> Export set
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={runConsistency}
+              disabled={checking}
+            >
+              {checking ? (
+                "Checking..."
+              ) : (
+                <>
+                  <Check size={14} /> Check consistency
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div className="set-detail-layout">
+          <section className="icon-grid-section">
+            {set.icons.length ? (
+              <div className="icon-grid">
+                {set.icons.map((icon, index) => {
+                  const finding = findings.find((item) => item.iconId === icon.id);
+                  const isMismatch = Boolean(finding?.mismatch);
+                  const isRegenerating = busy === icon.id;
+
+                  return (
+                    <article
+                      className={`icon-card ${isMismatch ? "icon-card-mismatch" : ""}`}
+                      key={icon.id}
+                    >
+                      <div className="icon-card-preview-stage">
+                        <div
+                          className="icon-card-svg"
+                          dangerouslySetInnerHTML={{ __html: icon.svg }}
+                        />
+                        {isMismatch && (
+                          <div className="mismatch-badge">
+                            <AlertTriangle size={11} /> Mismatch
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="icon-card-info">
+                        <div className="icon-card-name" title={icon.name}>
+                          {icon.name}
+                        </div>
+                        <div className="icon-card-meta">
+                          <span>{icon.canvas} × {icon.canvas}</span>
+                          <span className="spec-dot">·</span>
+                          <span>{icon.stroke}px</span>
+                          <span className="spec-dot">·</span>
+                          <span>{icon.style}</span>
+                        </div>
+                        {isMismatch && finding?.reasons && finding.reasons.length > 0 && (
+                          <div className="mismatch-reasons" title={finding.reasons.join(", ")}>
+                            {finding.reasons.join(" · ")}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="icon-card-bottom">
+                        <div className="icon-card-order-actions">
+                          <button
+                            className="icon-btn"
+                            onClick={() => move(index, -1)}
+                            disabled={index === 0}
+                            aria-label={`Move ${icon.name} up`}
+                            title="Move earlier"
+                          >
+                            <ArrowUp size={12.5} />
+                          </button>
+                          <button
+                            className="icon-btn"
+                            onClick={() => move(index, 1)}
+                            disabled={index === set.icons.length - 1}
+                            aria-label={`Move ${icon.name} down`}
+                            title="Move later"
+                          >
+                            <ArrowDown size={12.5} />
+                          </button>
+                        </div>
+
+                        <div className="icon-card-tools">
+                          <button
+                            className="icon-btn"
+                            onClick={() => renameIcon(icon)}
+                            aria-label={`Rename ${icon.name}`}
+                            title="Rename icon"
+                          >
+                            <Pencil size={13} />
+                          </button>
+                          <button
+                            className="icon-btn"
+                            onClick={() => downloadSvg(icon)}
+                            aria-label={`Download ${icon.name}`}
+                            title="Download SVG"
+                          >
+                            <Download size={13} />
+                          </button>
+                          <button
+                            className="icon-btn icon-btn-danger"
+                            onClick={() => removeIcon(icon)}
+                            aria-label={`Remove ${icon.name}`}
+                            title="Remove icon"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+
+                      {isMismatch && (
+                        <button
+                          className="btn btn-regenerate"
+                          onClick={() => regenerate(icon)}
+                          disabled={isRegenerating}
+                        >
+                          <Sparkles size={12.5} />
+                          {isRegenerating ? "Regenerating..." : "Regenerate to match"}
+                        </button>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="sets-empty-state">
+                <div className="empty-state-badge">
+                  <Layers size={24} strokeWidth={1.75} />
+                </div>
+                <h2 className="empty-state-title">This set has no icons yet</h2>
+                <p className="empty-state-copy">
+                  Generate one in the workspace and add it here.
+                </p>
+                <Link href="/create" className="btn btn-primary">
+                  <Plus size={15} /> Create icon
+                </Link>
+              </div>
+            )}
+          </section>
+
+          <aside className="set-sidebar">
+            <div className="inspector-panel style-system-card">
+              <div className="inspector-header">
+                <div className="eyebrow">Style system</div>
+                <span className="profile-name-badge">{profile.name}</span>
+              </div>
+
+              <div className="spec-table">
+                <div className="spec-row">
+                  <span className="spec-label">Canvas</span>
+                  <span className="spec-val">{profile.canvas} × {profile.canvas}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Stroke</span>
+                  <span className="spec-val">{profile.stroke} px</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Cap</span>
+                  <span className="spec-val">{profile.cap}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Join</span>
+                  <span className="spec-val">{profile.join}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Fill</span>
+                  <span className="spec-val">{profile.fillMode}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Complexity</span>
+                  <span className="spec-val">{profile.complexity}</span>
+                </div>
+              </div>
+            </div>
+
+            {analysisError && (
+              <div className="generation-error lock-banner" role="alert">
+                <span>{analysisError}</span>
+                <button className="btn" onClick={runConsistency}>
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {result ? (
+              <div className="inspector-panel consistency-card">
+                <div className="inspector-header">
+                  <div className="eyebrow">Consistency</div>
+                  <span
+                    className={`score-badge ${
+                      result.score === 100 ? "score-badge-perfect" : "score-badge-warn"
+                    }`}
+                  >
+                    {result.score === 100 ? "Cohesive" : "Mismatched"}
+                  </span>
+                </div>
+
+                <div className="consistency-score-hero">
+                  <div className="score-num-wrap">
+                    <span className="score-value">{result.score}</span>
+                    <span className="score-denom">/ 100</span>
+                  </div>
+                  <p className="score-subtext">Heuristic score</p>
+                </div>
+
+                <div className="audit-checklist">
+                  {result.checks.map((check) => {
+                    const isGood = check.status === "good";
+                    return (
+                      <div className="audit-check-item" key={check.label}>
+                        <span className="check-title">{check.label}</span>
+                        <span className={`check-outcome ${isGood ? "check-pass" : "check-flag"}`}>
+                          {isGood ? <Check size={11} strokeWidth={2.5} /> : <AlertTriangle size={11} strokeWidth={2.5} />}
+                          {check.result}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {findings.length > 0 && (
+                  <div className="findings-container">
+                    <div className="findings-title">Diagnosis per icon</div>
+                    <div className="findings-scroll">
+                      {findings.map((finding: ConsistencyFinding) => (
+                        <div
+                          className={`finding-item ${finding.mismatch ? "finding-item-mismatch" : ""}`}
+                          key={finding.iconId}
+                        >
+                          <div className="finding-msg">{finding.message}</div>
+                          {finding.reasons && finding.reasons.length > 0 && (
+                            <div className="finding-tags">
+                              {finding.reasons.map((r, i) => (
+                                <span className="finding-tag" key={i}>{r}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="sidebar-actions">
+                  <button
+                    className="btn btn-primary"
+                    style={{ width: "100%", marginBottom: 8 }}
+                    onClick={runConsistency}
+                    disabled={checking}
+                  >
+                    {checking ? "Checking..." : "Run again"}
+                  </button>
+                  <button
+                    className="btn"
+                    style={{ width: "100%" }}
+                    onClick={() => downloadZip(set)}
+                  >
+                    <Download size={13.5} /> Download all SVGs
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="inspector-panel consistency-prompt-card">
+                <div className="inspector-header">
+                  <div className="eyebrow">Consistency</div>
+                </div>
+                <h3 className="prompt-title">Heuristic style audit</h3>
+                <p className="prompt-text">
+                  Analyze stroke weights, canvas bounds, corner rounding, and path complexity against {profile.name}.
+                </p>
+                <div className="sidebar-actions">
+                  <button
+                    className="btn btn-primary"
+                    style={{ width: "100%", marginBottom: 8 }}
+                    onClick={runConsistency}
+                    disabled={checking}
+                  >
+                    {checking ? "Checking..." : "Check consistency"}
+                  </button>
+                  <button
+                    className="btn"
+                    style={{ width: "100%" }}
+                    onClick={() => downloadZip(set)}
+                  >
+                    <Download size={13.5} /> Download all SVGs
+                  </button>
+                </div>
+              </div>
+            )}
+          </aside>
+        </div>
+      </div>
+    </main>
+  );
 }
