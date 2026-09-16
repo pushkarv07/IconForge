@@ -922,16 +922,10 @@ export default function Home() {
                 role="region"
                 aria-label="Step 01: Start with an idea"
               >
-                <div>
-                  <div className="how-card-header">
-                    <div className="how-step-badge">
-                      <span className="how-step-num">01</span>
-                      <span className="how-step-dash">—</span>
-                      <span className="how-step-label">Step</span>
-                    </div>
-                    <div className="how-step-progression" aria-hidden="true">
-                      <span className="how-step-arrow">→</span>
-                    </div>
+                <div className="how-card-header-group">
+                  <div className="how-card-top">
+                    <span className="how-step-num">01</span>
+                    <span className="how-step-arrow" aria-hidden="true">→</span>
                   </div>
 
                   <div className="how-card-body">
@@ -942,16 +936,16 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="how-card-stage" aria-hidden="true">
-                  <div className="how-stage-prompt-box">
-                    <Sparkles size={13} className="how-stage-icon-sparkle" />
-                    <span className="how-stage-prompt-text">cloud upload</span>
-                    <span className="how-stage-cursor" />
+                <div className="how-card-visual" aria-hidden="true">
+                  <div className="how-prompt-field">
+                    <Sparkles size={13} className="how-prompt-sparkle" />
+                    <span className="how-prompt-text">cloud upload</span>
+                    <span className="how-prompt-cursor" />
                   </div>
-                  <div className="how-stage-meta">
-                    <span>24 × 24</span>
-                    <span className="how-stage-sep">•</span>
-                    <span>Simple prompt</span>
+                  <div className="how-visual-meta">
+                    <span>24 × 24 grid</span>
+                    <span className="how-meta-dot">•</span>
+                    <span>Prompt to vector</span>
                   </div>
                 </div>
               </div>
@@ -963,16 +957,10 @@ export default function Home() {
                 role="region"
                 aria-label="Step 02: Generate your icon"
               >
-                <div>
-                  <div className="how-card-header">
-                    <div className="how-step-badge">
-                      <span className="how-step-num">02</span>
-                      <span className="how-step-dash">—</span>
-                      <span className="how-step-label">Step</span>
-                    </div>
-                    <div className="how-step-progression" aria-hidden="true">
-                      <span className="how-step-arrow">→</span>
-                    </div>
+                <div className="how-card-header-group">
+                  <div className="how-card-top">
+                    <span className="how-step-num">02</span>
+                    <span className="how-step-arrow" aria-hidden="true">→</span>
                   </div>
 
                   <div className="how-card-body">
@@ -983,34 +971,34 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="how-card-stage" aria-hidden="true">
-                  <div className="how-stage-variations-row">
-                    <div className="how-mini-thumb active">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <div className="how-card-visual" aria-hidden="true">
+                  <div className="how-variations-row">
+                    <div className="how-variation-item active">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2"/>
                         <path d="M12 12v9"/>
                         <path d="m16 16-4-4-4 4"/>
                       </svg>
-                      <span className="how-mini-badge">Match</span>
+                      <span className="how-variation-indicator" />
                     </div>
-                    <div className="how-mini-thumb">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="how-variation-item">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5"/>
                         <path d="M12 11v8"/>
                         <path d="m9 14 3-3 3 3"/>
                       </svg>
                     </div>
-                    <div className="how-mini-thumb">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="how-variation-item">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98"/>
                         <path d="M12 13v7"/>
                         <path d="m15 16-3-3-3 3"/>
                       </svg>
                     </div>
                   </div>
-                  <div className="how-stage-meta">
-                    <span>SVG variations</span>
-                    <span className="how-stage-sep">•</span>
+                  <div className="how-visual-meta">
+                    <span>3 SVG candidates</span>
+                    <span className="how-meta-dot">•</span>
                     <span>1.5 px stroke</span>
                   </div>
                 </div>
@@ -1023,16 +1011,10 @@ export default function Home() {
                 role="region"
                 aria-label="Step 03: Refine your result"
               >
-                <div>
-                  <div className="how-card-header">
-                    <div className="how-step-badge">
-                      <span className="how-step-num">03</span>
-                      <span className="how-step-dash">—</span>
-                      <span className="how-step-label">Step</span>
-                    </div>
-                    <div className="how-step-progression" aria-hidden="true">
-                      <span className="how-step-check">✓</span>
-                    </div>
+                <div className="how-card-header-group">
+                  <div className="how-card-top">
+                    <span className="how-step-num">03</span>
+                    <span className="how-step-arrow done" aria-hidden="true">✓</span>
                   </div>
 
                   <div className="how-card-body">
@@ -1043,20 +1025,20 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="how-card-stage" aria-hidden="true">
-                  <div className="how-stage-lock-row">
-                    <div className="how-mini-lock-pill">
-                      <Lock size={11} />
+                <div className="how-card-visual" aria-hidden="true">
+                  <div className="how-stylelock-row">
+                    <div className="how-lock-indicator">
+                      <Lock size={12} className="how-lock-icon" />
                       <span>Style Lock</span>
                     </div>
-                    <div className="how-mini-score-pill">
-                      <span className="how-mini-score-dot" />
-                      <span>100 / 100</span>
+                    <div className="how-score-indicator">
+                      <span className="how-score-dot" />
+                      <span className="how-score-val">100 / 100</span>
                     </div>
                   </div>
-                  <div className="how-stage-meta">
-                    <span>Consistent</span>
-                    <span className="how-stage-sep">•</span>
+                  <div className="how-visual-meta">
+                    <span>Zero mismatch</span>
+                    <span className="how-meta-dot">•</span>
                     <span>Ready for set</span>
                   </div>
                 </div>
