@@ -45,7 +45,7 @@ export default function Home() {
 
         <section className="hero-grid">
           <div className="hero-content">
-            <div className="eyebrow">The Consistent Icon Generator</div>
+            <div className="eyebrow hero-eyebrow">The Consistent Icon Generator</div>
             <h1 className="hero-title">Build icons that belong together.</h1>
             <p className="hero-copy">
               AI-powered icon generation with consistent style across your entire icon set.
