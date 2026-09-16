@@ -1,13 +1,180 @@
 "use client";
+
 import Link from "next/link";
-import { ArrowRight, LockKeyhole } from "lucide-react";
+import { ArrowRight, Check, LockKeyhole } from "lucide-react";
 import { useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { iconPaths } from "@/lib/icons";
 import type { IconName } from "@/lib/types";
 
+interface HeroIconItem {
+  id: IconName;
+  name: string;
+}
+
+const HERO_SET: HeroIconItem[] = [
+  { id: "cloud-upload", name: "Cloud upload" },
+  { id: "shopping-cart", name: "Shopping cart" },
+  { id: "search", name: "Search" },
+  { id: "camera", name: "Camera" },
+  { id: "location", name: "Location" },
+  { id: "coffee", name: "Coffee" },
+];
+
 export default function Home() {
-  const [chosen, setChosen] = useState<IconName>("calendar");
-  const samples: IconName[] = ["calendar", "bell", "home", "search", "settings"];
-  return <main className="app-shell"><div className="hero"><nav className="landing-nav"><Link href="/" className="brand"><span className="brand-mark">IF</span> IconForge</Link><div style={{ display: "flex", gap: 8, alignItems: "center" }}><ThemeSwitcher /><Link href="/sets" className="btn btn-quiet">Icon sets</Link><Link href="/create" className="btn btn-primary">Open workspace <ArrowRight size={15} /></Link></div></nav><section className="hero-grid"><div><div className="eyebrow">The consistent icon generator</div><h1>Build icons that belong together.</h1><p className="hero-copy">Generate clean SVG icons from text and keep your entire icon set visually consistent.</p><div style={{ marginTop: 30 }}><Link href="/create" className="btn btn-primary">Create an icon <ArrowRight size={15} /></Link></div></div><div className="example"><div className="example-head"><span>calendar with notification badge</span><span className="muted">6 variations</span></div><div className="example-stage" dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[chosen]}<circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/></svg>` }} /><div className="example-row">{samples.map((sample) => <button key={sample} onClick={() => setChosen(sample)} aria-label={`Preview ${sample}`} className={chosen === sample ? "selected" : ""} dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[sample]}</svg>` }} />)}</div><div style={{ marginTop: 18, display: "flex", justifyContent: "space-between", alignItems: "center" }}><span className="style-chip"><LockKeyhole size={13} /> Style locked</span><span className="muted" style={{ fontSize: 11 }}>24 × 24 · 1.5 px</span></div></div></section><section className="section-rule"><div><div className="eyebrow">One visual language</div><h2 style={{ margin: "10px 0", fontSize: 27, letterSpacing: "-.05em" }}>A set that feels authored.</h2><p className="muted" style={{ maxWidth: 390, lineHeight: 1.55, fontSize: 14 }}>Lock the character of one icon, then carry its weight, rhythm, and geometry through everything that follows.</p></div><div className="set-preview"><span className="muted" style={{ fontSize: 12 }}>Finance Icons</span>{["wallet", "card", "chart", "bank", "receipt"].map((name) => <span key={name} dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[name as keyof typeof iconPaths]}</svg>` }} />)}</div></section></div></main>;
+  const [chosen, setChosen] = useState<IconName>("cloud-upload");
+  const currentItem = HERO_SET.find((item) => item.id === chosen) ?? HERO_SET[0];
+
+  return (
+    <main className="app-shell">
+      <div className="hero">
+        <nav className="landing-nav">
+          <Link href="/" className="brand">
+            <span className="brand-mark">IF</span> IconForge
+          </Link>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <ThemeSwitcher />
+            <Link href="/sets" className="btn btn-quiet">
+              Icon sets
+            </Link>
+            <Link href="/create" className="btn btn-primary">
+              Open workspace <ArrowRight size={15} />
+            </Link>
+          </div>
+        </nav>
+
+        <section className="hero-grid">
+          <div className="hero-content">
+            <div className="eyebrow">The Consistent Icon Generator</div>
+            <h1 className="hero-title">Build icons that belong together.</h1>
+            <p className="hero-copy">
+              AI-powered icon generation with consistent style across your entire icon set.
+            </p>
+
+            <div className="hero-actions">
+              <Link href="/create" className="btn btn-primary hero-btn-primary">
+                Create an icon <ArrowRight size={15} />
+              </Link>
+              <Link href="/sets" className="btn hero-btn-secondary">
+                Explore icon sets
+              </Link>
+            </div>
+
+            <div className="hero-spec-strip">
+              <span className="hero-spec-item">
+                <span className="hero-spec-dot" /> 24 × 24 grid
+              </span>
+              <span className="hero-spec-item">
+                <span className="hero-spec-dot" /> 1.5 px uniform stroke
+              </span>
+              <span className="hero-spec-item">
+                <span className="hero-spec-dot" /> Zero style drift
+              </span>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="hero-showcase">
+              <div className="showcase-header">
+                <div className="showcase-set-info">
+                  <span className="showcase-set-badge">Icon Set</span>
+                  <span className="showcase-set-title">Interface System</span>
+                </div>
+                <div className="showcase-status">
+                  <span className="showcase-lock-pill">
+                    <LockKeyhole size={11} /> Style locked
+                  </span>
+                  <span className="showcase-score-pill">
+                    <Check size={11} /> 100% match
+                  </span>
+                </div>
+              </div>
+
+              <div className="showcase-stage">
+                <div className="showcase-artboard">
+                  <div className="artboard-corner-tl" />
+                  <div className="artboard-corner-tr" />
+                  <div className="artboard-corner-bl" />
+                  <div className="artboard-corner-br" />
+                  <div className="showcase-grid-overlay" />
+                  <div
+                    className="showcase-active-icon"
+                    dangerouslySetInnerHTML={{
+                      __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[chosen]}</svg>`,
+                    }}
+                  />
+                </div>
+                <div className="showcase-stage-meta">
+                  <span className="showcase-icon-name">{currentItem.name}</span>
+                  <span className="showcase-meta-dot">•</span>
+                  <span>24 × 24</span>
+                  <span className="showcase-meta-dot">•</span>
+                  <span>1.5 px stroke</span>
+                </div>
+              </div>
+
+              <div className="showcase-tiles-section">
+                <div className="showcase-tiles-header">
+                  <span className="showcase-tiles-title">Cohesive set members</span>
+                  <span className="showcase-tiles-caption">Click to inspect</span>
+                </div>
+                <div className="showcase-tiles">
+                  {HERO_SET.map((item) => {
+                    const isSelected = item.id === chosen;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={`showcase-tile ${isSelected ? "selected" : ""}`}
+                        onClick={() => setChosen(item.id)}
+                        aria-label={`Inspect ${item.name}`}
+                      >
+                        <span
+                          className="showcase-tile-icon"
+                          dangerouslySetInnerHTML={{
+                            __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[item.id]}</svg>`,
+                          }}
+                        />
+                        <span className="showcase-tile-label">{item.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="showcase-footer">
+                <span className="showcase-spec-chip">24 × 24 canvas</span>
+                <span className="showcase-spec-chip">1.5 px outline</span>
+                <span className="showcase-spec-chip">Rounded joints</span>
+                <span className="showcase-spec-chip">Matched optical weight</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section-rule">
+          <div>
+            <div className="eyebrow">One visual language</div>
+            <h2 style={{ margin: "10px 0", fontSize: 27, letterSpacing: "-.05em" }}>
+              A set that feels authored.
+            </h2>
+            <p className="muted" style={{ maxWidth: 390, lineHeight: 1.55, fontSize: 14 }}>
+              Lock the character of one icon, then carry its weight, rhythm, and geometry through everything that follows.
+            </p>
+          </div>
+          <div className="set-preview">
+            <span className="muted" style={{ fontSize: 12 }}>Finance Icons</span>
+            {["wallet", "card", "chart", "bank", "receipt"].map((name) => (
+              <span
+                key={name}
+                dangerouslySetInnerHTML={{
+                  __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[name as keyof typeof iconPaths]}</svg>`,
+                }}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
+  );
 }
