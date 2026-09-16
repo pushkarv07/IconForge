@@ -917,6 +917,7 @@ export default function Home() {
               <Link href="/sets" className="landing-footer-link">
                 Icon sets
               </Link>
+              <span className="landing-footer-made">Made with ♥</span>
               <span className="landing-footer-copy">© {new Date().getFullYear()} IconForge</span>
             </div>
           </div>
