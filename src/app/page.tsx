@@ -122,7 +122,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+      </div>
 
+      <div className="landing-bottom">
         <section className="section-rule">
           <div>
             <div className="eyebrow">One visual language</div>
