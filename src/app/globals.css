@@ -656,7 +656,7 @@ button { cursor: pointer; }
   background: var(--panel-soft);
   border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
   border-radius: 8px;
-  padding: 8px 4px 6px;
+  padding: 8px 3px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -689,7 +689,7 @@ button { cursor: pointer; }
   display: block;
 }
 .showcase-tile-label {
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 600;
   color: var(--muted);
   white-space: nowrap;
@@ -697,6 +697,7 @@ button { cursor: pointer; }
   text-overflow: ellipsis;
   max-width: 100%;
   line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 .showcase-tile.selected .showcase-tile-label {
   color: var(--text);
