@@ -928,38 +928,44 @@ export default function Home() {
                   role="region"
                   aria-label="Step 01: Start with an idea"
                 >
-                  {/* TOP: Large Visual Area */}
-                  <div className="how-card-visual" aria-hidden="true">
-                    <div className="how-emerging-stage">
-                      <div className="how-emerging-icon-wrap">
-                        <svg
-                          width="50"
-                          height="50"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="how-emerging-svg"
-                        >
-                          <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
-                          <path d="M12 12v9" />
-                          <path d="m16 16-4-4-4 4" />
-                        </svg>
-                      </div>
-                      <div className="how-emerging-beam" />
-                      <div className="how-prompt-pill">
-                        <Sparkles size={12} className="how-prompt-sparkle" />
-                        <span className="how-prompt-text">cloud upload</span>
-                        <span className="how-prompt-cursor" />
+                  {/* TOP: Step number, category label, large visual area */}
+                  <div className="how-card-top">
+                    <div className="how-card-header">
+                      <span className="how-step-num">01</span>
+                      <span className="how-category-label">IDEA</span>
+                    </div>
+
+                    <div className="how-card-visual" aria-hidden="true">
+                      <div className="how-emerging-stage">
+                        <div className="how-emerging-icon-wrap">
+                          <svg
+                            width="54"
+                            height="54"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="how-emerging-svg"
+                          >
+                            <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
+                            <path d="M12 12v9" />
+                            <path d="m16 16-4-4-4 4" />
+                          </svg>
+                        </div>
+                        <div className="how-emerging-beam" />
+                        <div className="how-prompt-field">
+                          <Sparkles size={13} className="how-prompt-sparkle" />
+                          <span className="how-prompt-input">cloud upload</span>
+                          <span className="how-prompt-cursor" />
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* BOTTOM: Typography & Narrative */}
-                  <div className="how-card-content">
-                    <span className="how-step-num">01</span>
+                  {/* BOTTOM: Title & short description */}
+                  <div className="how-card-bottom">
                     <h3 className="how-card-title">Start with an idea</h3>
                     <p className="how-card-desc">
                       Describe the icon you need with a simple prompt.
@@ -974,94 +980,19 @@ export default function Home() {
                   role="region"
                   aria-label="Step 02: Generate your icon"
                 >
-                  {/* TOP: Large Visual Area */}
-                  <div className="how-card-visual" aria-hidden="true">
-                    <div className="how-variations-stage">
-                      <div className="how-var-box">
-                        <svg
-                          width="34"
-                          height="34"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5" />
-                          <path d="M12 11v8" />
-                          <path d="m9 14 3-3 3 3" />
-                        </svg>
-                      </div>
-                      <div className="how-var-box selected">
-                        <svg
-                          width="42"
-                          height="42"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
-                          <path d="M12 12v9" />
-                          <path d="m16 16-4-4-4 4" />
-                        </svg>
-                        <span className="how-var-badge">
-                          <Check size={9} strokeWidth={3} />
-                        </span>
-                      </div>
-                      <div className="how-var-box">
-                        <svg
-                          width="34"
-                          height="34"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98" />
-                          <path d="M12 13v7" />
-                          <path d="m15 16-3-3-3 3" />
-                        </svg>
-                      </div>
+                  {/* TOP: Step number, category label, large visual area */}
+                  <div className="how-card-top">
+                    <div className="how-card-header">
+                      <span className="how-step-num">02</span>
+                      <span className="how-category-label">GENERATE</span>
                     </div>
-                  </div>
 
-                  {/* BOTTOM: Typography & Narrative */}
-                  <div className="how-card-content">
-                    <span className="how-step-num">02</span>
-                    <h3 className="how-card-title">Generate your icon</h3>
-                    <p className="how-card-desc">
-                      Turn your idea into clean SVG variations and choose the direction you like.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Card 03 — Refine your result */}
-                <div
-                  className="how-it-works-card"
-                  tabIndex={0}
-                  role="region"
-                  aria-label="Step 03: Refine your result"
-                >
-                  {/* TOP: Large Visual Area */}
-                  <div className="how-card-visual" aria-hidden="true">
-                    <div className="how-refine-stage">
-                      <div className="how-refine-pill">
-                        <Lock size={11} className="how-refine-lock" />
-                        <span className="how-refine-lock-text">Style Lock</span>
-                        <span className="how-refine-divider">•</span>
-                        <span className="how-refine-score">100 / 100</span>
-                      </div>
-                      <div className="how-refine-icons-row">
-                        <div className="how-refine-sub-box">
+                    <div className="how-card-visual" aria-hidden="true">
+                      <div className="how-variations-stage">
+                        <div className="how-var-box">
                           <svg
-                            width="26"
-                            height="26"
+                            width="34"
+                            height="34"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -1069,12 +1000,12 @@ export default function Home() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                           >
-                            <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
-                            <path d="M12 19v-9" />
-                            <path d="m8 14 4 4 4-4" />
+                            <path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5" />
+                            <path d="M12 11v8" />
+                            <path d="m9 14 3-3 3 3" />
                           </svg>
                         </div>
-                        <div className="how-refine-hero-box">
+                        <div className="how-var-box selected">
                           <svg
                             width="46"
                             height="46"
@@ -1089,11 +1020,66 @@ export default function Home() {
                             <path d="M12 12v9" />
                             <path d="m16 16-4-4-4 4" />
                           </svg>
+                          <span className="how-var-badge">
+                            <Check size={10} strokeWidth={3} />
+                          </span>
                         </div>
-                        <div className="how-refine-sub-box">
+                        <div className="how-var-box">
                           <svg
-                            width="26"
-                            height="26"
+                            width="34"
+                            height="34"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98" />
+                            <path d="M12 13v7" />
+                            <path d="m15 16-3-3-3 3" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM: Title & short description */}
+                  <div className="how-card-bottom">
+                    <h3 className="how-card-title">Generate your icon</h3>
+                    <p className="how-card-desc">
+                      Turn your idea into clean SVG variations and choose the direction you like.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 03 — Refine your result */}
+                <div
+                  className="how-it-works-card"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Step 03: Refine your result"
+                >
+                  {/* TOP: Step number, category label, large visual area */}
+                  <div className="how-card-top">
+                    <div className="how-card-header">
+                      <span className="how-step-num">03</span>
+                      <span className="how-category-label">REFINE</span>
+                    </div>
+
+                    <div className="how-card-visual" aria-hidden="true">
+                      <div className="how-refine-stage">
+                        <div className="how-refine-indicator">
+                          <Lock size={11} className="how-refine-lock" />
+                          <span className="how-refine-lock-text">Style Lock</span>
+                          <span className="how-refine-divider">•</span>
+                          <span className="how-refine-score">100 / 100</span>
+                        </div>
+
+                        <div className="how-refine-hero-box">
+                          <svg
+                            width="54"
+                            height="54"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -1102,16 +1088,21 @@ export default function Home() {
                             strokeLinejoin="round"
                           >
                             <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
-                            <path d="m9 13 2 2 4-4" />
+                            <path d="M12 12v9" />
+                            <path d="m16 16-4-4-4 4" />
                           </svg>
+                        </div>
+
+                        <div className="how-refine-badge">
+                          <Check size={11} strokeWidth={2.5} />
+                          <span>Consistent style</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* BOTTOM: Typography & Narrative */}
-                  <div className="how-card-content">
-                    <span className="how-step-num">03</span>
+                  {/* BOTTOM: Title & short description */}
+                  <div className="how-card-bottom">
                     <h3 className="how-card-title">Refine your result</h3>
                     <p className="how-card-desc">
                       Lock the style, refine the details, and prepare your icon for a complete set.
