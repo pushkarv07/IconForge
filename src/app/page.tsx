@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Check, Lock, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Download, FolderKanban, Lock, RotateCcw, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { iconPaths } from "@/lib/icons";
@@ -281,6 +281,20 @@ const STYLELOCK_SET: StyleLockItem[] = [
   { id: "coffee", name: "Coffee", role: "generated" },
 ];
 
+interface SetOverviewIcon {
+  id: IconName;
+  name: string;
+}
+
+const SET_OVERVIEW_ICONS: SetOverviewIcon[] = [
+  { id: "cloud-upload", name: "Cloud upload" },
+  { id: "shopping-cart", name: "Shopping cart" },
+  { id: "search", name: "Search" },
+  { id: "camera", name: "Camera" },
+  { id: "location", name: "Location" },
+  { id: "coffee", name: "Coffee" },
+];
+
 export default function Home() {
   const [chosen, setChosen] = useState<IconName>("cloud-upload");
   const [activePromptId, setActivePromptId] = useState("cloud-upload");
@@ -288,6 +302,17 @@ export default function Home() {
 
   // Section 3: Style Lock + Consistency State
   const [isConsistencyFixed, setIsConsistencyFixed] = useState(false);
+
+  // Section 4: Icon Sets + Export State
+  const [exportFormat, setExportFormat] = useState<"svg" | "zip">("svg");
+  const [exportSuccess, setExportSuccess] = useState(false);
+
+  const handleExportClick = () => {
+    setExportSuccess(true);
+    setTimeout(() => {
+      setExportSuccess(false);
+    }, 2000);
+  };
 
   const currentItem = HERO_SET.find((item) => item.id === chosen) ?? HERO_SET[0];
   const activePromptSample =
@@ -724,6 +749,158 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Section 4: Icon Sets + Export */}
+        <section className="section-sets-export" id="sets-export">
+          <div className="sets-export-grid">
+            <div className="sets-export-left">
+              <div className="eyebrow sets-export-eyebrow">Build &amp; Export</div>
+              <h2 className="sets-export-title">
+                <span className="sets-export-title-line">From individual icons</span>
+                <span className="sets-export-title-line">to a complete set.</span>
+              </h2>
+              <p className="sets-export-subtext">
+                Organize your icons, keep everything together, and export clean SVGs when your set is ready.
+              </p>
+
+              <div className="sets-export-pills">
+                <span className="sets-export-pill">
+                  <span className="sets-export-pill-dot" />
+                  Organize into sets
+                </span>
+                <span className="sets-export-pill">
+                  <span className="sets-export-pill-dot" />
+                  Keep specs consistent
+                </span>
+                <span className="sets-export-pill">
+                  <span className="sets-export-pill-dot" />
+                  Export clean SVG &amp; ZIP
+                </span>
+              </div>
+            </div>
+
+            <div className="sets-export-right">
+              <div className="sets-export-card" aria-label="Icon set overview and export workspace">
+                <div className="sets-export-card-header">
+                  <div className="sets-export-header-main">
+                    <div className="sets-export-header-title-row">
+                      <FolderKanban size={14} className="sets-export-folder-icon" />
+                      <span className="sets-export-set-name">Interface Icons</span>
+                      <span className="sets-export-count-badge">6 icons</span>
+                      <span className="sets-export-status-badge">
+                        <span className="sets-export-status-dot" />
+                        Consistent
+                      </span>
+                    </div>
+                    <p className="sets-export-set-desc">Core navigation &amp; interface icon set</p>
+                  </div>
+
+                  <div className="sets-export-meta-chips">
+                    <span className="sets-export-chip">24 × 24</span>
+                    <span className="sets-export-chip">1.5 px</span>
+                    <span className="sets-export-chip">Outline</span>
+                  </div>
+                </div>
+
+                <div className="sets-export-card-body">
+                  <div className="sets-export-grid-meta">
+                    <span className="sets-export-grid-label">Set members</span>
+                    <span className="sets-export-grid-spec">Uniform 1.5 px · 24 × 24 grid</span>
+                  </div>
+
+                  <div className="sets-export-tiles">
+                    {SET_OVERVIEW_ICONS.map((item) => (
+                      <div key={item.id} className="sets-export-tile">
+                        <div className="sets-export-tile-artboard">
+                          <span
+                            className="sets-export-tile-svg"
+                            dangerouslySetInnerHTML={{
+                              __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[item.id]}</svg>`,
+                            }}
+                          />
+                        </div>
+                        <div className="sets-export-tile-info">
+                          <span className="sets-export-tile-name">{item.name}</span>
+                          <span className="sets-export-tile-ext">.svg</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="sets-export-bar">
+                  <div className="sets-export-format-group">
+                    <span className="sets-export-format-caption">Format:</span>
+                    <div className="sets-export-formats">
+                      <button
+                        type="button"
+                        className={`sets-export-format-btn ${exportFormat === "svg" ? "active" : ""}`}
+                        onClick={() => setExportFormat("svg")}
+                        aria-label="Select SVG export format"
+                      >
+                        SVG
+                      </button>
+                      <button
+                        type="button"
+                        className={`sets-export-format-btn ${exportFormat === "zip" ? "active" : ""}`}
+                        onClick={() => setExportFormat("zip")}
+                        aria-label="Select ZIP export format"
+                      >
+                        ZIP
+                      </button>
+                    </div>
+                    <span className="sets-export-format-hint">
+                      {exportFormat === "svg" ? "Clean vector markup" : "Full archive package"}
+                    </span>
+                  </div>
+
+                  <div className="sets-export-action-group">
+                    <button
+                      type="button"
+                      className={`sets-export-btn ${exportSuccess ? "exported" : ""}`}
+                      onClick={handleExportClick}
+                      aria-label={exportFormat === "svg" ? "Export SVG set" : "Export ZIP archive"}
+                    >
+                      {exportSuccess ? (
+                        <>
+                          <Check size={13} strokeWidth={2.5} />
+                          <span>{exportFormat === "svg" ? "6 SVGs ready" : "Archive ready"}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download size={13} />
+                          <span>{exportFormat === "svg" ? "Export SVG" : "Export ZIP"}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Footer */}
+        <footer className="landing-footer">
+          <div className="landing-footer-inner">
+            <div className="landing-footer-brand">
+              <Link href="/" className="brand landing-footer-logo">
+                <span className="brand-mark">IF</span> IconForge
+              </Link>
+              <span className="landing-footer-tagline">AI-powered icon set generator with consistent visual style.</span>
+            </div>
+
+            <div className="landing-footer-nav">
+              <Link href="/create" className="landing-footer-link">
+                Create an icon
+              </Link>
+              <Link href="/sets" className="landing-footer-link">
+                Icon sets
+              </Link>
+              <span className="landing-footer-copy">© {new Date().getFullYear()} IconForge</span>
+            </div>
+          </div>
+        </footer>
       </div>
     </main>
   );
