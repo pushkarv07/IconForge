@@ -2296,7 +2296,7 @@ button { cursor: pointer; }
 }
 .sets-export-grid {
   display: grid;
-  grid-template-columns: 1.08fr 1fr;
+  grid-template-columns: 0.92fr 1.08fr;
   gap: 56px;
   align-items: center;
 }

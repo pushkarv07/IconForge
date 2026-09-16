@@ -1032,6 +1032,38 @@ export default function Home() {
         {/* Section 5: Icon Sets + Export */}
         <section className="section-sets-export" id="sets-export">
           <div className="sets-export-grid">
+            <div className="sets-export-text">
+              <div className="eyebrow sets-export-eyebrow">Build &amp; Export</div>
+              <h2 className="sets-export-title">
+                <span className="sets-export-title-line">From individual icons</span>
+                <span className="sets-export-title-line">to a complete set.</span>
+              </h2>
+              <p className="sets-export-subtext">
+                Organize your icons, keep everything together, and export clean SVGs when your set is ready.
+              </p>
+
+              <div className="sets-export-pills">
+                <span className="sets-export-pill">
+                  <span className="sets-export-pill-dot" />
+                  Organize into sets
+                </span>
+                <span className="sets-export-pill">
+                  <span className="sets-export-pill-dot" />
+                  Keep specs consistent
+                </span>
+                <span className="sets-export-pill">
+                  <span className="sets-export-pill-dot" />
+                  Export clean SVG &amp; ZIP
+                </span>
+              </div>
+
+              <div className="section-cta-wrap">
+                <Link href="/create" className="btn btn-primary section-cta-btn">
+                  <span>Create an icon</span> <ArrowRight size={15} className="cta-arrow" />
+                </Link>
+              </div>
+            </div>
+
             <div className="sets-export-visual">
               <div className="sets-export-card" aria-label="Icon set overview and export workspace">
                 <div className="sets-export-card-header">
@@ -1128,38 +1160,6 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="sets-export-text">
-              <div className="eyebrow sets-export-eyebrow">Build &amp; Export</div>
-              <h2 className="sets-export-title">
-                <span className="sets-export-title-line">From individual icons</span>
-                <span className="sets-export-title-line">to a complete set.</span>
-              </h2>
-              <p className="sets-export-subtext">
-                Organize your icons, keep everything together, and export clean SVGs when your set is ready.
-              </p>
-
-              <div className="sets-export-pills">
-                <span className="sets-export-pill">
-                  <span className="sets-export-pill-dot" />
-                  Organize into sets
-                </span>
-                <span className="sets-export-pill">
-                  <span className="sets-export-pill-dot" />
-                  Keep specs consistent
-                </span>
-                <span className="sets-export-pill">
-                  <span className="sets-export-pill-dot" />
-                  Export clean SVG &amp; ZIP
-                </span>
-              </div>
-
-              <div className="section-cta-wrap">
-                <Link href="/create" className="btn btn-primary section-cta-btn">
-                  <span>Create an icon</span> <ArrowRight size={15} className="cta-arrow" />
-                </Link>
               </div>
             </div>
           </div>
