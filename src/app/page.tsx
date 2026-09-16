@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Check, Download, FolderKanban, Lock, RotateCcw, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { iconPaths } from "@/lib/icons";
 import type { IconName } from "@/lib/types";
@@ -300,12 +300,51 @@ export default function Home() {
   const [activePromptId, setActivePromptId] = useState("cloud-upload");
   const [selectedVariationIdx, setSelectedVariationIdx] = useState(0);
 
-  // Section 3: Style Lock + Consistency State
+  // Section 4: Style Lock + Consistency State
   const [isConsistencyFixed, setIsConsistencyFixed] = useState(false);
 
-  // Section 4: Icon Sets + Export State
+  // Section 5: Icon Sets + Export State
   const [exportFormat, setExportFormat] = useState<"svg" | "zip">("svg");
   const [exportSuccess, setExportSuccess] = useState(false);
+
+  // Hero auto-shifting icon animation (4-second cycle, respects prefers-reduced-motion)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mediaQuery.matches) {
+      setChosen("cloud-upload");
+      return;
+    }
+
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        setChosen("cloud-upload");
+      }
+    };
+    mediaQuery.addEventListener?.("change", handleMotionChange);
+
+    const cycleOrder: IconName[] = [
+      "cloud-upload",
+      "shopping-cart",
+      "search",
+      "camera",
+      "location",
+      "coffee",
+    ];
+
+    const interval = setInterval(() => {
+      setChosen((prev) => {
+        const idx = cycleOrder.indexOf(prev);
+        const nextIdx = (idx + 1) % cycleOrder.length;
+        return cycleOrder[nextIdx];
+      });
+    }, 4000);
+
+    return () => {
+      clearInterval(interval);
+      mediaQuery.removeEventListener?.("change", handleMotionChange);
+    };
+  }, []);
 
   const handleExportClick = () => {
     setExportSuccess(true);
@@ -373,12 +412,15 @@ export default function Home() {
                   <div className="artboard-corner-bl" />
                   <div className="artboard-corner-br" />
                   <div className="showcase-grid-overlay" />
-                  <div
-                    className="showcase-active-icon"
-                    dangerouslySetInnerHTML={{
-                      __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[chosen]}</svg>`,
-                    }}
-                  />
+                  <div className="showcase-icon-float-wrap">
+                    <div
+                      key={chosen}
+                      className="showcase-active-icon"
+                      dangerouslySetInnerHTML={{
+                        __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[chosen]}</svg>`,
+                      }}
+                    />
+                  </div>
                 </div>
                 <div className="showcase-stage-meta">
                   <span className="showcase-icon-name">{currentItem.name}</span>
@@ -423,7 +465,227 @@ export default function Home() {
       </div>
 
       <div className="landing-bottom">
-        {/* Section 2: Prompt → Icon */}
+        {/* Section 2: How It Works */}
+        <section className="section-how-it-works" id="how-it-works">
+          {/* Subtle Atmospheric Ambient Glow */}
+          <div className="how-ambient-glow" aria-hidden="true" />
+
+          <div className="how-it-works-container">
+            <div className="how-it-works-header">
+              <div className="how-it-works-eyebrow">HOW IT WORKS</div>
+              <h2 className="how-it-works-title">
+                <span className="how-it-works-title-line">From idea to complete set</span>
+                <span className="how-it-works-title-line">in three simple steps.</span>
+              </h2>
+              <p className="how-it-works-copy">
+                A streamlined workflow designed to turn ideas into production-ready, style-consistent vector icons.
+              </p>
+            </div>
+
+            <div className="how-it-works-grid-wrap">
+              <div className="how-progress-line" aria-hidden="true" />
+
+              <div className="how-it-works-grid">
+                {/* Card 01 — Start with an idea */}
+                <div
+                  className="how-it-works-card"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Step 01: Start with an idea"
+                >
+                  {/* TOP: Step number, category label, large visual area */}
+                  <div className="how-card-top">
+                    <div className="how-card-header">
+                      <span className="how-step-num">01</span>
+                      <span className="how-category-label">IDEA</span>
+                    </div>
+
+                    <div className="how-card-visual" aria-hidden="true">
+                      <div className="how-emerging-stage">
+                        <div className="how-emerging-icon-wrap">
+                          <svg
+                            width="54"
+                            height="54"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="how-emerging-svg"
+                          >
+                            <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
+                            <path d="M12 12v9" />
+                            <path d="m16 16-4-4-4 4" />
+                          </svg>
+                        </div>
+                        <div className="how-emerging-beam" />
+                        <div className="how-prompt-field">
+                          <Sparkles size={13} className="how-prompt-sparkle" />
+                          <span className="how-prompt-input">cloud upload</span>
+                          <span className="how-prompt-cursor" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM: Title & short description */}
+                  <div className="how-card-bottom">
+                    <h3 className="how-card-title">Start with an idea</h3>
+                    <p className="how-card-desc">
+                      Describe the icon you need with a simple prompt.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 02 — Generate your icon */}
+                <div
+                  className="how-it-works-card"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Step 02: Generate your icon"
+                >
+                  {/* TOP: Step number, category label, large visual area */}
+                  <div className="how-card-top">
+                    <div className="how-card-header">
+                      <span className="how-step-num">02</span>
+                      <span className="how-category-label">GENERATE</span>
+                    </div>
+
+                    <div className="how-card-visual" aria-hidden="true">
+                      <div className="how-variations-stage">
+                        <div className="how-var-box">
+                          <svg
+                            width="34"
+                            height="34"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5" />
+                            <path d="M12 11v8" />
+                            <path d="m9 14 3-3 3 3" />
+                          </svg>
+                        </div>
+                        <div className="how-var-box selected">
+                          <svg
+                            width="46"
+                            height="46"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
+                            <path d="M12 12v9" />
+                            <path d="m16 16-4-4-4 4" />
+                          </svg>
+                          <span className="how-var-badge">
+                            <Check size={10} strokeWidth={3} />
+                          </span>
+                        </div>
+                        <div className="how-var-box">
+                          <svg
+                            width="34"
+                            height="34"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98" />
+                            <path d="M12 13v7" />
+                            <path d="m15 16-3-3-3 3" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM: Title & short description */}
+                  <div className="how-card-bottom">
+                    <h3 className="how-card-title">Generate your icon</h3>
+                    <p className="how-card-desc">
+                      Turn your idea into clean SVG variations and choose the direction you like.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 03 — Refine your result */}
+                <div
+                  className="how-it-works-card"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Step 03: Refine your result"
+                >
+                  {/* TOP: Step number, category label, large visual area */}
+                  <div className="how-card-top">
+                    <div className="how-card-header">
+                      <span className="how-step-num">03</span>
+                      <span className="how-category-label">REFINE</span>
+                    </div>
+
+                    <div className="how-card-visual" aria-hidden="true">
+                      <div className="how-refine-stage">
+                        <div className="how-refine-indicator">
+                          <Lock size={11} className="how-refine-lock" />
+                          <span className="how-refine-lock-text">Style Lock</span>
+                          <span className="how-refine-divider">•</span>
+                          <span className="how-refine-score">100 / 100</span>
+                        </div>
+
+                        <div className="how-refine-hero-box">
+                          <svg
+                            width="54"
+                            height="54"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2" />
+                            <path d="M12 12v9" />
+                            <path d="m16 16-4-4-4 4" />
+                          </svg>
+                        </div>
+
+                        <div className="how-refine-badge">
+                          <Check size={11} strokeWidth={2.5} />
+                          <span>Consistent style</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM: Title & short description */}
+                  <div className="how-card-bottom">
+                    <h3 className="how-card-title">Refine your result</h3>
+                    <p className="how-card-desc">
+                      Lock the style, refine the details, and prepare your icon for a complete set.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="how-it-works-cta-wrap">
+              <Link href="/create" className="btn btn-primary section-cta-btn">
+                <span>Create an icon</span> <ArrowRight size={15} className="cta-arrow" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3: Prompt → Icon */}
         <section className="section-prompt-icon" id="prompt-to-icon">
           <div className="prompt-icon-grid">
             <div className="prompt-icon-left">
@@ -569,45 +831,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 3: Style Lock + Consistency */}
+        {/* Section 4: Style Lock + Consistency */}
         <section className="section-style-consistency" id="style-consistency">
           <div className="stylelock-grid">
-            <div className="stylelock-left">
-              <div className="eyebrow stylelock-eyebrow">Keep the style</div>
-              <h2 className="stylelock-title">
-                Make every icon feel like it belongs.
-              </h2>
-              <p className="stylelock-subtext">
-                Lock a visual style, generate more icons, and quickly fix anything that feels out of place.
-              </p>
-
-              <div className="stylelock-pills">
-                <span className="stylelock-pill">
-                  <span className="stylelock-pill-dot" />
-                  Lock visual style
-                </span>
-                <span className="stylelock-pill">
-                  <span className="stylelock-pill-dot" />
-                  Generate matching icons
-                </span>
-                <span className="stylelock-pill">
-                  <span className="stylelock-pill-dot" />
-                  Check consistency score
-                </span>
-                <span className="stylelock-pill">
-                  <span className="stylelock-pill-dot" />
-                  Regenerate to match
-                </span>
-              </div>
-
-              <div className="section-cta-wrap">
-                <Link href="/create" className="btn btn-primary section-cta-btn">
-                  <span>Create an icon</span> <ArrowRight size={15} className="cta-arrow" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="stylelock-right">
+            <div className="stylelock-visual">
               <div className="stylelock-card" aria-label="Style lock and consistency workflow">
                 <div className="stylelock-card-header">
                   <div className="stylelock-card-header-left">
@@ -764,10 +991,45 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            <div className="stylelock-text">
+              <div className="eyebrow stylelock-eyebrow">Keep the style</div>
+              <h2 className="stylelock-title">
+                Make every icon feel like it belongs.
+              </h2>
+              <p className="stylelock-subtext">
+                Lock a visual style, generate more icons, and quickly fix anything that feels out of place.
+              </p>
+
+              <div className="stylelock-pills">
+                <span className="stylelock-pill">
+                  <span className="stylelock-pill-dot" />
+                  Lock visual style
+                </span>
+                <span className="stylelock-pill">
+                  <span className="stylelock-pill-dot" />
+                  Generate matching icons
+                </span>
+                <span className="stylelock-pill">
+                  <span className="stylelock-pill-dot" />
+                  Check consistency score
+                </span>
+                <span className="stylelock-pill">
+                  <span className="stylelock-pill-dot" />
+                  Regenerate to match
+                </span>
+              </div>
+
+              <div className="section-cta-wrap">
+                <Link href="/create" className="btn btn-primary section-cta-btn">
+                  <span>Create an icon</span> <ArrowRight size={15} className="cta-arrow" />
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Section 4: Icon Sets + Export */}
+        {/* Section 5: Icon Sets + Export */}
         <section className="section-sets-export" id="sets-export">
           <div className="sets-export-grid">
             <div className="sets-export-visual">
