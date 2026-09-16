@@ -7,18 +7,18 @@ import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { iconPaths } from "@/lib/icons";
 import type { IconName } from "@/lib/types";
 
-interface HeroSupportingIcon {
+interface HeroIconItem {
   id: IconName;
   name: string;
-  positionClass: string;
 }
 
-const HERO_SUPPORTING_ICONS: HeroSupportingIcon[] = [
-  { id: "shopping-cart", name: "Shopping cart", positionClass: "pos-top-left" },
-  { id: "search", name: "Search", positionClass: "pos-top-right" },
-  { id: "coffee", name: "Coffee", positionClass: "pos-mid-right" },
-  { id: "location", name: "Location", positionClass: "pos-bottom-right" },
-  { id: "camera", name: "Camera", positionClass: "pos-bottom-left" },
+const HERO_SET: HeroIconItem[] = [
+  { id: "cloud-upload", name: "Cloud upload" },
+  { id: "shopping-cart", name: "Shopping cart" },
+  { id: "search", name: "Search" },
+  { id: "camera", name: "Camera" },
+  { id: "location", name: "Location" },
+  { id: "coffee", name: "Coffee" },
 ];
 
 interface VariationItem {
@@ -296,6 +296,7 @@ const SET_OVERVIEW_ICONS: SetOverviewIcon[] = [
 ];
 
 export default function Home() {
+  const [chosen, setChosen] = useState<IconName>("cloud-upload");
   const [activePromptId, setActivePromptId] = useState("cloud-upload");
   const [selectedVariationIdx, setSelectedVariationIdx] = useState(0);
 
@@ -313,6 +314,7 @@ export default function Home() {
     }, 2000);
   };
 
+  const currentItem = HERO_SET.find((item) => item.id === chosen) ?? HERO_SET[0];
   const activePromptSample =
     PROMPT_SAMPLES.find((s) => s.id === activePromptId) ?? PROMPT_SAMPLES[0];
 
@@ -354,76 +356,63 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-visual" aria-label="Editorial Icon Showcase">
-            <div className="hero-editorial-stage">
-              {/* Atmospheric Ambient Environment */}
-              <div className="hero-ambient-glow" aria-hidden="true" />
-              <div className="hero-ambient-vignette" aria-hidden="true" />
-
-              {/* Editorial Geometry & Reference Guides */}
-              <div className="hero-guide-rings" aria-hidden="true">
-                <div className="hero-guide-ring-outer" />
-                <div className="hero-guide-ring-inner" />
-                <div className="hero-guide-axis-h" />
-                <div className="hero-guide-axis-v" />
-                <span className="hero-guide-cross cross-tl">+</span>
-                <span className="hero-guide-cross cross-tr">+</span>
-                <span className="hero-guide-cross cross-bl">+</span>
-                <span className="hero-guide-cross cross-br">+</span>
+          <div className="hero-visual">
+            <div className="hero-showcase">
+              <div className="showcase-header">
+                <span className="showcase-set-title">Design System</span>
+                <span className="showcase-set-specs">24 × 24 · 1.5 px outline</span>
               </div>
 
-              {/* Central Dominant Hero Artboard (Cloud Upload) */}
-              <div className="hero-main-card">
-                <div className="hero-main-inner">
-                  <div className="hero-corner-mark corner-tl" />
-                  <div className="hero-corner-mark corner-tr" />
-                  <div className="hero-corner-mark corner-bl" />
-                  <div className="hero-corner-mark corner-br" />
-
-                  <div className="hero-main-icon-wrap">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="hero-main-svg"
-                      aria-label="Cloud upload"
-                      dangerouslySetInnerHTML={{ __html: iconPaths["cloud-upload"] }}
-                    />
-                  </div>
-
-                  <div className="hero-main-meta">
-                    <span className="hero-main-meta-dot" />
-                    <span className="hero-main-meta-label">24 × 24 · 1.5 px</span>
-                  </div>
+              <div className="showcase-stage">
+                <div className="showcase-artboard">
+                  <div className="artboard-corner-tl" />
+                  <div className="artboard-corner-tr" />
+                  <div className="artboard-corner-bl" />
+                  <div className="artboard-corner-br" />
+                  <div className="showcase-grid-overlay" />
+                  <div
+                    className="showcase-active-icon"
+                    dangerouslySetInnerHTML={{
+                      __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[chosen]}</svg>`,
+                    }}
+                  />
+                </div>
+                <div className="showcase-stage-meta">
+                  <span className="showcase-icon-name">{currentItem.name}</span>
+                  <span className="showcase-meta-dot">•</span>
+                  <span>24 × 24</span>
+                  <span className="showcase-meta-dot">•</span>
+                  <span>1.5 px stroke</span>
                 </div>
               </div>
 
-              {/* Supporting Satellite Icons (Cohesive Icon Set) */}
-              <div className="hero-satellites">
-                {HERO_SUPPORTING_ICONS.map((icon) => (
-                  <div
-                    key={icon.id}
-                    className={`hero-satellite-item ${icon.positionClass}`}
-                    title={icon.name}
-                  >
-                    <div className="hero-satellite-card">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="hero-satellite-svg"
-                        dangerouslySetInnerHTML={{ __html: iconPaths[icon.id] }}
-                      />
-                    </div>
-                    <span className="hero-satellite-label">{icon.name}</span>
-                  </div>
-                ))}
+              <div className="showcase-tiles-section">
+                <div className="showcase-tiles-header">
+                  <span className="showcase-tiles-title">Set members</span>
+                  <span className="showcase-tiles-caption">Click to inspect</span>
+                </div>
+                <div className="showcase-tiles">
+                  {HERO_SET.map((item) => {
+                    const isSelected = item.id === chosen;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={`showcase-tile ${isSelected ? "selected" : ""}`}
+                        onClick={() => setChosen(item.id)}
+                        aria-label={`Inspect ${item.name}`}
+                      >
+                        <span
+                          className="showcase-tile-icon"
+                          dangerouslySetInnerHTML={{
+                            __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[item.id]}</svg>`,
+                          }}
+                        />
+                        <span className="showcase-tile-label">{item.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
