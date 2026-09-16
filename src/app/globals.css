@@ -1886,6 +1886,330 @@ button { cursor: pointer; }
 }
 
 /* ==================================================
+   Section 5: How It Works
+   ================================================== */
+.section-how-it-works {
+  border-top: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+  padding: 88px 0 108px;
+}
+.how-it-works-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.how-it-works-header {
+  max-width: 640px;
+  margin-bottom: 52px;
+}
+.how-it-works-eyebrow {
+  color: var(--hero-mint);
+  letter-spacing: .08em;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.how-it-works-title {
+  font-size: clamp(32px, 3.6vw, 46px);
+  letter-spacing: -.035em;
+  line-height: 1.1;
+  margin: 20px 0 18px;
+  font-weight: 400;
+  color: var(--text);
+}
+.how-it-works-title-line {
+  display: block;
+}
+.how-it-works-copy {
+  font-size: clamp(15px, 1.5vw, 17px);
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0;
+  max-width: 520px;
+}
+.how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.how-it-works-card {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 340px;
+  cursor: default;
+  outline: none;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 220ms ease,
+              box-shadow 220ms ease,
+              background-color 220ms ease;
+}
+.how-it-works-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--hero-mint) 50%, var(--line));
+  background: color-mix(in srgb, var(--panel) 96%, var(--hero-mint));
+  box-shadow: 0 10px 28px -6px color-mix(in srgb, var(--hero-mint) 14%, transparent),
+              0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.how-it-works-card:focus-visible {
+  outline: none;
+  transform: translateY(-3px);
+  border-color: var(--hero-mint);
+  background: color-mix(in srgb, var(--panel) 95%, var(--hero-mint));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--hero-mint) 40%, transparent),
+              0 10px 28px -6px color-mix(in srgb, var(--hero-mint) 14%, transparent);
+}
+.how-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.how-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.how-step-num {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hero-mint);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+  transition: all 220ms ease;
+}
+.how-step-dash {
+  font-size: 11px;
+  color: var(--muted);
+  opacity: .5;
+}
+.how-step-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  font-weight: 500;
+}
+.how-step-progression {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: var(--panel-soft);
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  color: var(--muted);
+  font-size: 11px;
+  transition: all 220ms ease;
+}
+.how-step-check {
+  color: var(--hero-mint);
+  font-size: 12px;
+  font-weight: 600;
+}
+.how-it-works-card:hover .how-step-progression,
+.how-it-works-card:focus-visible .how-step-progression {
+  border-color: color-mix(in srgb, var(--hero-mint) 35%, transparent);
+  color: var(--hero-mint);
+  background: color-mix(in srgb, var(--hero-mint) 10%, var(--panel));
+}
+.how-card-title {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+.how-card-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0;
+}
+.how-card-stage {
+  margin-top: 30px;
+  padding: 16px 14px 12px;
+  border-radius: 8px;
+  background: var(--panel-soft);
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 220ms ease, background-color 220ms ease;
+}
+.how-it-works-card:hover .how-card-stage,
+.how-it-works-card:focus-visible .how-card-stage {
+  border-color: color-mix(in srgb, var(--hero-mint) 30%, var(--line));
+  background: color-mix(in srgb, var(--panel-soft) 94%, var(--hero-mint));
+}
+.how-stage-prompt-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  font-family: var(--font-mono, monospace);
+  color: var(--text);
+}
+.how-stage-icon-sparkle {
+  color: var(--hero-mint);
+  flex-shrink: 0;
+  transition: color 220ms ease;
+}
+.how-stage-cursor {
+  width: 1.5px;
+  height: 14px;
+  background: var(--hero-mint);
+  margin-left: 2px;
+  animation: blinkCursor 1s step-start infinite;
+}
+@keyframes blinkCursor {
+  50% { opacity: 0; }
+}
+.how-stage-variations-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+}
+.how-mini-thumb {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: all 220ms ease;
+}
+.how-mini-thumb.active {
+  border-color: color-mix(in srgb, var(--hero-mint) 60%, var(--line));
+  background: color-mix(in srgb, var(--hero-mint) 10%, var(--panel));
+  color: var(--text);
+}
+.how-mini-badge {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  font-size: 8px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--hero-mint);
+  color: #141514;
+}
+.how-stage-lock-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+}
+.how-mini-lock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--hero-mint) 12%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--hero-mint) 30%, transparent);
+  color: var(--hero-mint);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.how-mini-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.how-mini-score-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hero-mint);
+}
+.how-stage-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--muted);
+  opacity: .8;
+  white-space: nowrap;
+}
+.how-stage-sep {
+  opacity: .5;
+}
+[data-theme="dark"] .how-it-works-card {
+  background: #171816;
+  border-color: #2a2e29;
+}
+[data-theme="dark"] .how-it-works-card:hover {
+  background: color-mix(in srgb, #171816 94%, var(--hero-mint));
+  border-color: color-mix(in srgb, var(--hero-mint) 50%, #2a2e29);
+}
+[data-theme="dark"] .how-it-works-card:focus-visible {
+  background: color-mix(in srgb, #171816 92%, var(--hero-mint));
+  border-color: var(--hero-mint);
+}
+[data-theme="dark"] .how-step-progression {
+  background: #141514;
+  border-color: #262925;
+}
+[data-theme="dark"] .how-card-stage {
+  background: #141514;
+  border-color: #262925;
+}
+[data-theme="dark"] .how-it-works-card:hover .how-card-stage,
+[data-theme="dark"] .how-it-works-card:focus-visible .how-card-stage {
+  border-color: color-mix(in srgb, var(--hero-mint) 30%, #262925);
+  background: color-mix(in srgb, #141514 94%, var(--hero-mint));
+}
+[data-theme="dark"] .how-stage-prompt-box {
+  background: #1c1e1c;
+  border-color: #2e322d;
+}
+[data-theme="dark"] .how-mini-thumb {
+  background: #1c1e1c;
+  border-color: #2e322d;
+}
+[data-theme="dark"] .how-mini-thumb.active {
+  background: color-mix(in srgb, var(--hero-mint) 14%, #1c1e1c);
+  border-color: color-mix(in srgb, var(--hero-mint) 60%, #2e322d);
+}
+[data-theme="dark"] .how-mini-score-pill {
+  background: #1c1e1c;
+  border-color: #2e322d;
+}
+.how-it-works-cta-wrap {
+  margin-top: 52px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ==================================================
    Landing Page Minimal Footer
    ================================================== */
 .landing-footer {
@@ -2126,6 +2450,8 @@ button { cursor: pointer; }
   .section-style-consistency { padding: 72px 0 88px; }
   .sets-export-grid { grid-template-columns: 1fr; gap: 48px; }
   .section-sets-export { padding: 72px 0 88px; }
+  .section-how-it-works { padding: 72px 0 88px; }
+  .how-it-works-grid { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (max-width: 720px) {
   .topbar { padding: 0 14px; gap: 8px; }
@@ -2157,6 +2483,10 @@ button { cursor: pointer; }
   .sets-export-tiles { grid-template-columns: repeat(3, 1fr); }
   .sets-export-bar { flex-direction: column; align-items: stretch; gap: 12px; }
   .sets-export-btn { width: 100%; justify-content: center; }
+  .section-how-it-works { padding: 72px 0 88px; }
+  .how-it-works-title { font-size: 38px; line-height: 1.1; }
+  .how-it-works-grid { grid-template-columns: 1fr; gap: 16px; }
+  .how-it-works-container { padding: 0 20px; }
   .landing-nav { padding: 14px 20px; }
   .landing-footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
   .landing-footer-nav { width: 100%; justify-content: flex-start; gap: 24px; flex-wrap: wrap; }
@@ -2212,6 +2542,12 @@ button { cursor: pointer; }
   .sets-export-tile-artboard { width: 32px; height: 32px; }
   .sets-export-tile-artboard svg { width: 20px; height: 20px; }
   .sets-export-format-hint { display: none; }
+  .section-how-it-works { padding: 56px 0 72px; }
+  .how-it-works-container { padding: 0 16px; }
+  .how-it-works-title { font-size: 32px; letter-spacing: -.035em; line-height: 1.12; }
+  .how-it-works-title-line { white-space: normal; }
+  .how-it-works-cta-wrap { margin-top: 32px; width: 100%; }
+  .how-it-works-cta-wrap .section-cta-btn { width: 100%; justify-content: center; }
   .landing-footer { padding: 32px 0 40px; }
   .landing-footer-brand { flex-direction: column; align-items: flex-start; gap: 4px; }
   .landing-footer-nav { flex-direction: column; align-items: flex-start; gap: 10px; }

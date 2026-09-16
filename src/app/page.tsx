@@ -900,7 +900,178 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. Footer */}
+        {/* 5. How It Works */}
+        <section className="section-how-it-works" id="how-it-works">
+          <div className="how-it-works-container">
+            <div className="how-it-works-header">
+              <div className="how-it-works-eyebrow">HOW IT WORKS</div>
+              <h2 className="how-it-works-title">
+                <span className="how-it-works-title-line">From idea to complete set</span>
+                <span className="how-it-works-title-line">in three simple steps.</span>
+              </h2>
+              <p className="how-it-works-copy">
+                A streamlined workflow designed to turn ideas into production-ready, style-consistent vector icons.
+              </p>
+            </div>
+
+            <div className="how-it-works-grid">
+              {/* Card 01 */}
+              <div
+                className="how-it-works-card"
+                tabIndex={0}
+                role="region"
+                aria-label="Step 01: Start with an idea"
+              >
+                <div>
+                  <div className="how-card-header">
+                    <div className="how-step-badge">
+                      <span className="how-step-num">01</span>
+                      <span className="how-step-dash">—</span>
+                      <span className="how-step-label">Step</span>
+                    </div>
+                    <div className="how-step-progression" aria-hidden="true">
+                      <span className="how-step-arrow">→</span>
+                    </div>
+                  </div>
+
+                  <div className="how-card-body">
+                    <h3 className="how-card-title">Start with an idea</h3>
+                    <p className="how-card-desc">
+                      Describe the icon you need with a simple prompt.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="how-card-stage" aria-hidden="true">
+                  <div className="how-stage-prompt-box">
+                    <Sparkles size={13} className="how-stage-icon-sparkle" />
+                    <span className="how-stage-prompt-text">cloud upload</span>
+                    <span className="how-stage-cursor" />
+                  </div>
+                  <div className="how-stage-meta">
+                    <span>24 × 24</span>
+                    <span className="how-stage-sep">•</span>
+                    <span>Simple prompt</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 02 */}
+              <div
+                className="how-it-works-card"
+                tabIndex={0}
+                role="region"
+                aria-label="Step 02: Generate your icon"
+              >
+                <div>
+                  <div className="how-card-header">
+                    <div className="how-step-badge">
+                      <span className="how-step-num">02</span>
+                      <span className="how-step-dash">—</span>
+                      <span className="how-step-label">Step</span>
+                    </div>
+                    <div className="how-step-progression" aria-hidden="true">
+                      <span className="how-step-arrow">→</span>
+                    </div>
+                  </div>
+
+                  <div className="how-card-body">
+                    <h3 className="how-card-title">Generate your icon</h3>
+                    <p className="how-card-desc">
+                      Turn your idea into clean SVG variations and choose the direction you like.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="how-card-stage" aria-hidden="true">
+                  <div className="how-stage-variations-row">
+                    <div className="how-mini-thumb active">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2"/>
+                        <path d="M12 12v9"/>
+                        <path d="m16 16-4-4-4 4"/>
+                      </svg>
+                      <span className="how-mini-badge">Match</span>
+                    </div>
+                    <div className="how-mini-thumb">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5"/>
+                        <path d="M12 11v8"/>
+                        <path d="m9 14 3-3 3 3"/>
+                      </svg>
+                    </div>
+                    <div className="how-mini-thumb">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98"/>
+                        <path d="M12 13v7"/>
+                        <path d="m15 16-3-3-3 3"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="how-stage-meta">
+                    <span>SVG variations</span>
+                    <span className="how-stage-sep">•</span>
+                    <span>1.5 px stroke</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 03 */}
+              <div
+                className="how-it-works-card"
+                tabIndex={0}
+                role="region"
+                aria-label="Step 03: Refine your result"
+              >
+                <div>
+                  <div className="how-card-header">
+                    <div className="how-step-badge">
+                      <span className="how-step-num">03</span>
+                      <span className="how-step-dash">—</span>
+                      <span className="how-step-label">Step</span>
+                    </div>
+                    <div className="how-step-progression" aria-hidden="true">
+                      <span className="how-step-check">✓</span>
+                    </div>
+                  </div>
+
+                  <div className="how-card-body">
+                    <h3 className="how-card-title">Refine your result</h3>
+                    <p className="how-card-desc">
+                      Lock the style, refine the details, and prepare your icon for a complete set.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="how-card-stage" aria-hidden="true">
+                  <div className="how-stage-lock-row">
+                    <div className="how-mini-lock-pill">
+                      <Lock size={11} />
+                      <span>Style Lock</span>
+                    </div>
+                    <div className="how-mini-score-pill">
+                      <span className="how-mini-score-dot" />
+                      <span>100 / 100</span>
+                    </div>
+                  </div>
+                  <div className="how-stage-meta">
+                    <span>Consistent</span>
+                    <span className="how-stage-sep">•</span>
+                    <span>Ready for set</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="how-it-works-cta-wrap">
+              <Link href="/create" className="btn btn-primary section-cta-btn">
+                Create an icon <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Footer */}
         <footer className="landing-footer">
           <div className="landing-footer-inner">
             <div className="landing-footer-brand">
