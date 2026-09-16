@@ -1889,10 +1889,42 @@ button { cursor: pointer; }
    Section 5: How It Works
    ================================================== */
 .section-how-it-works {
+  position: relative;
+  overflow: hidden;
   border-top: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
   padding: 96px 0 112px;
 }
+
+/* Atmospheric Ambient Glow behind the section */
+.how-ambient-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(1100px, 90vw);
+  height: 420px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(79, 157, 122, 0.05) 0%,
+    rgba(79, 157, 122, 0.02) 40%,
+    transparent 70%
+  );
+  filter: blur(52px);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] .how-ambient-glow {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(143, 211, 182, 0.07) 0%,
+    rgba(143, 211, 182, 0.025) 45%,
+    transparent 70%
+  );
+}
+
 .how-it-works-container {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 32px;
@@ -1926,58 +1958,100 @@ button { cursor: pointer; }
   margin: 0;
   max-width: 520px;
 }
+
+/* Grid Wrapper & Horizontal Progress Connector Line */
+.how-it-works-grid-wrap {
+  position: relative;
+}
+.how-progress-line {
+  position: absolute;
+  top: 145px;
+  left: 14%;
+  right: 14%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(79, 157, 122, 0.18) 20%,
+    rgba(79, 157, 122, 0.25) 50%,
+    rgba(79, 157, 122, 0.18) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] .how-progress-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(143, 211, 182, 0.14) 20%,
+    rgba(143, 211, 182, 0.22) 50%,
+    rgba(143, 211, 182, 0.14) 80%,
+    transparent 100%
+  );
+}
+
 .how-it-works-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+
+/* Cards */
 .how-it-works-card {
   position: relative;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  border-radius: 16px;
   padding: 24px 24px 28px;
   display: flex;
   flex-direction: column;
-  min-height: 440px;
+  min-height: 450px;
   cursor: default;
   outline: none;
-  transition: background-color 220ms ease,
-              border-color 220ms ease,
-              box-shadow 220ms ease,
-              transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03),
+              0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: background-color 260ms ease,
+              border-color 260ms ease,
+              box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 [data-theme="dark"] .how-it-works-card {
-  background: #171816;
-  border-color: #272a26;
+  background: rgba(23, 24, 22, 0.72);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.42),
+              0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 /* Hover State:
-   - Card surface shifts to deeper muted green (#17261F dark, #f1f7f4 light)
-   - Subtle Soft Mint tint in visual
-   - Visual icons become slightly brighter
-   - Card lifts slightly (translateY(-2px))
-   - NO border glow
+   - Card surface shifts gently toward deeper muted green (#17261F dark, #f1f7f4 light)
+   - Lifts 2-3px
+   - Ambient glow strengthens very gently
+   - NO strong border glow
 */
 .how-it-works-card:hover {
   background-color: #f1f7f4;
-  border-color: rgba(79, 157, 122, 0.25);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 36px -10px rgba(79, 157, 122, 0.12),
+  border-color: rgba(79, 157, 122, 0.28);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -8px rgba(79, 157, 122, 0.12),
               0 2px 8px rgba(0, 0, 0, 0.03);
 }
 [data-theme="dark"] .how-it-works-card:hover {
   background-color: #17261f;
   border-color: rgba(143, 211, 182, 0.22);
-  transform: translateY(-2px);
-  box-shadow: 0 18px 42px -10px rgba(0, 0, 0, 0.52),
-              0 2px 8px rgba(0, 0, 0, 0.22);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 44px -10px rgba(0, 0, 0, 0.65),
+              0 2px 8px rgba(0, 0, 0, 0.28);
 }
 
 /* Accessible Focus State */
 .how-it-works-card:focus-visible {
   outline: none;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 0 0 2px var(--hero-mint),
               0 14px 32px -10px rgba(0, 0, 0, 0.25);
 }
@@ -1985,8 +2059,8 @@ button { cursor: pointer; }
 /* TOP: Large Visual Area */
 .how-card-visual {
   flex: 1;
-  min-height: 240px;
-  border-radius: 10px;
+  min-height: 245px;
+  border-radius: 12px;
   background: var(--panel-soft);
   border: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
   display: flex;
@@ -1995,19 +2069,34 @@ button { cursor: pointer; }
   position: relative;
   overflow: hidden;
   padding: 24px 18px;
-  transition: background-color 220ms ease, border-color 220ms ease;
+  transition: background-color 260ms ease, border-color 260ms ease;
+}
+.how-card-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(79, 157, 122, 0.05) 0%, transparent 68%);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 260ms ease;
 }
 [data-theme="dark"] .how-card-visual {
-  background: #121412;
-  border-color: #212420;
+  background: rgba(18, 20, 18, 0.85);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+[data-theme="dark"] .how-card-visual::before {
+  background: radial-gradient(circle at 50% 50%, rgba(143, 211, 182, 0.07) 0%, transparent 68%);
 }
 .how-it-works-card:hover .how-card-visual {
   background: #e8f3ee;
-  border-color: rgba(79, 157, 122, 0.2);
+  border-color: rgba(79, 157, 122, 0.22);
+}
+.how-it-works-card:hover .how-card-visual::before {
+  opacity: 1;
 }
 [data-theme="dark"] .how-it-works-card:hover .how-card-visual {
   background: #132018;
-  border-color: rgba(143, 211, 182, 0.18);
+  border-color: rgba(143, 211, 182, 0.2);
 }
 
 /* BOTTOM: Content & Editorial Typography */
@@ -2018,7 +2107,7 @@ button { cursor: pointer; }
   gap: 6px;
 }
 .how-step-num {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 550;
   letter-spacing: .08em;
   color: var(--hero-mint);
@@ -2049,6 +2138,8 @@ button { cursor: pointer; }
 
 /* Card 01 Visual: Emerging Icon from Prompt */
 .how-emerging-stage {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2057,42 +2148,42 @@ button { cursor: pointer; }
   width: 100%;
 }
 .how-emerging-icon-wrap {
-  width: 76px;
-  height: 76px;
-  border-radius: 14px;
+  width: 82px;
+  height: 82px;
+  border-radius: 16px;
   background: var(--panel);
   border: 1px solid var(--line);
   display: grid;
   place-items: center;
   color: var(--text);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  transition: all 220ms ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+  transition: all 260ms ease;
 }
 [data-theme="dark"] .how-emerging-icon-wrap {
   background: #191b19;
-  border-color: #292d27;
+  border-color: #2b2f29;
 }
 .how-it-works-card:hover .how-emerging-icon-wrap {
   background: #ffffff;
   border-color: rgba(79, 157, 122, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(79, 157, 122, 0.15);
+  box-shadow: 0 8px 24px rgba(79, 157, 122, 0.15);
 }
 [data-theme="dark"] .how-it-works-card:hover .how-emerging-icon-wrap {
   background: #1b2d23;
   border-color: rgba(143, 211, 182, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 .how-emerging-svg {
   display: block;
 }
 .how-emerging-beam {
   width: 1.5px;
-  height: 16px;
+  height: 18px;
   background: linear-gradient(to top, var(--hero-mint), transparent);
   opacity: .55;
-  transition: opacity 220ms ease;
+  transition: opacity 260ms ease;
 }
 .how-it-works-card:hover .how-emerging-beam {
   opacity: .95;
@@ -2109,11 +2200,11 @@ button { cursor: pointer; }
   font-size: 12px;
   color: var(--text);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 220ms ease;
+  transition: all 260ms ease;
 }
 [data-theme="dark"] .how-prompt-pill {
   background: #191b19;
-  border-color: #292d27;
+  border-color: #2b2f29;
 }
 .how-it-works-card:hover .how-prompt-pill {
   background: #ffffff;
@@ -2144,6 +2235,8 @@ button { cursor: pointer; }
 
 /* Card 02 Visual: 3 Large Prominent Variations */
 .how-variations-stage {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2151,15 +2244,15 @@ button { cursor: pointer; }
   width: 100%;
 }
 .how-var-box {
-  width: 66px;
-  height: 66px;
-  border-radius: 12px;
+  width: 68px;
+  height: 68px;
+  border-radius: 14px;
   background: var(--panel);
   border: 1px solid var(--line);
   display: grid;
   place-items: center;
   color: var(--muted);
-  transition: all 220ms ease;
+  transition: all 260ms ease;
 }
 [data-theme="dark"] .how-var-box {
   background: #191b19;
@@ -2174,19 +2267,19 @@ button { cursor: pointer; }
   border-color: rgba(143, 211, 182, 0.2);
 }
 .how-var-box.selected {
-  width: 78px;
-  height: 78px;
-  border-radius: 14px;
+  width: 82px;
+  height: 82px;
+  border-radius: 16px;
   color: var(--text);
   background: color-mix(in srgb, var(--hero-mint) 10%, var(--panel));
   border: 1.5px solid var(--hero-mint);
   position: relative;
-  box-shadow: 0 4px 18px color-mix(in srgb, var(--hero-mint) 18%, transparent);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--hero-mint) 18%, transparent);
 }
 [data-theme="dark"] .how-var-box.selected {
   background: rgba(143, 211, 182, 0.12);
   border-color: rgba(143, 211, 182, 0.6);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.4);
 }
 .how-it-works-card:hover .how-var-box.selected {
   background: color-mix(in srgb, var(--hero-mint) 16%, #ffffff);
@@ -2200,8 +2293,8 @@ button { cursor: pointer; }
   position: absolute;
   top: 5px;
   right: 5px;
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   background: var(--hero-mint);
   color: #141514;
@@ -2211,6 +2304,8 @@ button { cursor: pointer; }
 
 /* Card 03 Visual: Refined Result & Set Consistency */
 .how-refine-stage {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2230,7 +2325,7 @@ button { cursor: pointer; }
   font-size: 11px;
   font-weight: 500;
   color: var(--hero-mint);
-  transition: all 220ms ease;
+  transition: all 260ms ease;
 }
 [data-theme="dark"] .how-refine-pill {
   background: rgba(143, 211, 182, 0.1);
@@ -2266,16 +2361,16 @@ button { cursor: pointer; }
   gap: 12px;
 }
 .how-refine-sub-box {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
   background: var(--panel);
   border: 1px solid var(--line);
   display: grid;
   place-items: center;
   color: var(--muted);
   opacity: .75;
-  transition: all 220ms ease;
+  transition: all 260ms ease;
 }
 [data-theme="dark"] .how-refine-sub-box {
   background: #191b19;
@@ -2292,16 +2387,16 @@ button { cursor: pointer; }
   opacity: .95;
 }
 .how-refine-hero-box {
-  width: 76px;
-  height: 76px;
-  border-radius: 14px;
+  width: 82px;
+  height: 82px;
+  border-radius: 16px;
   background: color-mix(in srgb, var(--hero-mint) 8%, var(--panel));
   border: 1px solid color-mix(in srgb, var(--hero-mint) 35%, transparent);
   display: grid;
   place-items: center;
   color: var(--text);
   box-shadow: 0 4px 18px color-mix(in srgb, var(--hero-mint) 15%, transparent);
-  transition: all 220ms ease;
+  transition: all 260ms ease;
 }
 [data-theme="dark"] .how-refine-hero-box {
   background: rgba(143, 211, 182, 0.1);
@@ -2567,6 +2662,7 @@ button { cursor: pointer; }
   .sets-export-grid { grid-template-columns: 1fr; gap: 48px; }
   .section-sets-export { padding: 72px 0 88px; }
   .section-how-it-works { padding: 72px 0 88px; }
+  .how-progress-line { display: none; }
   .how-it-works-grid { grid-template-columns: 1fr; gap: 24px; max-width: 540px; margin: 0 auto; }
 }
 @media (max-width: 720px) {
