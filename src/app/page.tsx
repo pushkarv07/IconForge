@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Check, LockKeyhole } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { iconPaths } from "@/lib/icons";
@@ -56,38 +56,16 @@ export default function Home() {
                 Create an icon <ArrowRight size={15} />
               </Link>
               <Link href="/sets" className="btn hero-btn-secondary">
-                Explore icon sets
+                Icon sets
               </Link>
-            </div>
-
-            <div className="hero-spec-strip">
-              <span className="hero-spec-item">
-                <span className="hero-spec-dot" /> 24 × 24 grid
-              </span>
-              <span className="hero-spec-item">
-                <span className="hero-spec-dot" /> 1.5 px uniform stroke
-              </span>
-              <span className="hero-spec-item">
-                <span className="hero-spec-dot" /> Zero style drift
-              </span>
             </div>
           </div>
 
           <div className="hero-visual">
             <div className="hero-showcase">
               <div className="showcase-header">
-                <div className="showcase-set-info">
-                  <span className="showcase-set-badge">Icon Set</span>
-                  <span className="showcase-set-title">Interface System</span>
-                </div>
-                <div className="showcase-status">
-                  <span className="showcase-lock-pill">
-                    <LockKeyhole size={11} /> Style locked
-                  </span>
-                  <span className="showcase-score-pill">
-                    <Check size={11} /> 100% match
-                  </span>
-                </div>
+                <span className="showcase-set-title">Interface System</span>
+                <span className="showcase-set-specs">24 × 24 · 1.5 px outline</span>
               </div>
 
               <div className="showcase-stage">
@@ -141,13 +119,6 @@ export default function Home() {
                   })}
                 </div>
               </div>
-
-              <div className="showcase-footer">
-                <span className="showcase-spec-chip">24 × 24 canvas</span>
-                <span className="showcase-spec-chip">1.5 px outline</span>
-                <span className="showcase-spec-chip">Rounded joints</span>
-                <span className="showcase-spec-chip">Matched optical weight</span>
-              </div>
             </div>
           </div>
         </section>
@@ -155,7 +126,7 @@ export default function Home() {
         <section className="section-rule">
           <div>
             <div className="eyebrow">One visual language</div>
-            <h2 style={{ margin: "10px 0", fontSize: 27, letterSpacing: "-.05em" }}>
+            <h2 style={{ margin: "10px 0", fontSize: 27, letterSpacing: "-.04em", fontWeight: 600 }}>
               A set that feels authored.
             </h2>
             <p className="muted" style={{ maxWidth: 390, lineHeight: 1.55, fontSize: 14 }}>
