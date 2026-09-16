@@ -64,7 +64,7 @@ export default function Home() {
           <div className="hero-visual">
             <div className="hero-showcase">
               <div className="showcase-header">
-                <span className="showcase-set-title">Interface System</span>
+                <span className="showcase-set-title">Design System</span>
                 <span className="showcase-set-specs">24 × 24 · 1.5 px outline</span>
               </div>
 
@@ -93,7 +93,7 @@ export default function Home() {
 
               <div className="showcase-tiles-section">
                 <div className="showcase-tiles-header">
-                  <span className="showcase-tiles-title">Cohesive set members</span>
+                  <span className="showcase-tiles-title">Set members</span>
                   <span className="showcase-tiles-caption">Click to inspect</span>
                 </div>
                 <div className="showcase-tiles">
