@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Sliders, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { iconPaths } from "@/lib/icons";
@@ -266,10 +266,67 @@ const PROMPT_SAMPLES: PromptSample[] = [
   },
 ];
 
+const SEC2_CANDIDATES = [
+  {
+    id: "sec2-c1",
+    label: "Variant A",
+    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>',
+    outlinePath: '<path d="M4 14.9A7 7 0 1 1 15.7 8H17.5a4.5 4.5 0 0 1 2.5 8.2"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/>',
+    solidSvg: '<path d="M4.5 15.5A6.5 6.5 0 0 1 15 9h1.5a4.5 4.5 0 0 1 3.5 7.5H4.5Z"/><path d="m12 11 3.5 3.5h-2.5V20h-2v-5.5H8.5L12 11Z"/>',
+  },
+  {
+    id: "sec2-c2",
+    label: "Variant B",
+    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5"/><path d="M12 11v8"/><path d="m9 14 3-3 3 3"/></svg>',
+    outlinePath: '<path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5"/><path d="M12 11v8"/><path d="m9 14 3-3 3 3"/>',
+    solidSvg: '<path d="M5 17h14a4 4 0 0 0 0-8h-.5A7 7 0 0 0 5.1 12.5H5Z"/><path d="m12 10 3.5 3.5h-2.5V19h-2v-5.5H8.5L12 10Z"/>',
+  },
+  {
+    id: "sec2-c3",
+    label: "Variant C",
+    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98"/><path d="M12 13v7"/><path d="m15 16-3-3-3 3"/></svg>',
+    outlinePath: '<path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98"/><path d="M12 13v7"/><path d="m15 16-3-3-3 3"/>',
+    solidSvg: '<path d="M7 16.5A5.5 5.5 0 0 1 12 9a6 6 0 0 1 5.8 4.4A4 4 0 0 1 17 21H7a5 5 0 0 1-.5-9.98Z"/><path d="m12 12 3 3h-2v5h-2v-5H9l3-3Z"/>',
+  },
+  {
+    id: "sec2-c4",
+    label: "Variant D",
+    svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 0 1 0 9Z"/><path d="M12 13v6"/><path d="m9 16 3-3 3 3"/></svg>',
+    outlinePath: '<path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 0 1 0 9Z"/><path d="M12 13v6"/><path d="m9 16 3-3 3 3"/>',
+    solidSvg: '<path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 0 1 0 9Z"/><path d="m12 12 3 3h-2v4h-2v-4H9l3-3Z"/>',
+  },
+];
+
+function getSec2RefinedSvg(
+  candidateIdx: number,
+  style: "Outline" | "Solid" | "Duotone",
+  stroke: "1px" | "1.5px" | "2px"
+) {
+  const c = SEC2_CANDIDATES[candidateIdx] ?? SEC2_CANDIDATES[0];
+  const strokeVal = stroke === "1px" ? "1" : stroke === "2px" ? "2" : "1.5";
+
+  if (style === "Solid") {
+    return `<svg viewBox="0 0 24 24" fill="currentColor">${c.solidSvg}</svg>`;
+  }
+
+  if (style === "Duotone") {
+    return `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="${strokeVal}" stroke-linecap="round" stroke-linejoin="round"><g fill="color-mix(in srgb, var(--hero-mint) 20%, transparent)">${c.outlinePath}</g></svg>`;
+  }
+
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${strokeVal}" stroke-linecap="round" stroke-linejoin="round">${c.outlinePath}</svg>`;
+}
+
 export default function Home() {
   const [chosen, setChosen] = useState<IconName>("cloud-upload");
   const [activePromptId, setActivePromptId] = useState("cloud-upload");
   const [selectedVariationIdx, setSelectedVariationIdx] = useState(0);
+
+  // Section 2 Interactive Controls State
+  const [sec2Candidate, setSec2Candidate] = useState(0);
+  const [sec2Style, setSec2Style] = useState<"Outline" | "Solid" | "Duotone">("Outline");
+  const [sec2Stroke, setSec2Stroke] = useState<"1px" | "1.5px" | "2px">("1.5px");
+  const [sec2Canvas, setSec2Canvas] = useState<"16×16" | "24×24" | "32×32">("24×24");
+  const [sec2Complexity, setSec2Complexity] = useState<"Simple" | "Balanced" | "Detailed">("Simple");
 
   const currentItem = HERO_SET.find((item) => item.id === chosen) ?? HERO_SET[0];
   const activePromptSample =
@@ -375,26 +432,211 @@ export default function Home() {
       </div>
 
       <div className="landing-bottom">
-        <section className="section-rule">
-          <div>
-            <div className="eyebrow">One visual language</div>
-            <h2 style={{ margin: "10px 0", fontSize: 27, letterSpacing: "-.04em", fontWeight: 600 }}>
-              A set that feels authored.
-            </h2>
-            <p className="muted" style={{ maxWidth: 390, lineHeight: 1.55, fontSize: 14 }}>
-              Lock the character of one icon, then carry its weight, rhythm, and geometry through everything that follows.
-            </p>
-          </div>
-          <div className="set-preview">
-            <span className="muted" style={{ fontSize: 12 }}>Finance Icons</span>
-            {["wallet", "card", "chart", "bank", "receipt"].map((name) => (
-              <span
-                key={name}
-                dangerouslySetInnerHTML={{
-                  __html: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconPaths[name as keyof typeof iconPaths]}</svg>`,
-                }}
-              />
-            ))}
+        {/* Section 2: Create Your Way */}
+        <section className="section-create-way" id="create-your-way">
+          <div className="section2-grid">
+            <div className="section2-left">
+              <div className="eyebrow section2-eyebrow">Create your way</div>
+              <h2 className="section2-title">
+                AI when you want it.<br />
+                Control when you need it.
+              </h2>
+              <p className="section2-subtext">
+                Start with a prompt, or refine your icon manually with the controls you need.
+              </p>
+              <div className="section2-pills">
+                <div className="section2-pill">
+                  <span className="section2-pill-dot" />
+                  <span>Prompt generation</span>
+                </div>
+                <div className="section2-pill">
+                  <span className="section2-pill-dot" />
+                  <span>Manual refinement</span>
+                </div>
+                <div className="section2-pill">
+                  <span className="section2-pill-dot" />
+                  <span>Consistent export</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right-side dual-path workbench visual */}
+            <div className="dualpath-card" aria-label="Create your way dual workflow">
+              <div className="dualpath-header">
+                <div className="dualpath-header-title-wrap">
+                  <Sliders size={14} className="dualpath-prompt-icon" />
+                  <span className="dualpath-header-title">Icon Workbench</span>
+                  <span className="dualpath-header-badge">Dual Mode</span>
+                </div>
+                <div className="dualpath-header-workflow">
+                  <span>Prompt</span>
+                  <span className="dualpath-header-arrow">→</span>
+                  <span>Generate</span>
+                  <span className="dualpath-header-arrow">→</span>
+                  <span className="dualpath-header-active">Refine</span>
+                </div>
+              </div>
+
+              <div className="dualpath-body">
+                {/* Track 1: AI Prompt -> Generate */}
+                <div className="dualpath-track">
+                  <div className="dualpath-track-header">
+                    <div className="dualpath-track-label">
+                      <span className="dualpath-step-badge">1</span>
+                      <span className="dualpath-track-name">AI Prompt & Variations</span>
+                    </div>
+                    <span className="dualpath-track-caption">Natural language to vectors</span>
+                  </div>
+
+                  <div className="dualpath-prompt-row">
+                    <div className="dualpath-prompt-field">
+                      <Sparkles size={13} className="dualpath-prompt-icon" />
+                      <span className="dualpath-prompt-text">cloud upload</span>
+                      <span className="dualpath-prompt-cursor" />
+                    </div>
+                    <button type="button" className="dualpath-generate-btn" aria-label="Generate cloud upload icon">
+                      <Sparkles size={11} />
+                      <span>Generate</span>
+                    </button>
+                  </div>
+
+                  <div className="dualpath-variations-row">
+                    <span className="dualpath-variations-label">4 Variations</span>
+                    <div className="dualpath-variations-list">
+                      {SEC2_CANDIDATES.map((cand, idx) => {
+                        const isSelected = sec2Candidate === idx;
+                        return (
+                          <button
+                            key={cand.id}
+                            type="button"
+                            className={`dualpath-var-chip ${isSelected ? "selected" : ""}`}
+                            onClick={() => setSec2Candidate(idx)}
+                            aria-label={`Select ${cand.label}`}
+                          >
+                            {isSelected && (
+                              <span className="dualpath-var-check">
+                                <Check size={8} strokeWidth={3} />
+                              </span>
+                            )}
+                            <span
+                              className="dualpath-var-svg"
+                              dangerouslySetInnerHTML={{ __html: cand.svg }}
+                            />
+                            <span className="dualpath-var-label">{cand.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="dualpath-divider">
+                  <div className="dualpath-divider-line" />
+                  <span className="dualpath-divider-tag">
+                    <Sliders size={10} /> Fine-tune controls
+                  </span>
+                  <div className="dualpath-divider-line" />
+                </div>
+
+                {/* Track 2: Manual Control & Live Refined Artboard */}
+                <div className="dualpath-track">
+                  <div className="dualpath-track-header">
+                    <div className="dualpath-track-label">
+                      <span className="dualpath-step-badge">2</span>
+                      <span className="dualpath-track-name">Manual Geometry & Style</span>
+                    </div>
+                    <span className="dualpath-track-caption">Live spec adjustments</span>
+                  </div>
+
+                  <div className="dualpath-controls-layout">
+                    <div className="dualpath-controls-grid">
+                      <div className="dualpath-control-item">
+                        <span className="dualpath-control-label">Style</span>
+                        <div className="dualpath-segmented" role="radiogroup" aria-label="Style control">
+                          {(["Outline", "Solid", "Duotone"] as const).map((st) => (
+                            <button
+                              key={st}
+                              type="button"
+                              className={sec2Style === st ? "active" : ""}
+                              onClick={() => setSec2Style(st)}
+                            >
+                              {st}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="dualpath-control-item">
+                        <span className="dualpath-control-label">Stroke</span>
+                        <div className="dualpath-segmented" role="radiogroup" aria-label="Stroke weight control">
+                          {(["1px", "1.5px", "2px"] as const).map((str) => (
+                            <button
+                              key={str}
+                              type="button"
+                              className={sec2Stroke === str ? "active" : ""}
+                              onClick={() => setSec2Stroke(str)}
+                            >
+                              {str}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="dualpath-control-item">
+                        <span className="dualpath-control-label">Canvas</span>
+                        <div className="dualpath-segmented" role="radiogroup" aria-label="Canvas grid size control">
+                          {(["16×16", "24×24", "32×32"] as const).map((cv) => (
+                            <button
+                              key={cv}
+                              type="button"
+                              className={sec2Canvas === cv ? "active" : ""}
+                              onClick={() => setSec2Canvas(cv)}
+                            >
+                              {cv}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="dualpath-control-item">
+                        <span className="dualpath-control-label">Complexity</span>
+                        <div className="dualpath-segmented" role="radiogroup" aria-label="Complexity control">
+                          {(["Simple", "Balanced", "Detailed"] as const).map((cx) => (
+                            <button
+                              key={cx}
+                              type="button"
+                              className={sec2Complexity === cx ? "active" : ""}
+                              onClick={() => setSec2Complexity(cx)}
+                            >
+                              {cx}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Live Refined Icon Result */}
+                    <div className="dualpath-preview-box">
+                      <div className="dualpath-preview-artboard">
+                        <div className="dualpath-artboard-grid" />
+                        <div
+                          className="dualpath-preview-svg"
+                          dangerouslySetInnerHTML={{
+                            __html: getSec2RefinedSvg(sec2Candidate, sec2Style, sec2Stroke),
+                          }}
+                        />
+                      </div>
+                      <div className="dualpath-preview-meta">
+                        <span className="dualpath-preview-name">cloud-upload</span>
+                        <span className="dualpath-preview-badge">
+                          {sec2Style} • {sec2Stroke} • {sec2Canvas}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
