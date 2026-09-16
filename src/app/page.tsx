@@ -320,7 +320,7 @@ export default function Home() {
 
   return (
     <main className="app-shell landing">
-      <div className="hero">
+      <header className="landing-header-sticky">
         <nav className="landing-nav">
           <Link href="/" className="brand">
             <span className="brand-mark">IF</span> IconForge
@@ -335,7 +335,9 @@ export default function Home() {
             </Link>
           </div>
         </nav>
+      </header>
 
+      <div className="hero">
         <section className="hero-grid">
           <div className="hero-content">
             <div className="eyebrow hero-eyebrow">The Consistent Icon Generator</div>
@@ -444,6 +446,12 @@ export default function Home() {
                   <span className="prompt-pill-dot" />
                   Production-ready 24 × 24 SVG
                 </span>
+              </div>
+
+              <div className="section-cta-wrap">
+                <Link href="/create" className="btn btn-primary section-cta-btn">
+                  Create an icon <ArrowRight size={14} />
+                </Link>
               </div>
             </div>
 
@@ -587,6 +595,12 @@ export default function Home() {
                   <span className="stylelock-pill-dot" />
                   Regenerate to match
                 </span>
+              </div>
+
+              <div className="section-cta-wrap">
+                <Link href="/create" className="btn btn-primary section-cta-btn">
+                  Create an icon <ArrowRight size={14} />
+                </Link>
               </div>
             </div>
 
@@ -776,6 +790,12 @@ export default function Home() {
                   <span className="sets-export-pill-dot" />
                   Export clean SVG &amp; ZIP
                 </span>
+              </div>
+
+              <div className="section-cta-wrap">
+                <Link href="/create" className="btn btn-primary section-cta-btn">
+                  Create an icon <ArrowRight size={14} />
+                </Link>
               </div>
             </div>
 
