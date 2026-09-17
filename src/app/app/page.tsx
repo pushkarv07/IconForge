@@ -81,6 +81,7 @@ export default function GeneratorPage() {
     candidates[0];
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setSets(loadSets());
 
     const syncThemeBg = () => {
@@ -890,7 +891,7 @@ export default function GeneratorPage() {
               <LockKeyhole size={14} />
               {locked ? "Style locked" : "Lock style"}
             </button>
-            <button className="btn btn-add-set" onClick={addToSet}>
+            <button className="btn" onClick={addToSet}>
               <Plus size={14} /> Add to set
             </button>
             <button className="btn" onClick={downloadSvg}>
