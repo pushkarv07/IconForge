@@ -37,7 +37,7 @@ import type {
 
 type GenerationMode = "ai" | "mock";
 const initialRequest = {
-  prompt: "calendar with notification badge",
+  prompt: "cloud upload",
   style: "Outline" as IconStyle,
   canvas: 24 as CanvasSize,
   stroke: 1.5 as 1 | 1.5 | 2,
@@ -295,7 +295,7 @@ export default function GeneratorPage() {
     flash(`Added ${selected.name} to ${created.name}`);
   }
 
-  const basePreviewPx = 216;
+  const basePreviewPx = 180;
   const previewSize = Math.round(basePreviewPx * zoom);
 
   return (
@@ -726,8 +726,8 @@ export default function GeneratorPage() {
               <div
                 className="artboard-stage"
                 style={{
-                  width: `${previewSize + 48}px`,
-                  height: `${previewSize + 48}px`,
+                  width: `${previewSize + 40}px`,
+                  height: `${previewSize + 40}px`,
                 }}
               >
                 <div className="artboard-corner-tl" />
