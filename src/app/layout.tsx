@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "IconForge", description: "Build icon
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ margin: 0, padding: 0 }}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -13,7 +13,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning style={{ margin: 0, padding: 0 }}>{children}</body>
     </html>
   );
 }

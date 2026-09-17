@@ -295,12 +295,12 @@ export default function GeneratorPage() {
     flash(`Added ${selected.name} to ${created.name}`);
   }
 
-  const basePreviewPx = 180;
+  const basePreviewPx = 200;
   const previewSize = Math.round(basePreviewPx * zoom);
 
   return (
-    <main className="app-shell workspace-shell">
-      <header className="topbar">
+    <main className="app-shell workspace-shell" style={{ margin: 0, padding: 0 }}>
+      <header className="topbar" style={{ top: 0, margin: 0 }}>
         <Link href="/" className="brand">
           <span className="brand-mark">IF</span> IconForge
         </Link>
