@@ -885,7 +885,7 @@ export default function GeneratorPage() {
 
           <div className="actions">
             <button
-              className={`btn ${locked ? "btn-primary" : ""}`}
+              className={`btn btn-lock-style ${locked ? "is-locked" : ""}`}
               onClick={locked ? unlockStyle : lockSelectedStyle}
             >
               <LockKeyhole size={14} />
