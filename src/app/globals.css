@@ -634,69 +634,49 @@ button { cursor: pointer; }
 [data-theme="dark"] .properties .actions .btn-add-set {
   background: #141514;
   border: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
-  color: var(--text);
-}
-.properties .actions .btn:hover,
-.properties .actions .btn-add-set:hover {
-  background: #78C7A8 !important;
-  border-color: #78C7A8 !important;
-  color: #ffffff !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px color-mix(in srgb, #78C7A8 35%, transparent);
-}
-.properties .actions .btn:hover svg,
-.properties .actions .btn-add-set:hover svg {
-  color: #ffffff !important;
-  stroke: #ffffff !important;
-}
-
-/* Lock style - Secondary CTA behavior */
-.properties .actions .btn-lock-style {
-  background: #ebebe7;
-  border: 1px solid var(--line);
-  color: var(--text);
-  font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-theme="dark"] .properties .actions .btn-lock-style {
-  background: #141514;
-  border: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
   color: #F3F3ED;
 }
-.properties .actions .btn-lock-style svg {
+.properties .actions .btn svg,
+.properties .actions .btn-add-set svg {
   color: currentColor;
   stroke: currentColor;
 }
 
-/* Hover state: remains a secondary CTA (subtle surface/border change, NOT green) */
-.properties .actions .btn-lock-style:not(.is-locked):hover {
+/* Secondary CTA Hover State: subtle background/border change, NO green fill, NO green glow */
+.properties .actions .btn:not(.is-locked):hover,
+.properties .actions .btn-add-set:not(.is-locked):hover {
   background: color-mix(in srgb, var(--panel-soft) 85%, var(--panel)) !important;
   border-color: color-mix(in srgb, var(--text) 30%, var(--line)) !important;
   color: var(--text) !important;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
 }
-[data-theme="dark"] .properties .actions .btn-lock-style:not(.is-locked):hover {
+[data-theme="dark"] .properties .actions .btn:not(.is-locked):hover,
+[data-theme="dark"] .properties .actions .btn-add-set:not(.is-locked):hover {
   background: #242724 !important;
   border-color: color-mix(in srgb, #F3F3ED 30%, var(--line)) !important;
   color: #ffffff !important;
 }
-.properties .actions .btn-lock-style:not(.is-locked):hover svg {
+.properties .actions .btn:not(.is-locked):hover svg,
+.properties .actions .btn-add-set:not(.is-locked):hover svg {
   color: currentColor !important;
   stroke: currentColor !important;
 }
 
 /* Clicked / Locked state: ONLY when locked, becomes #1DB389 green with white text/icon */
+.properties .actions .btn.is-locked,
 .properties .actions .btn-lock-style.is-locked {
   background: #1DB389 !important;
   border-color: #1DB389 !important;
   color: #ffffff !important;
   box-shadow: 0 2px 10px color-mix(in srgb, #1DB389 30%, transparent) !important;
 }
+.properties .actions .btn.is-locked svg,
 .properties .actions .btn-lock-style.is-locked svg {
   color: #ffffff !important;
   stroke: #ffffff !important;
 }
+.properties .actions .btn.is-locked:hover,
 .properties .actions .btn-lock-style.is-locked:hover {
   background: color-mix(in srgb, #1DB389 90%, #000) !important;
   border-color: color-mix(in srgb, #1DB389 90%, #000) !important;

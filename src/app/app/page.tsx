@@ -37,7 +37,7 @@ import type {
 
 type GenerationMode = "ai" | "mock";
 const initialRequest = {
-  prompt: "cloud upload",
+  prompt: "search",
   style: "Outline" as IconStyle,
   canvas: 24 as CanvasSize,
   stroke: 1.5 as 1 | 1.5 | 2,

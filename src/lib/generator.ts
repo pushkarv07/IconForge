@@ -18,7 +18,17 @@ const conceptRules: { name: IconName; terms: string[] }[] = [
   { name: "coffee", terms: ["coffee cup", "coffee", "cup"] },
   { name: "shopping-cart", terms: ["shopping cart", "cart", "trolley"] },
   { name: "cloud-upload", terms: ["cloud upload", "upload to cloud", "cloud storage"] },
-  ...(["home", "search", "calendar", "settings", "bell", "user", "mail", "heart", "wallet", "check", "close", "menu", "star", "bookmark", "filter", "download", "upload", "card", "chart", "bank", "receipt"] as IconName[]).map((name) => ({ name, terms: [name] })),
+  { name: "search", terms: ["search", "magnifying glass", "magnifier", "find", "lookup", "explore"] },
+  ...(["home", "calendar", "settings", "bell", "user", "mail", "heart", "wallet", "check", "close", "menu", "star", "bookmark", "filter", "download", "upload", "card", "chart", "bank", "receipt"] as IconName[]).map((name) => ({ name, terms: [name] })),
+];
+
+const searchVariants = [
+  '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
+  '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 3.5 3.5a1.2 1.2 0 1 0 1.7-1.7L17.7 14.3"/>',
+  '<circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/>',
+  '<rect x="4.5" y="4.5" width="12" height="12" rx="3.5"/><path d="m15 15 5.5 5.5"/>',
+  '<circle cx="10" cy="10" r="5.5"/><path d="m14.2 14.2 6.3 6.3"/>',
+  '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M8 8a3.5 3.5 0 0 1 4 0"/>',
 ];
 
 function resolveConcept(prompt: string): IconName | null {
@@ -48,11 +58,11 @@ function makeSvg(name: IconName, request: GenerationRequest, variant: number): s
   const join = request.lockedStyle?.join.toLowerCase() ?? "round";
   const fill = style === "Solid" ? "currentColor" : "none";
   const opacity = style === "Duotone" ? 0.14 : 1;
-  const paths = iconPaths[name];
+  const paths = name === "search" ? (searchVariants[variant % searchVariants.length] ?? iconPaths[name]) : iconPaths[name];
   const extra = name === "calendar" && request.prompt.toLowerCase().includes("notification") ? '<circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/><path d="M18 5v2m-1 0h2" stroke="white" stroke-width=".8"/>' : "";
-  const detail = variationDetail(name, variant);
-  const transform = variant % 3 === 1 ? "translate(.25 .25) scale(.98)" : variant % 3 === 2 ? "translate(-.2 .2) scale(.985)" : "";
-  const body = style === "Duotone" ? `<g opacity="${opacity}" fill="currentColor">${paths.replaceAll("fill=\"none\"", "")}</g>${paths}${detail}` : `<g transform="${transform}">${paths}${detail}</g>`;
+  const detail = name === "search" ? "" : variationDetail(name, variant);
+  const transform = name === "search" ? "" : variant % 3 === 1 ? "translate(.25 .25) scale(.98)" : variant % 3 === 2 ? "translate(-.2 .2) scale(.985)" : "";
+  const body = style === "Duotone" ? `<g opacity="${opacity}" fill="currentColor">${paths.replaceAll("fill=\"none\"", "")}</g>${paths}${detail}` : transform ? `<g transform="${transform}">${paths}${detail}</g>` : `${paths}${detail}`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="${stroke}" stroke-linecap="${cap}" stroke-linejoin="${join}">${body}${extra}</svg>`;
 }
 
