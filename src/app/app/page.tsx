@@ -994,7 +994,7 @@ export default function GeneratorPage() {
             ) : (
               <p className="muted">No sets yet. Create one for this icon.</p>
             )}
-            <form onSubmit={createSetAndAdd}>
+            <form onSubmit={createSetAndAdd} className="create-set-form">
               <label className="field-label" htmlFor="new-set-name">
                 Create new set
               </label>
