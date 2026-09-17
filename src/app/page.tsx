@@ -370,7 +370,7 @@ export default function Home() {
               Icon sets
             </Link>
             <Link href="/create" className="btn btn-primary">
-              Open workspace <ArrowRight size={15} />
+              <span>Open workspace</span> <ArrowRight size={15} className="cta-arrow" />
             </Link>
           </div>
         </nav>
