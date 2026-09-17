@@ -779,7 +779,7 @@ export default function Home() {
                   <div className="workflow-variations-section">
                     <div className="workflow-variations-header">
                       <div className="workflow-variations-title-wrap">
-                        <span className="workflow-variations-eyebrow">Generated variations</span>
+                        <span className="workflow-variations-eyebrow eyebrow-neutral">Generated variations</span>
                         <span className="workflow-variations-count">
                           {activePromptSample.variations.length} candidates
                         </span>

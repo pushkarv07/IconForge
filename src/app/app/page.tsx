@@ -5,6 +5,7 @@ import {
   Check,
   Copy,
   Download,
+  Folder,
   Grid3X3,
   Loader2,
   LockKeyhole,
@@ -618,7 +619,7 @@ export default function GeneratorPage() {
                 )}
               </button>
               <div>
-                <span className="eyebrow">Preview</span>
+                <span className="eyebrow eyebrow-neutral">Preview</span>
                 <div className="kicker" style={{ marginTop: 2 }}>
                   {selected.name} · {selected.canvas} × {selected.canvas}
                 </div>
@@ -770,7 +771,7 @@ export default function GeneratorPage() {
               }}
             >
               <div>
-                <span className="eyebrow">Generated variations</span>
+                <span className="eyebrow eyebrow-neutral">Generated variations</span>
                 <div className="kicker" style={{ marginTop: 4 }}>
                   Select a direction to inspect & export
                 </div>
@@ -963,7 +964,10 @@ export default function GeneratorPage() {
             aria-modal="true"
             aria-labelledby="add-set-title"
           >
-            <div className="eyebrow">Library</div>
+            <div className="eyebrow library-eyebrow">
+              <Folder size={12} className="library-icon" />
+              <span>Library</span>
+            </div>
             <h2 id="add-set-title" className="property-title">
               Add to set
             </h2>

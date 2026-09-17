@@ -2,7 +2,7 @@
 
 import JSZip from "jszip";
 import Link from "next/link";
-import { ArrowRight, Copy, Download, Layers, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Copy, Download, Folder, Layers, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { defaultStyleProfile, loadSets, makeSet, saveSets } from "@/lib/sets";
@@ -42,7 +42,10 @@ export default function SetsPage() {
       <div className="page-content">
         <div className="page-header">
           <div>
-            <div className="eyebrow">Your library</div>
+            <div className="eyebrow library-eyebrow">
+              <Folder size={12} className="library-icon" />
+              <span>Your library</span>
+            </div>
             <h1>Icon sets</h1>
             <p className="page-header-desc">
               Keep related icons together and consistent.
