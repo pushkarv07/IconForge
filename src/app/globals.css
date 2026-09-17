@@ -15,7 +15,7 @@ body:has(.workspace-shell) {
 h1, h2, h3, h4, h5, h6 { font-weight: 600; }
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 1px solid color-mix(in srgb, var(--text) 40%, var(--line)); outline-offset: 1px; }
 .app-shell { min-height: 100vh; background: var(--bg); margin: 0 !important; padding: 0 !important; }
 .app-shell.workspace-shell {
   height: 100vh;
@@ -115,8 +115,20 @@ button { cursor: pointer; }
 .icon-btn:hover { border-color: var(--line); color: var(--text); background: var(--panel); }
 .kicker { font-size: 12px; font-weight: 500; color: var(--muted); }
 .field-label { font-size: 12px; font-weight: 500; margin-bottom: 8px; display: block; }
-.segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 7px; padding: 3px; background: var(--panel-soft); }
-.segmented button { border: 0; background: transparent; color: var(--muted); border-radius: 5px; font-size: 12px; height: 30px; }
+.segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 7px; padding: 3px; background: var(--panel-soft); gap: 2px; }
+.segmented button { border: 0; background: transparent; color: var(--muted); border-radius: 5px; font-size: 12px; font-weight: 500; height: 30px; transition: background-color .15s ease, color .15s ease, box-shadow .15s ease; cursor: pointer; user-select: none; }
+.segmented button:hover:not([aria-pressed="true"]) { color: var(--text); background: color-mix(in srgb, var(--panel) 55%, transparent); }
+.segmented button[aria-pressed="true"] {
+  background: #ffffff;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+[data-theme="dark"] .segmented button[aria-pressed="true"] {
+  background: #343834;
+  color: #F3F3ED;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
 .mode-segmented button[aria-pressed="true"].mode-active-ai,
 .mode-segmented button[aria-pressed="true"].mode-active-mock {
   background: var(--text);
@@ -127,7 +139,7 @@ button { cursor: pointer; }
 .theme-btn { display: inline-flex; align-items: center; justify-content: flex-start; text-align: left; gap: 4.5px; height: 24px; padding: 0 7px; border: 0; border-radius: 4.5px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: -0.01em; cursor: pointer; white-space: nowrap; user-select: none; transition: color .15s ease, background-color .15s ease, box-shadow .15s ease; }
 .theme-btn:hover { color: var(--text); background: color-mix(in srgb, var(--panel) 50%, transparent); }
 .theme-btn.active { background: var(--panel); color: var(--text); font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 0 0 1px color-mix(in srgb, var(--line) 50%, transparent); }
-.theme-btn:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 1px; }
+.theme-btn:focus-visible { outline: 1px solid color-mix(in srgb, var(--text) 40%, var(--line)); outline-offset: 1px; }
 .theme-icon { flex-shrink: 0; opacity: .7; display: block; }
 .theme-btn:hover .theme-icon { opacity: .9; }
 .theme-btn.active .theme-icon { opacity: 1; color: var(--text); }
@@ -184,7 +196,12 @@ button { cursor: pointer; }
 .prompt-header-line { display: flex; justify-content: space-between; align-items: baseline; }
 .prompt-hint { font-size: 10.5px; color: var(--muted); font-weight: 450; }
 .prompt-textarea { width: 100%; resize: vertical; min-height: 84px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 10px 12px; color: var(--text); font-size: 13.5px; line-height: 1.5; font-weight: 500; transition: border-color .15s ease, box-shadow .15s ease; }
-.prompt-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); outline: none; }
+.prompt-textarea:focus,
+.prompt-textarea:focus-visible {
+  border-color: color-mix(in srgb, var(--text) 45%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 20%, transparent);
+  outline: none;
+}
 .prompt-textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
 .prompt-helper { margin-top: 4px; font-size: 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .prompt-chip-btn {
@@ -271,10 +288,13 @@ button { cursor: pointer; }
   color: #ffffff !important;
   stroke: #ffffff !important;
 }
-.btn-generate-main:disabled { opacity: .65; cursor: not-allowed; transform: none; }
-.textarea { width: 100%; resize: vertical; min-height: 90px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); padding: 11px 12px; color: var(--text); font-size: 13px; line-height: 1.5; }
+.textarea { width: 100%; resize: vertical; min-height: 90px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); padding: 11px 12px; color: var(--text); font-size: 13px; line-height: 1.5; transition: border-color .15s ease, box-shadow .15s ease; }
+.textarea:focus,
+.textarea:focus-visible { border-color: color-mix(in srgb, var(--text) 45%, var(--line)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 20%, transparent); outline: none; }
 .textarea::placeholder { color: var(--muted); }
-.select { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 7px; padding: 0 10px; background: var(--panel); color: var(--text); font-size: 13px; }
+.select { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 7px; padding: 0 10px; background: var(--panel); color: var(--text); font-size: 13px; transition: border-color .15s ease, box-shadow .15s ease; }
+.select:focus,
+.select:focus-visible { border-color: color-mix(in srgb, var(--text) 45%, var(--line)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 20%, transparent); outline: none; }
 .lock-banner { border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); background: color-mix(in srgb, var(--accent) 7%, var(--panel)); color: var(--text); border-radius: 8px; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .lock-banner-content { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .lock-banner-heading { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--accent); font-weight: 600; }
