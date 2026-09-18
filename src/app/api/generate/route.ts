@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import {
   geometryCandidates,
   validateGeometry,
-  getGeometryFingerprint,
+  isDistinctGeometry,
+  sortAndSelectBestMatch,
   type IconGeometry,
 } from "@/lib/geometry";
 import type { GenerationRequest } from "@/lib/types";
@@ -15,42 +16,65 @@ function promptFor(
   request: GenerationRequest,
   targetCount: number = 6,
   existingCount: number = 0
-) {
+): string {
   const locked = request.lockedStyle;
   const reference = request.styleReference;
   const askCount = Math.max(targetCount, 6);
   const distinctNote =
     existingCount > 0
-      ? `\nImportant: Generate ${targetCount} NEW, distinct variations that differ in geometry from previous candidates.`
+      ? `\nImportant: You already produced ${existingCount} candidates. Return ${targetCount} NEW, distinct variations that differ in visual silhouette and geometry from previous ones.`
       : "";
 
-  return `You generate ${askCount} visually distinct icon variations for the concept: "${request.prompt}".
+  return `You are a world-class iconographer and vector designer creating production-grade UI icons for a clean design system.
+Generate ${askCount} distinct, high-quality vector icon variations for the concept: "${request.prompt}".
 
+PRIORITIZE QUALITY AND SEMANTIC ACCURACY OVER RAW CANDIDATE COUNT.
 Return ONLY valid JSON matching this exact shape: {"candidates":[{"canvas":24,"strokeWidth":1.5,"strokeLinecap":"round","strokeLinejoin":"round","fill":"none","paths":[{"d":"M..."}]}]}
 
-Rules:
-- Return an array of ${askCount} to ${askCount + 2} candidates.
-- Every candidate MUST immediately and clearly depict the requested concept ("${request.prompt}") using recognizable iconography.
-  Examples: "search" must be an identifiable magnifying glass; "cloud upload" must be a cloud with an upload arrow; "shopping cart" must be a wheeled cart; "camera" must be an identifiable camera body with lens; "location" must be a map pin/marker; "coffee" must be an identifiable cup/mug with handle or steam.
-- Do NOT generate abstract, ambiguous, broken, or unrelated shapes.
-- The variations must be visibly distinct (variations in geometry, proportion, compactness, curvature, or detail).
-- Each candidate canvas must be 24.
-- Use only valid SVG path commands (M, L, H, V, C, S, Q, T, A, Z) and numeric coordinates between 1 and 23.
-- In arc 'A' or 'a' commands, always separate all 7 parameters with spaces (e.g. 'a 4 4 0 0 0 1 2'), never glued together.
-- Do not return SVG, HTML, XML, scripts, images, data URLs, explanations, or markdown.
-- Keep each candidate to at most 12 paths and each path d under 1000 characters.
-- Honor this requested style: ${request.style}; stroke width: ${request.stroke}; complexity: ${request.complexity}; color mode: ${request.color}.${distinctNote}
+CORE REQUIREMENTS:
+1. SEMANTIC ACCURACY: Every candidate MUST immediately and unmistakably represent the requested concept ("${request.prompt}") at a glance.
+   - "coffee cup with steam" / "coffee": MUST depict an identifiable cup/mug with a handle and visible wavy steam wisps rising above it. Do NOT generate bowls, buckets, or abstract symbols.
+   - "search": MUST depict an identifiable magnifying glass with a round circular lens and a diagonal/straight handle. Do NOT generate a plain circle or unrelated shapes.
+   - "cloud upload": MUST depict a clean cloud outline with an upward-pointing arrow inside or at the base.
+   - "shopping cart": MUST depict a wheeled cart basket with push handle and bottom wheels.
+   - "camera": MUST depict a horizontal camera body with rounded corners and a central circular lens.
+   - "location": MUST depict a map pin/marker with a pointed tip at the bottom and rounded top.
+   - "design": MUST depict an iconic tool like a vector pen tool with bezier anchor, an artboard/ruler, or an artist palette.
+   - For any other prompt: Use universally recognized UI iconography for that concept. Never output abstract shapes, disconnected lines, or meaningless doodles.
+
+2. OPTIMIZED FOR 24 × 24 CANVAS:
+   - Canvas size is 24x24.
+   - Keep the icon artwork comfortably padded within the grid: coordinates should sit between 2 and 22.
+   - Optical balance: center the icon mass around (12, 12).
+   - High legibility at small sizes: clear silhouette, balanced negative space, no micro-details or cramped geometry.
+
+3. CLEAN SVG GEOMETRY:
+   - Valid SVG path commands: M, L, H, V, C, S, Q, T, A, Z.
+   - Coordinates must be clean, sensible numbers between 1 and 23.
+   - In arc 'A' or 'a' commands, separate all 7 parameters with spaces (e.g. 'a 4 4 0 0 0 1 2').
+   - Keep each icon to 1 to 6 clean, purposeful paths. No orphan dots, no overlapping duplicate lines.
+
+4. MEANINGFUL VARIATION BETWEEN CANDIDATES:
+   - Provide genuine design alternatives (e.g. different silhouettes, corner radiuses, proportions, compactness, or structural styles).
+   - Do not return near-duplicate copies or tiny 0.1px offsets.
+
+5. REQUESTED SPECIFICATIONS:
+   - Style: ${request.style}; stroke width: ${request.stroke}; complexity: ${request.complexity}; color mode: ${request.color}.${distinctNote}
 ${
   locked
     ? `
-STYLE LOCK IS ACTIVE. Preserve the visual language of the reference icon. Change the subject, not the design system.
-Prioritize matching stroke weight (${locked.strokeWidth}px), caps (${locked.strokeLinecap}), joins (${locked.strokeLinejoin}), fill (${locked.fillMode}), visual density (${locked.density}), complexity (${locked.complexity}), geometric character (${locked.geometric}), optical weight (${locked.opticalWeight}), spacing, and ${locked.corner.toLowerCase()} corner behavior. Do not simply regenerate the reference icon with a different label.`
+STYLE LOCK IS ACTIVE. Strictly preserve the visual language of the reference icon:
+- Stroke weight: ${locked.strokeWidth}px
+- Caps: ${locked.strokeLinecap}, Joins: ${locked.strokeLinejoin}
+- Fill: ${locked.fillMode}
+- Visual density: ${locked.density}, Complexity: ${locked.complexity}
+- Corner radius character: ${locked.corner.toLowerCase()}
+Change the concept subject to "${request.prompt}", but keep the exact design system styling.`
     : ""
 }
 ${
   reference
-    ? `
-Compact reference characteristics: ${JSON.stringify({
+    ? `Reference SVG characteristics: ${JSON.stringify({
         pathCount: reference.pathCount,
         viewBox: reference.viewBox,
         svg: reference.svg.slice(0, 2400),
@@ -134,7 +158,7 @@ async function fetchGeminiCandidates(
         ),
       };
 
-      if (validateGeometry(geometry)) {
+      if (validateGeometry(geometry, requestBody.prompt)) {
         valid.push(geometry);
       }
     }
@@ -168,16 +192,13 @@ export async function POST(request: Request) {
     const TARGET = 6;
     const MAX_ATTEMPTS = 2;
     const collected: IconGeometry[] = [];
-    const seenFingerprints = new Set<string>();
 
     for (let attempt = 1; attempt <= MAX_ATTEMPTS && collected.length < TARGET; attempt++) {
       const needed = TARGET - collected.length;
       try {
         const batch = await fetchGeminiCandidates(body, needed, collected.length);
         for (const geom of batch) {
-          const fp = getGeometryFingerprint(geom);
-          if (!seenFingerprints.has(fp)) {
-            seenFingerprints.add(fp);
+          if (isDistinctGeometry(geom, collected)) {
             collected.push(geom);
             if (collected.length >= TARGET) break;
           }
@@ -201,8 +222,11 @@ export async function POST(request: Request) {
       throw new Error("Gemini returned invalid icon geometry");
     }
 
+    // Rank candidates so the strongest, most balanced, semantically accurate candidate is Best match (index 0)
+    const ranked = sortAndSelectBestMatch(collected.slice(0, TARGET), body.prompt);
+
     const finalCandidates = geometryCandidates(
-      collected.slice(0, TARGET),
+      ranked,
       body,
       body.prompt
     );

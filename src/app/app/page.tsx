@@ -66,6 +66,8 @@ export default function GeneratorPage() {
   const [userBgSelection, setUserBgSelection] = useState<PreviewBackground | null>(null);
   const [status, setStatus] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [hasGenerated, setHasGenerated] = useState(false);
+  const generationIdRef = useRef(0);
   const [mode, setMode] = useState<GenerationMode>("ai");
   const [generationError, setGenerationError] = useState("");
   const [retryUsed, setRetryUsed] = useState(false);
@@ -120,6 +122,7 @@ export default function GeneratorPage() {
     setSelectedId(next[0].id);
     setGenerationError("");
     setRetryUsed(false);
+    setHasGenerated(true);
     flash(
       `Mock mode: ${next.length} variation${
         next.length === 1 ? "" : "s"
@@ -185,7 +188,9 @@ export default function GeneratorPage() {
   async function generate(isRetry = false) {
     if (generating) return;
     if (isRetry && retryUsed) return;
+    const currentGenId = ++generationIdRef.current;
     setGenerationError("");
+    setStatus("");
     setGenerating(true);
     if (isRetry) setRetryUsed(true);
     else setRetryUsed(false);
@@ -196,6 +201,7 @@ export default function GeneratorPage() {
     );
     if (mode === "mock") {
       window.setTimeout(() => {
+        if (generationIdRef.current !== currentGenId) return;
         mockResult();
         setGenerating(false);
       }, 450);
@@ -216,6 +222,7 @@ export default function GeneratorPage() {
         error?: string;
         code?: "quota" | "upstream";
       };
+      if (generationIdRef.current !== currentGenId) return;
       if (!response.ok || !result.candidates?.length) {
         if (response.status === 429 || result.code === "quota")
           throw new Error("Gemini quota or rate limit reached.");
@@ -224,9 +231,11 @@ export default function GeneratorPage() {
       setCandidates(result.candidates);
       setSelectedId(result.candidates[0].id);
       setRetryUsed(false);
+      setHasGenerated(true);
       const count = result.candidates.length;
       flash(`${count} AI variation${count === 1 ? "" : "s"} generated`);
     } catch (error) {
+      if (generationIdRef.current !== currentGenId) return;
       const message =
         error instanceof TypeError && error.message === "Failed to fetch"
           ? "The AI server is unavailable. Try again or use Mock result."
@@ -236,7 +245,9 @@ export default function GeneratorPage() {
       setGenerationError(message);
       flash("Gemini generation failed");
     } finally {
-      setGenerating(false);
+      if (generationIdRef.current === currentGenId) {
+        setGenerating(false);
+      }
     }
   }
 
@@ -434,8 +445,11 @@ export default function GeneratorPage() {
                     <>
                       <Sparkles size={15} />
                       <span>
-                        Generate{" "}
-                        {mode === "ai" ? "AI Variations" : "Mock Variations"}
+                        {hasGenerated
+                          ? "Generate Again"
+                          : mode === "ai"
+                          ? "Generate AI Variations"
+                          : "Generate Mock Variations"}
                       </span>
                     </>
                   )}
@@ -716,7 +730,7 @@ export default function GeneratorPage() {
             <div className="generation-status-banner">
               <Loader2
                 size={14}
-                style={{ animation: "spin 1s linear infinite" }}
+                style={{ animation: "spin 1s linear infinite", color: "#1DB389" }}
               />
               <span>
                 {mode === "ai"
