@@ -42,16 +42,75 @@ function isValidPathData(value: unknown): value is string {
   return Boolean(command && command.toUpperCase() !== "Z" ? numbers >= arity[command.toUpperCase()] && numbers % arity[command.toUpperCase()] === 0 : command);
 }
 
+function hasValidCoordinateBounds(geometry: IconGeometry): boolean {
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  let coordCount = 0;
+
+  for (const path of geometry.paths) {
+    const d = typeof path === "string" ? path : path.d;
+    const numbers = d.match(/[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g);
+    if (!numbers) continue;
+
+    for (let i = 0; i < numbers.length; i++) {
+      const val = parseFloat(numbers[i]);
+      if (isNaN(val) || !isFinite(val)) return false;
+      // Coordinates should be in sensible range for a 24x24 canvas [-3, 27]
+      if (val < -3 || val > 27) return false;
+
+      if (i % 2 === 0) {
+        if (val < minX) minX = val;
+        if (val > maxX) maxX = val;
+      } else {
+        if (val < minY) minY = val;
+        if (val > maxY) maxY = val;
+      }
+      coordCount++;
+    }
+  }
+
+  // Must have coordinates and reasonable non-zero dimensions
+  if (coordCount < 4) return false;
+  const width = maxX - minX;
+  const height = maxY - minY;
+  if (width < 2.5 || height < 2.5) return false;
+
+  return true;
+}
+
 export function validateGeometry(value: unknown): value is IconGeometry {
   if (!value || typeof value !== "object" || forbiddenMarkup.test(JSON.stringify(value))) return false;
   const geometry = value as Partial<IconGeometry>;
-  return geometry.canvas === 24
+  const isValidBasic = geometry.canvas === 24
     && typeof geometry.strokeWidth === "number" && geometry.strokeWidth >= 0.5 && geometry.strokeWidth <= 4
     && ["round", "square", "butt"].includes(geometry.strokeLinecap ?? "")
     && ["round", "miter", "bevel"].includes(geometry.strokeLinejoin ?? "")
     && ["none", "currentColor"].includes(geometry.fill ?? "")
     && Array.isArray(geometry.paths) && geometry.paths.length > 0 && geometry.paths.length <= 12
     && geometry.paths.every((path) => path && isValidPathData(typeof path === "string" ? path : path.d));
+
+  if (!isValidBasic) return false;
+  return hasValidCoordinateBounds(geometry as IconGeometry);
+}
+
+export function getGeometryFingerprint(geometry: IconGeometry): string {
+  return geometry.paths
+    .map((p) => {
+      const d = typeof p === "string" ? p : p.d;
+      return d
+        .replace(/([0-9]+\.[0-9]{2,})/g, (n) => parseFloat(n).toFixed(1))
+        .replace(/[\s,]+/g, "")
+        .toLowerCase();
+    })
+    .sort()
+    .join("|");
+}
+
+export function isDistinctGeometry(candidate: IconGeometry, existing: IconGeometry[]): boolean {
+  const candidateFp = getGeometryFingerprint(candidate);
+  return !existing.some((e) => getGeometryFingerprint(e) === candidateFp);
 }
 
 function styleValues(request: GenerationRequest, geometry: IconGeometry) {
@@ -65,18 +124,19 @@ function styleValues(request: GenerationRequest, geometry: IconGeometry) {
   };
 }
 
-export function geometryToSvg(geometry: IconGeometry, request: GenerationRequest, variant: number): string {
+export function geometryToSvg(geometry: IconGeometry, request: GenerationRequest): string {
   const values = styleValues(request, geometry);
-  const transform = variant % 3 === 1 ? "translate(.2 .2) scale(.985)" : variant % 3 === 2 ? "translate(-.2 .1) scale(.99)" : "";
   const paths = geometry.paths.map((p) => `<path d="${typeof p === "string" ? p : p.d}"/>`).join("");
-  const body = values.style === "Duotone" ? `<g opacity="${values.opacity}" fill="currentColor">${paths}</g><g>${paths}</g>` : `<g transform="${transform}">${paths}</g>`;
+  const body = values.style === "Duotone"
+    ? `<g opacity="${values.opacity}" fill="currentColor">${paths}</g><g>${paths}</g>`
+    : `<g>${paths}</g>`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${values.canvas} ${values.canvas}" fill="${values.fill}" stroke="currentColor" stroke-width="${values.stroke}" stroke-linecap="${geometry.strokeLinecap}" stroke-linejoin="${geometry.strokeLinejoin}">${body}</svg>`;
 }
 
 export function geometryCandidates(geometries: IconGeometry[], request: GenerationRequest, prompt: string): IconCandidate[] {
   const baseName = prompt.trim().replace(/\s+/g, " ").slice(0, 48) || "Generated icon";
   return geometries.slice(0, 6).map((geometry, index) => {
-    const svg = geometryToSvg(geometry, request, index);
+    const svg = geometryToSvg(geometry, request);
     return {
       id: `gemini-${Date.now()}-${index}`,
       name: baseName,

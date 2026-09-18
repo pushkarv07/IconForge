@@ -111,13 +111,20 @@ export default function GeneratorPage() {
   function mockResult() {
     const next = mockGenerator
       .generateIcons({ ...requestRef.current, lockedStyle: locked })
-      .map((candidate) => ({ ...candidate, label: "Mock result" }));
+      .map((candidate, idx) => ({
+        ...candidate,
+        label: idx === 0 ? "Best match" : `Mock variation ${idx}`,
+      }));
     setMode("mock");
     setCandidates(next);
     setSelectedId(next[0].id);
     setGenerationError("");
     setRetryUsed(false);
-    flash("Mock mode: local SVG generated");
+    flash(
+      `Mock mode: ${next.length} variation${
+        next.length === 1 ? "" : "s"
+      } generated`
+    );
   }
 
   function lockSelectedStyle() {
@@ -184,8 +191,8 @@ export default function GeneratorPage() {
     else setRetryUsed(false);
     flash(
       mode === "ai"
-        ? "Asking Gemini for six variations..."
-        : "Generating six variations locally..."
+        ? "Asking Gemini for variations..."
+        : "Generating variations locally..."
     );
     if (mode === "mock") {
       window.setTimeout(() => {
@@ -217,7 +224,8 @@ export default function GeneratorPage() {
       setCandidates(result.candidates);
       setSelectedId(result.candidates[0].id);
       setRetryUsed(false);
-      flash("Six AI variations generated");
+      const count = result.candidates.length;
+      flash(`${count} AI variation${count === 1 ? "" : "s"} generated`);
     } catch (error) {
       const message =
         error instanceof TypeError && error.message === "Failed to fetch"
@@ -777,7 +785,10 @@ export default function GeneratorPage() {
                   Select a direction to inspect & export
                 </div>
               </div>
-              <span className="kicker">{candidates.length} candidates</span>
+              <span className="kicker">
+                {candidates.length}{" "}
+                {candidates.length === 1 ? "candidate" : "candidates"}
+              </span>
             </div>
 
             <div

@@ -26,7 +26,7 @@ const searchVariants = [
   '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
   '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 3.5 3.5a1.2 1.2 0 1 0 1.7-1.7L17.7 14.3"/>',
   '<circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/>',
-  '<rect x="4.5" y="4.5" width="12" height="12" rx="3.5"/><path d="m15 15 5.5 5.5"/>',
+  '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M10.5 8v5M8 10.5h5"/>',
   '<circle cx="10" cy="10" r="5.5"/><path d="m14.2 14.2 6.3 6.3"/>',
   '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M8 8a3.5 3.5 0 0 1 4 0"/>',
 ];
@@ -46,9 +46,30 @@ function variationDetail(name: IconName, variant: number): string {
     location: ["<circle cx=\"12\" cy=\"10\" r=\"1\" fill=\"currentColor\" stroke=\"none\"/>", "<path d=\"M9 17h6\"/>", "<circle cx=\"12\" cy=\"10\" r=\"4\"/>", "<path d=\"M7 14h2\"/>", "<path d=\"M15 14h2\"/>",],
     map: ["<path d=\"M5 7h2M11 5h2M17 7h2\"/>", "<circle cx=\"12\" cy=\"12\" r=\"1\"/>", "<path d=\"M5 17h2M17 17h2\"/>", "<path d=\"M8 9h2\"/>", "<path d=\"M14 15h2\"/>",],
     clock: ["<path d=\"M12 5v2\"/>", "<path d=\"M19 12h-2\"/>", "<path d=\"M12 17v2\"/>", "<path d=\"M7 12H5\"/>", "<circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"currentColor\" stroke=\"none\"/>",],
+    coffee: [
+      '<path d="M10 5c0 1.2 1 1.2 1 2.2"/>',
+      '<path d="M3 20h14"/>',
+      '<path d="M7 5c0 1 1 1 1 2m6-2c0 1 1 1 1 2"/>',
+      '<path d="M5 13h10"/>',
+      '<circle cx="10" cy="14" r="1.2"/>',
+    ],
+    "shopping-cart": [
+      '<path d="M9 11h8"/>',
+      '<circle cx="13" cy="6" r="1.2"/>',
+      '<path d="M12 8v5M15 8v5"/>',
+      '<path d="M4 3h2"/>',
+      '<path d="M8 8h10"/>',
+    ],
+    "cloud-upload": [
+      '<path d="M8 20h8"/>',
+      '<path d="M12 7V5"/>',
+      '<path d="M6 21h12"/>',
+      '<path d="M10 13a2 2 0 0 1 3-1"/>',
+      '<path d="M10 17h4"/>',
+    ],
   };
   const options = details[name];
-  return options?.[(variant - 1) % options.length] ?? (variant % 2 === 0 ? "<circle cx=\"12\" cy=\"12\" r=\".7\" fill=\"currentColor\" stroke=\"none\"/>" : "<path d=\"M7 7h10\"/>");
+  return options?.[(variant - 1) % options.length] ?? "";
 }
 
 function makeSvg(name: IconName, request: GenerationRequest, variant: number): string {
