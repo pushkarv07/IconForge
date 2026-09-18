@@ -249,7 +249,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
       delete next[iconId];
       return next;
     });
-    showToast("Kept current icon", "success");
+    showToast("Kept previous icon", "success");
   }
 
   function togglePreviewOriginal(iconId: string) {
@@ -478,7 +478,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                             onClick={() => discardProposal(icon.id)}
                             disabled={isRegenerating}
                           >
-                            Keep current
+                            Keep previous
                           </button>
                         </div>
                       ) : isMismatch ? (
@@ -565,7 +565,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                       result.score === 100 ? "score-badge-perfect" : "score-badge-warn"
                     }`}
                   >
-                    {result.score === 100 ? "Cohesive" : "Mismatched"}
+                    {result.score === 100 ? "Style fully matched" : "Mismatched"}
                   </span>
                 </div>
 
@@ -641,7 +641,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 <div className="inspector-header">
                   <div className="eyebrow eyebrow-neutral">Consistency</div>
                 </div>
-                <h3 className="prompt-title">Heuristic style audit</h3>
+                <h3 className="prompt-title">Style consistency check</h3>
                 <p className="prompt-text">
                   Analyze stroke weights, canvas bounds, corner rounding, and path complexity against Forge Style.
                 </p>
