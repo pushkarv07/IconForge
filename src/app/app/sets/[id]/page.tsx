@@ -14,7 +14,7 @@ import {
   Sparkles,
   Trash2,
 } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { consistencyScore, type ConsistencyFinding } from "@/lib/consistency";
 import { downloadAllIconsAsZip } from "@/lib/export";
@@ -34,6 +34,29 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   const [busy, setBusy] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const sidebarRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    function updateSidebarHeight() {
+      if (typeof window === "undefined" || window.innerWidth <= 1100) return;
+      const sidebar = sidebarRef.current;
+      if (!sidebar) return;
+      const topOffset = 72;
+      const bottomSpacing = 16;
+      const rect = sidebar.getBoundingClientRect();
+      const currentTop = Math.max(topOffset, rect.top);
+      const availableHeight = Math.max(200, Math.floor(window.innerHeight - currentTop - bottomSpacing));
+      sidebar.style.setProperty("--sidebar-max-height", `${availableHeight}px`);
+    }
+
+    updateSidebarHeight();
+    window.addEventListener("scroll", updateSidebarHeight, { passive: true });
+    window.addEventListener("resize", updateSidebarHeight, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateSidebarHeight);
+      window.removeEventListener("resize", updateSidebarHeight);
+    };
+  }, [set, result, analysisError]);
 
   function showToast(message: string, type: "success" | "error" = "success") {
     setToast({ message, type });
@@ -305,7 +328,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
             )}
           </section>
 
-          <aside className="set-sidebar">
+          <aside className="set-sidebar" ref={sidebarRef}>
             <div className="inspector-panel style-system-card">
               <div className="inspector-header">
                 <div className="eyebrow eyebrow-neutral">Style system</div>
