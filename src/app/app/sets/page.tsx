@@ -181,7 +181,7 @@ export default function SetsPage() {
       {dialogOpen && (
         <div className="modal-backdrop" role="presentation">
           <form className="modal" onSubmit={createSet}>
-            <div className="eyebrow">New collection</div>
+            <div className="eyebrow library-eyebrow">New collection</div>
             <h2 className="property-title">Create icon set</h2>
             <label className="field-label" htmlFor="set-name">
               Set name
