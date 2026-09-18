@@ -102,7 +102,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
         <div className="page-header detail-header">
           <div className="detail-header-main">
             <div className="detail-header-eyebrow">
-              <span className="eyebrow">Icon set</span>
+              <span className="eyebrow eyebrow-neutral">Icon set</span>
               <span className="detail-badge">
                 {set.icons.length} {set.icons.length === 1 ? "icon" : "icons"}
               </span>
@@ -129,7 +129,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
               <Download size={13.5} /> Export set
             </button>
             <button
-              className="btn btn-primary"
+              className={`btn ${result?.score === 100 ? "btn-success-state" : ""}`}
               onClick={runConsistency}
               disabled={checking}
             >
@@ -137,7 +137,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 "Checking..."
               ) : (
                 <>
-                  <Check size={14} /> Check consistency
+                  <Check size={14} /> {result?.score === 100 ? "Consistent" : "Check consistency"}
                 </>
               )}
             </button>
@@ -271,7 +271,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
           <aside className="set-sidebar">
             <div className="inspector-panel style-system-card">
               <div className="inspector-header">
-                <div className="eyebrow">Style system</div>
+                <div className="eyebrow eyebrow-neutral">Style system</div>
                 <span className="profile-name-badge">{profile.name}</span>
               </div>
 
@@ -315,7 +315,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
             {result ? (
               <div className="inspector-panel consistency-card">
                 <div className="inspector-header">
-                  <div className="eyebrow">Consistency</div>
+                  <div className="eyebrow eyebrow-neutral">Consistency</div>
                   <span
                     className={`score-badge ${
                       result.score === 100 ? "score-badge-perfect" : "score-badge-warn"
@@ -325,12 +325,14 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                   </span>
                 </div>
 
-                <div className="consistency-score-hero">
+                <div className={`consistency-score-hero ${result.score === 100 ? "score-hero-perfect" : ""}`}>
                   <div className="score-num-wrap">
-                    <span className="score-value">{result.score}</span>
+                    <span className={`score-value ${result.score === 100 ? "score-value-perfect" : ""}`}>{result.score}</span>
                     <span className="score-denom">/ 100</span>
                   </div>
-                  <p className="score-subtext">Heuristic score</p>
+                  <p className={`score-subtext ${result.score === 100 ? "score-subtext-perfect" : ""}`}>
+                    {result.score === 100 ? "All icons match reference style" : "Heuristic score"}
+                  </p>
                 </div>
 
                 <div className="audit-checklist">
@@ -392,7 +394,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
             ) : (
               <div className="inspector-panel consistency-prompt-card">
                 <div className="inspector-header">
-                  <div className="eyebrow">Consistency</div>
+                  <div className="eyebrow eyebrow-neutral">Consistency</div>
                 </div>
                 <h3 className="prompt-title">Heuristic style audit</h3>
                 <p className="prompt-text">
