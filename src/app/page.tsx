@@ -37,6 +37,44 @@ interface PromptSample {
 
 const PROMPT_SAMPLES: PromptSample[] = [
   {
+    id: "search",
+    promptText: "search",
+    chipLabel: "search",
+    variations: [
+      {
+        id: "search-1",
+        label: "Best match",
+        isBestMatch: true,
+        svgPath: '<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>',
+      },
+      {
+        id: "search-2",
+        label: "Geometric",
+        svgPath: '<circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/>',
+      },
+      {
+        id: "search-3",
+        label: "Minimal",
+        svgPath: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+      },
+      {
+        id: "search-4",
+        label: "Center dot",
+        svgPath: '<circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/><circle cx="11" cy="11" r="1.5"/>',
+      },
+      {
+        id: "search-5",
+        label: "Compact",
+        svgPath: '<circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5"/>',
+      },
+      {
+        id: "search-6",
+        label: "Outlined",
+        svgPath: '<circle cx="11" cy="11" r="7.5"/><path d="m17 17 4 4"/>',
+      },
+    ],
+  },
+  {
     id: "cloud-upload",
     promptText: "cloud upload",
     chipLabel: "cloud upload",
@@ -109,44 +147,6 @@ const PROMPT_SAMPLES: PromptSample[] = [
         id: "cart-6",
         label: "Outlined",
         svgPath: '<path d="M2 4h3.2l2.4 10h10.8l2-7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/>',
-      },
-    ],
-  },
-  {
-    id: "search",
-    promptText: "search",
-    chipLabel: "search",
-    variations: [
-      {
-        id: "search-1",
-        label: "Best match",
-        isBestMatch: true,
-        svgPath: '<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>',
-      },
-      {
-        id: "search-2",
-        label: "Geometric",
-        svgPath: '<circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/>',
-      },
-      {
-        id: "search-3",
-        label: "Minimal",
-        svgPath: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
-      },
-      {
-        id: "search-4",
-        label: "Center dot",
-        svgPath: '<circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/><circle cx="11" cy="11" r="1.5"/>',
-      },
-      {
-        id: "search-5",
-        label: "Compact",
-        svgPath: '<circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5"/>',
-      },
-      {
-        id: "search-6",
-        label: "Outlined",
-        svgPath: '<circle cx="11" cy="11" r="7.5"/><path d="m17 17 4 4"/>',
       },
     ],
   },
@@ -273,10 +273,10 @@ interface StyleLockItem {
 }
 
 const STYLELOCK_SET: StyleLockItem[] = [
-  { id: "cloud-upload", name: "Cloud upload", role: "reference" },
+  { id: "camera", name: "Camera", role: "reference" },
   { id: "shopping-cart", name: "Shopping cart", role: "generated" },
   { id: "search", name: "Search", role: "generated" },
-  { id: "camera", name: "Camera", role: "mismatch" },
+  { id: "cloud-upload", name: "Cloud upload", role: "mismatch" },
   { id: "location", name: "Location", role: "generated" },
   { id: "coffee", name: "Coffee", role: "generated" },
 ];
@@ -297,7 +297,7 @@ const SET_OVERVIEW_ICONS: SetOverviewIcon[] = [
 
 export default function Home() {
   const [chosen, setChosen] = useState<IconName>("cloud-upload");
-  const [activePromptId, setActivePromptId] = useState("cloud-upload");
+  const [activePromptId, setActivePromptId] = useState("search");
   const [selectedVariationIdx, setSelectedVariationIdx] = useState(0);
 
   // Section 4: Style Lock + Consistency State
@@ -881,7 +881,7 @@ export default function Home() {
                     <div className="stylelock-tiles-header">
                       <span className="stylelock-tiles-caption">Active icon set (6 members)</span>
                       <span className="stylelock-tiles-ref">
-                        <Lock size={11} /> Reference: Cloud upload (1.5 px)
+                        <Lock size={11} /> Reference: Camera (1.5 px)
                       </span>
                     </div>
 
@@ -953,7 +953,7 @@ export default function Home() {
                         <div className="stylelock-diagnostic-detail">
                           {isConsistencyFixed
                             ? "All 6 icons match reference style (1.5 px stroke, 24 × 24 grid)"
-                            : "Camera rendered with 2.5 px stroke (reference requires 1.5 px)"}
+                            : "Cloud upload rendered with 2.5 px stroke (reference requires 1.5 px)"}
                         </div>
                       </div>
                     </div>
@@ -964,7 +964,7 @@ export default function Home() {
                           type="button"
                           className="stylelock-fix-btn"
                           onClick={() => setIsConsistencyFixed(true)}
-                          aria-label="Regenerate camera to match reference"
+                          aria-label="Regenerate cloud upload to match reference"
                         >
                           <Sparkles size={12} />
                           <span>Regenerate to Match</span>
