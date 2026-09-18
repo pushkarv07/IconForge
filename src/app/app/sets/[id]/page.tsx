@@ -85,7 +85,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   function removeIcon(icon: IconCandidate) { persist({ ...currentSet, icons: currentSet.icons.filter((item) => item.id !== icon.id) }); }
   function move(index: number, direction: -1 | 1) { const target = index + direction; if (target < 0 || target >= currentSet.icons.length) return; const icons = [...currentSet.icons]; [icons[index], icons[target]] = [icons[target], icons[index]]; persist({ ...currentSet, icons }); }
   async function regenerate(icon: IconCandidate) {
-    if (!window.confirm(`Generate a replacement for ${icon.name} using ${profile.name}?`)) return;
+    if (!window.confirm(`Generate a replacement for ${icon.name} using Forge Style?`)) return;
     setBusy(icon.id);
     try {
       const response = await fetch("/api/generate", {
@@ -309,7 +309,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
             <div className="inspector-panel style-system-card">
               <div className="inspector-header">
                 <div className="eyebrow eyebrow-neutral">Style system</div>
-                <span className="profile-name-badge">{profile.name}</span>
+                <span className="profile-name-badge">Forge Style</span>
               </div>
 
               <div className="spec-table">
@@ -368,7 +368,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                     <span className="score-denom">/ 100</span>
                   </div>
                   <p className={`score-subtext ${result.score === 100 ? "score-subtext-perfect" : ""}`}>
-                    {result.score === 100 ? "All icons match reference style" : "Heuristic score"}
+                    {result.score === 100 ? "All icons match reference style" : "Consistency score"}
                   </p>
                 </div>
 
@@ -436,7 +436,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 </div>
                 <h3 className="prompt-title">Heuristic style audit</h3>
                 <p className="prompt-text">
-                  Analyze stroke weights, canvas bounds, corner rounding, and path complexity against {profile.name}.
+                  Analyze stroke weights, canvas bounds, corner rounding, and path complexity against Forge Style.
                 </p>
                 <div className="sidebar-actions">
                   <button
