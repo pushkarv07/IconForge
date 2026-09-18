@@ -719,8 +719,8 @@ button { cursor: pointer; }
 .style-profile-actions .btn { height: 30px; padding: 0 8px; font-size: 11px; }
 .markup-section { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--line); padding-top: 16px; }
 .markup-header { display: flex; justify-content: space-between; align-items: center; }
-.code-viewer { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 12px; font: 11px/1.6 "SFMono-Regular", Consolas, Menlo, monospace; max-height: 180px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
 .toast { position: fixed; right: 24px; bottom: 24px; background: var(--text); color: var(--bg); padding: 11px 14px; border-radius: 7px; font-size: 12px; font-weight: 500; box-shadow: var(--shadow); z-index: 20; }
+.toast.toast-error { background: #ea580c; color: #ffffff; }
 .landing {
   --accent: var(--hero-mint);
   --accent-soft: var(--hero-mint-soft);

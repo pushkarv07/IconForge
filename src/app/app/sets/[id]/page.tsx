@@ -1,6 +1,5 @@
 "use client";
 
-import JSZip from "jszip";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -18,13 +17,13 @@ import {
 import { use, useEffect, useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { consistencyScore, type ConsistencyFinding } from "@/lib/consistency";
+import { downloadAllIconsAsZip } from "@/lib/export";
 import { defaultStyleProfile, loadSets, saveSets } from "@/lib/sets";
 import type { IconCandidate, IconSet } from "@/lib/types";
 
 function fileName(name: string) { return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "icon"; }
 function profileFor(set: IconSet) { return { ...defaultStyleProfile, ...set.profile }; }
 function downloadSvg(icon: IconCandidate) { const url = URL.createObjectURL(new Blob([icon.svg], { type: "image/svg+xml" })); const link = document.createElement("a"); link.href = url; link.download = `${fileName(icon.name)}.svg`; link.click(); URL.revokeObjectURL(url); }
-async function downloadZip(set: IconSet) { const zip = new JSZip(); set.icons.forEach((icon) => zip.file(`${fileName(icon.name)}.svg`, icon.svg)); const blob = await zip.generateAsync({ type: "blob" }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = `${fileName(set.name)}.zip`; link.click(); URL.revokeObjectURL(url); }
 
 export default function SetDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -33,6 +32,44 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   const [checking, setChecking] = useState(false);
   const [analysisError, setAnalysisError] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  function showToast(message: string, type: "success" | "error" = "success") {
+    setToast({ message, type });
+    window.setTimeout(() => {
+      setToast((curr) => (curr?.message === message ? null : curr));
+    }, 2800);
+  }
+
+  async function handleDownloadAll() {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const count = await downloadAllIconsAsZip(currentSet);
+      showToast(`${count} ${count === 1 ? "SVG" : "SVGs"} exported`, "success");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to export SVGs";
+      showToast(message, "error");
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  async function handleExportSet() {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const count = await downloadAllIconsAsZip(currentSet);
+      showToast(`${count} ${count === 1 ? "SVG" : "SVGs"} exported`, "success");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to export icon set";
+      showToast(message, "error");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   useEffect(() => { setSet(loadSets().find((item) => item.id === id) ?? null); }, [id]);
   if (!set) return <main className="app-shell"><div className="page-content"><p className="muted">Set not found.</p><Link href="/sets" className="btn">Back to sets</Link></div></main>;
   const currentSet = set;
@@ -125,7 +162,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
             <button className="btn" onClick={renameSet}>
               <Pencil size={13.5} /> Rename
             </button>
-            <button className="btn" onClick={() => downloadZip(set)}>
+            <button className="btn" onClick={handleExportSet} disabled={exporting}>
               <Download size={13.5} /> Export set
             </button>
             <button
@@ -385,7 +422,8 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                   <button
                     className="btn"
                     style={{ width: "100%" }}
-                    onClick={() => downloadZip(set)}
+                    onClick={handleDownloadAll}
+                    disabled={exporting}
                   >
                     <Download size={13.5} /> Download all SVGs
                   </button>
@@ -412,7 +450,8 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                   <button
                     className="btn"
                     style={{ width: "100%" }}
-                    onClick={() => downloadZip(set)}
+                    onClick={handleDownloadAll}
+                    disabled={exporting}
                   >
                     <Download size={13.5} /> Download all SVGs
                   </button>
@@ -422,6 +461,20 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
           </aside>
         </div>
       </div>
+      {toast && (
+        <div
+          className={`toast ${toast.type === "error" ? "toast-error" : ""}`}
+          role={toast.type === "error" ? "alert" : "status"}
+          style={toast.type === "error" ? { background: "#ea580c", color: "#ffffff" } : undefined}
+        >
+          {toast.type === "error" ? (
+            <AlertTriangle size={14} style={{ verticalAlign: "-2px", marginRight: 6 }} />
+          ) : (
+            <Check size={14} style={{ verticalAlign: "-2px", marginRight: 6 }} />
+          )}
+          {toast.message}
+        </div>
+      )}
     </main>
   );
 }
