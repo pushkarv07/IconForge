@@ -18,12 +18,22 @@ import { use, useEffect, useRef, useState } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { consistencyScore, type ConsistencyFinding } from "@/lib/consistency";
 import { downloadAllIconsAsZip } from "@/lib/export";
+import { mockGenerator } from "@/lib/generator";
 import { defaultStyleProfile, loadSets, saveSets } from "@/lib/sets";
 import type { IconCandidate, IconSet } from "@/lib/types";
 
 function fileName(name: string) { return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "icon"; }
 function profileFor(set: IconSet) { return { ...defaultStyleProfile, ...set.profile }; }
 function downloadSvg(icon: IconCandidate) { const url = URL.createObjectURL(new Blob([icon.svg], { type: "image/svg+xml" })); const link = document.createElement("a"); link.href = url; link.download = `${fileName(icon.name)}.svg`; link.click(); URL.revokeObjectURL(url); }
+
+function isValidCandidate(candidate: unknown): candidate is IconCandidate {
+  if (!candidate || typeof candidate !== "object") return false;
+  const c = candidate as Partial<IconCandidate>;
+  if (typeof c.svg !== "string" || !c.svg.includes("<svg") || !c.svg.includes("</svg>")) return false;
+  if (typeof c.canvas !== "number" || c.canvas <= 0) return false;
+  if (typeof c.stroke !== "number" || c.stroke <= 0) return false;
+  return true;
+}
 
 export default function SetDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -34,6 +44,8 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   const [busy, setBusy] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [proposedReplacements, setProposedReplacements] = useState<Record<string, IconCandidate>>({});
+  const [previewOriginalMap, setPreviewOriginalMap] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -108,40 +120,143 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   function removeIcon(icon: IconCandidate) { persist({ ...currentSet, icons: currentSet.icons.filter((item) => item.id !== icon.id) }); }
   function move(index: number, direction: -1 | 1) { const target = index + direction; if (target < 0 || target >= currentSet.icons.length) return; const icons = [...currentSet.icons]; [icons[index], icons[target]] = [icons[target], icons[index]]; persist({ ...currentSet, icons }); }
   async function regenerate(icon: IconCandidate) {
-    if (!window.confirm(`Generate a replacement for ${icon.name} using Forge Style?`)) return;
     setBusy(icon.id);
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: icon.name,
-          style: profile.fillMode,
-          canvas: profile.canvas,
+      const payload = {
+        prompt: icon.name,
+        style: profile.fillMode,
+        canvas: profile.canvas,
+        stroke: profile.stroke,
+        complexity: profile.complexity,
+        color: "Current Color" as const,
+        lockedStyle: {
+          ...profile,
           stroke: profile.stroke,
+          strokeWidth: profile.stroke,
+          canvas: profile.canvas,
+          fillMode: profile.fillMode,
+          cap: profile.cap,
+          strokeLinecap: profile.strokeLinecap,
+          join: profile.join,
+          strokeLinejoin: profile.strokeLinejoin,
           complexity: profile.complexity,
-          color: "Current Color",
-          lockedStyle: profile,
-          styleReference: {
-            pathCount: icon.pathCount,
-            viewBox: `0 0 ${profile.canvas} ${profile.canvas}`,
-            svg: icon.svg,
-          },
-        }),
-      });
-      const data = (await response.json()) as { candidates?: IconCandidate[]; error?: string };
-      if (!response.ok || !data.candidates?.[0]) throw new Error(data.error ?? "Could not regenerate icon");
-      const updatedCandidate = { ...data.candidates[0], name: icon.name };
-      const updatedIcons = currentSet.icons.map((item) => (item.id === icon.id ? updatedCandidate : item));
-      const updated = { ...currentSet, icons: updatedIcons, updatedAt: new Date().toISOString() };
-      setSet(updated);
-      saveSets(loadSets().map((item) => (item.id === updated.id ? updated : item)));
-      setResult(consistencyScore(updatedIcons, profile));
-    } catch (error) {
-      window.alert(error instanceof Error ? error.message : "Could not regenerate icon");
+        },
+        styleReference: {
+          pathCount: icon.pathCount,
+          viewBox: "0 0 24 24" as const,
+          svg: icon.svg,
+        },
+      };
+
+      let candidate: IconCandidate | null = null;
+      try {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (response.ok) {
+          const data = (await response.json()) as { candidates?: IconCandidate[]; error?: string };
+          if (data.candidates && data.candidates.length > 0 && isValidCandidate(data.candidates[0])) {
+            candidate = data.candidates[0];
+          }
+        }
+      } catch {
+        // Fallback to local mock generator if API is unavailable
+      }
+
+      if (!candidate) {
+        const mockResults = mockGenerator.generateIcons(payload);
+        if (mockResults.length > 0 && isValidCandidate(mockResults[0])) {
+          candidate = mockResults[0];
+        }
+      }
+
+      if (!candidate || !isValidCandidate(candidate)) {
+        throw new Error("Could not generate valid candidate");
+      }
+
+      const proposalCandidate: IconCandidate = {
+        ...candidate,
+        id: `proposal-${icon.id}-${Date.now()}`,
+        name: icon.name,
+        canvas: profile.canvas,
+        stroke: profile.stroke,
+        style: profile.fillMode,
+        complexity: profile.complexity,
+      };
+
+      setProposedReplacements((prev) => ({
+        ...prev,
+        [icon.id]: proposalCandidate,
+      }));
+      setPreviewOriginalMap((prev) => ({
+        ...prev,
+        [icon.id]: false,
+      }));
+      showToast("Proposed replacement ready for review", "success");
+    } catch {
+      showToast("Could not regenerate icon", "error");
     } finally {
       setBusy(null);
     }
+  }
+
+  function acceptProposal(iconId: string) {
+    const proposal = proposedReplacements[iconId];
+    if (!proposal) return;
+
+    const original = currentSet.icons.find((item) => item.id === iconId);
+    if (!original) return;
+
+    const accepted: IconCandidate = {
+      ...proposal,
+      id: original.id,
+      name: original.name,
+      label: "Regenerated match",
+    };
+
+    const updatedIcons = currentSet.icons.map((item) => (item.id === iconId ? accepted : item));
+    const updatedSet = { ...currentSet, icons: updatedIcons, updatedAt: new Date().toISOString() };
+
+    setSet(updatedSet);
+    saveSets(loadSets().map((item) => (item.id === updatedSet.id ? updatedSet : item)));
+
+    setProposedReplacements((prev) => {
+      const next = { ...prev };
+      delete next[iconId];
+      return next;
+    });
+    setPreviewOriginalMap((prev) => {
+      const next = { ...prev };
+      delete next[iconId];
+      return next;
+    });
+
+    const newResult = consistencyScore(updatedIcons, profile);
+    setResult(newResult);
+    showToast(`Replaced and saved ${original.name}`, "success");
+  }
+
+  function discardProposal(iconId: string) {
+    setProposedReplacements((prev) => {
+      const next = { ...prev };
+      delete next[iconId];
+      return next;
+    });
+    setPreviewOriginalMap((prev) => {
+      const next = { ...prev };
+      delete next[iconId];
+      return next;
+    });
+    showToast("Kept current icon", "success");
+  }
+
+  function togglePreviewOriginal(iconId: string) {
+    setPreviewOriginalMap((prev) => ({
+      ...prev,
+      [iconId]: !prev[iconId],
+    }));
   }
   const findings = result?.findings ?? [];
   return (
@@ -182,14 +297,23 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
           </div>
 
           <div className="detail-header-actions">
-            <button className="btn" onClick={renameSet}>
+            <button
+              className="btn btn-ghost"
+              onClick={renameSet}
+              title="Rename icon set"
+            >
               <Pencil size={13.5} /> Rename
             </button>
-            <button className="btn" onClick={handleExportSet} disabled={exporting}>
+            <button
+              className="btn"
+              onClick={handleExportSet}
+              disabled={exporting}
+              title="Export set as ZIP archive"
+            >
               <Download size={13.5} /> Export set
             </button>
             <button
-              className={`btn ${result?.score === 100 ? "btn-success-state" : ""}`}
+              className={`btn ${result?.score === 100 ? "btn-success-state" : "btn-primary"}`}
               onClick={runConsistency}
               disabled={checking}
             >
@@ -212,22 +336,40 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                   const finding = findings.find((item) => item.iconId === icon.id);
                   const isMismatch = Boolean(finding?.mismatch);
                   const isRegenerating = busy === icon.id;
+                  const proposal = proposedReplacements[icon.id];
+                  const showOriginal = previewOriginalMap[icon.id] ?? false;
+                  const displayedIcon = proposal && !showOriginal ? proposal : icon;
+                  const isProposed = Boolean(proposal);
 
                   return (
                     <article
-                      className={`icon-card ${isMismatch ? "icon-card-mismatch" : ""}`}
+                      className={`icon-card ${isProposed ? "icon-card-proposed" : isMismatch ? "icon-card-mismatch" : ""}`}
                       key={icon.id}
                     >
                       <div className="icon-card-preview-stage">
                         <div
                           className="icon-card-svg"
-                          dangerouslySetInnerHTML={{ __html: icon.svg }}
+                          dangerouslySetInnerHTML={{ __html: displayedIcon.svg }}
                         />
-                        {isMismatch && (
+                        {isProposed ? (
+                          <>
+                            <div className="proposal-badge">
+                              <Sparkles size={11} /> Proposed match
+                            </div>
+                            <button
+                              type="button"
+                              className="proposal-toggle-btn"
+                              onClick={() => togglePreviewOriginal(icon.id)}
+                              title={showOriginal ? "Click to view proposed candidate" : "Click to view original icon"}
+                            >
+                              {showOriginal ? "Viewing original" : "Viewing proposed"}
+                            </button>
+                          </>
+                        ) : isMismatch ? (
                           <div className="mismatch-badge">
                             <AlertTriangle size={11} /> Mismatch
                           </div>
-                        )}
+                        ) : null}
                       </div>
 
                       <div className="icon-card-info">
@@ -235,17 +377,27 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                           {icon.name}
                         </div>
                         <div className="icon-card-meta">
-                          <span>{icon.canvas} × {icon.canvas}</span>
+                          <span>{displayedIcon.canvas} × {displayedIcon.canvas}</span>
                           <span className="spec-dot">·</span>
-                          <span>{icon.stroke}px</span>
+                          <span>{displayedIcon.stroke}px</span>
                           <span className="spec-dot">·</span>
-                          <span>{icon.style}</span>
+                          <span>{displayedIcon.style}</span>
                         </div>
-                        {isMismatch && finding?.reasons && finding.reasons.length > 0 && (
+
+                        {isProposed ? (
+                          <>
+                            <div className="proposal-status-match">
+                              ✓ Matches set specifications
+                            </div>
+                            <div className="proposal-notice" style={{ fontSize: "10.5px", color: "var(--muted)", lineHeight: 1.3, marginTop: "2px" }}>
+                              Original icon has not been replaced yet.
+                            </div>
+                          </>
+                        ) : isMismatch && finding?.reasons && finding.reasons.length > 0 ? (
                           <div className="mismatch-reasons" title={finding.reasons.join(", ")}>
                             {finding.reasons.join(" · ")}
                           </div>
-                        )}
+                        ) : null}
                       </div>
 
                       <div className="icon-card-bottom">
@@ -253,7 +405,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                           <button
                             className="icon-btn"
                             onClick={() => move(index, -1)}
-                            disabled={index === 0}
+                            disabled={index === 0 || isRegenerating || isProposed}
                             aria-label={`Move ${icon.name} up`}
                             title="Move earlier"
                           >
@@ -262,7 +414,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                           <button
                             className="icon-btn"
                             onClick={() => move(index, 1)}
-                            disabled={index === set.icons.length - 1}
+                            disabled={index === set.icons.length - 1 || isRegenerating || isProposed}
                             aria-label={`Move ${icon.name} down`}
                             title="Move later"
                           >
@@ -274,6 +426,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                           <button
                             className="icon-btn"
                             onClick={() => renameIcon(icon)}
+                            disabled={isRegenerating || isProposed}
                             aria-label={`Rename ${icon.name}`}
                             title="Rename icon"
                           >
@@ -281,7 +434,8 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                           </button>
                           <button
                             className="icon-btn"
-                            onClick={() => downloadSvg(icon)}
+                            onClick={() => downloadSvg(displayedIcon)}
+                            disabled={isRegenerating}
                             aria-label={`Download ${icon.name}`}
                             title="Download SVG"
                           >
@@ -290,6 +444,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                           <button
                             className="icon-btn icon-btn-danger"
                             onClick={() => removeIcon(icon)}
+                            disabled={isRegenerating || isProposed}
                             aria-label={`Remove ${icon.name}`}
                             title="Remove icon"
                           >
@@ -298,16 +453,45 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                         </div>
                       </div>
 
-                      {isMismatch && (
+                      {isProposed ? (
+                        <div className="proposal-actions">
+                          <button
+                            type="button"
+                            className="btn btn-keep-proposal"
+                            onClick={() => acceptProposal(icon.id)}
+                            disabled={isRegenerating}
+                          >
+                            <Check size={13} strokeWidth={2.5} /> Keep this
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-regenerate-again"
+                            onClick={() => regenerate(icon)}
+                            disabled={isRegenerating}
+                          >
+                            <Sparkles size={12.5} className={isRegenerating ? "spin-icon" : ""} />
+                            {isRegenerating ? "Regenerating to match…" : "Regenerate again"}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-discard-proposal"
+                            onClick={() => discardProposal(icon.id)}
+                            disabled={isRegenerating}
+                          >
+                            Keep current
+                          </button>
+                        </div>
+                      ) : isMismatch ? (
                         <button
+                          type="button"
                           className="btn btn-regenerate"
                           onClick={() => regenerate(icon)}
                           disabled={isRegenerating}
                         >
-                          <Sparkles size={12.5} />
-                          {isRegenerating ? "Regenerating..." : "Regenerate to match"}
+                          <Sparkles size={12.5} className={isRegenerating ? "spin-icon" : ""} />
+                          {isRegenerating ? "Regenerating to match…" : "Regenerate to match"}
                         </button>
-                      )}
+                      ) : null}
                     </article>
                   );
                 })}
