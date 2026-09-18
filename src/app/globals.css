@@ -3374,9 +3374,35 @@ button { cursor: pointer; }
 .btn-regenerate:hover:not(:disabled) { background: color-mix(in srgb, #ea580c 22%, var(--panel)); border-color: color-mix(in srgb, #ea580c 50%, transparent); color: #9a3412; transform: translateY(-1px); }
 [data-theme="dark"] .btn-regenerate { color: #fb923c; background: color-mix(in srgb, #f97316 14%, var(--panel)); border-color: color-mix(in srgb, #f97316 32%, transparent); }
 [data-theme="dark"] .btn-regenerate:hover:not(:disabled) { color: #fed7aa; background: color-mix(in srgb, #f97316 22%, var(--panel)); border-color: color-mix(in srgb, #f97316 45%, transparent); }
-.btn-regenerate:disabled { opacity: .5; cursor: not-allowed; }
-.set-sidebar { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 80px; }
-.inspector-panel { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--panel); }
+.set-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 88px);
+  max-height: calc(100dvh - 88px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  z-index: 10;
+  padding-right: 2px;
+}
+.set-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.set-sidebar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--line) 80%, transparent);
+  border-radius: 3px;
+}
+.set-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+.set-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
 .inspector-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .profile-name-badge { font-size: 11px; font-weight: 500; color: #1DB389; background: color-mix(in srgb, #1DB389 8%, var(--panel)); border: 1px solid color-mix(in srgb, #1DB389 28%, transparent); padding: 2px 7px; border-radius: 5px; }
 [data-theme="dark"] .profile-name-badge { color: #1DB389; background: color-mix(in srgb, #1DB389 10%, #141514); border-color: color-mix(in srgb, #1DB389 32%, transparent); }
@@ -3429,7 +3455,7 @@ button { cursor: pointer; }
   .workspace.left-collapsed.right-collapsed { grid-template-columns: 0 1fr 0; }
   .hero-grid { gap: 35px; }
   .set-detail-layout { grid-template-columns: 1fr; }
-  .set-sidebar { position: static; }
+  .set-sidebar { position: static; max-height: none; overflow: visible; padding-right: 0; }
 }
 @media (max-width: 900px) {
   .app-shell.workspace-shell {
