@@ -905,7 +905,7 @@ export default function GeneratorPage() {
           {locked && (
             <div className="inspector-panel style-profile-card">
               <div className="inspector-header">
-                <span className="eyebrow">Style profile</span>
+                <span className="eyebrow eyebrow-neutral">Style profile</span>
                 <span className="profile-name-badge">{locked.name}</span>
               </div>
               <div className="spec-table">
