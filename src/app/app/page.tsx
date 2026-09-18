@@ -49,6 +49,21 @@ const renderSvg = (svg: string) => ({
   __html: svg.replace("<svg ", '<svg aria-hidden="true" '),
 });
 
+function formatSvgForDisplay(svg: string): string {
+  if (!svg) return "";
+  const trimmed = svg.trim();
+  if (trimmed.includes("\n")) return trimmed;
+  let formatted = trimmed.replace(/(<svg\b[^>]*>)/, (match) => {
+    return match
+      .replace(/\s+([a-zA-Z0-9_:-]+=(?:"[^"]*"|'[^']*'))/g, "\n  $1")
+      .replace(/\n\s*>/g, "\n>");
+  });
+  formatted = formatted.replace(/>\s*<(?!\/svg>)/g, ">\n  <");
+  formatted = formatted.replace(/>\s*(<\/svg>)/g, ">\n$1");
+  return formatted;
+}
+
+
 export default function GeneratorPage() {
   const [request, setRequest] = useState(initialRequest);
   const requestRef = useRef(initialRequest);
@@ -977,7 +992,7 @@ export default function GeneratorPage() {
               <div className="kicker">SVG markup</div>
               <span className="meta-pill">{selected.svg.length} chars</span>
             </div>
-            <pre className="code-viewer">{selected.svg}</pre>
+            <pre className="code-viewer">{formatSvgForDisplay(selected.svg)}</pre>
           </div>
         </aside>
       </div>
