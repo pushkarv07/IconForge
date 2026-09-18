@@ -444,7 +444,7 @@ export default function GeneratorPage() {
 
               <div className="generate-action-bar">
                 <button
-                  className="btn-generate-main"
+                  className={`btn-generate-main ${generating ? "is-generating" : ""}`}
                   onClick={() => generate()}
                   disabled={generating}
                 >
@@ -452,7 +452,7 @@ export default function GeneratorPage() {
                     <>
                       <Loader2
                         size={15}
-                        style={{ animation: "spin 1s linear infinite" }}
+                        className="btn-spinner"
                       />
                       <span>Generating variations…</span>
                     </>
@@ -745,7 +745,7 @@ export default function GeneratorPage() {
             <div className="generation-status-banner">
               <Loader2
                 size={14}
-                style={{ animation: "spin 1s linear infinite", color: "#1DB389" }}
+                className="status-spinner"
               />
               <span>
                 {mode === "ai"
@@ -755,7 +755,11 @@ export default function GeneratorPage() {
             </div>
           )}
 
-          <div className={`preview-box preview-${background}`}>
+          <div
+            className={`preview-box preview-${background} ${
+              generating ? "is-generating" : ""
+            }`}
+          >
             <div className="artboard-container">
               <div className="artboard-frame-label">
                 <span className="frame-name">{selected.name}</span>
