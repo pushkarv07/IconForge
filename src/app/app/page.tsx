@@ -999,22 +999,28 @@ export default function GeneratorPage() {
             </h2>
             {sets.length ? (
               <div className="set-choice-list">
-                {sets.map((set) => (
-                  <button
-                    className="set-choice"
-                    key={set.id}
-                    onClick={() => addToExistingSet(set.id)}
-                  >
-                    <span>
-                      <strong>{set.name}</strong>
-                      <small>
-                        {set.icons.length} icons · {set.profile.canvas} ×{" "}
-                        {set.profile.canvas}
-                      </small>
-                    </span>
-                    <Plus size={15} />
-                  </button>
-                ))}
+                {sets.map((set) => {
+                  const isSelected = set.icons.some(
+                    (icon) => icon.id === selected.id
+                  );
+                  return (
+                    <button
+                      className={`set-choice ${isSelected ? "is-selected" : ""}`}
+                      key={set.id}
+                      aria-pressed={isSelected}
+                      onClick={() => addToExistingSet(set.id)}
+                    >
+                      <span>
+                        <strong>{set.name}</strong>
+                        <small>
+                          {set.icons.length} icons · {set.profile.canvas} ×{" "}
+                          {set.profile.canvas}
+                        </small>
+                      </span>
+                      {isSelected ? <Check size={15} /> : <Plus size={15} />}
+                    </button>
+                  );
+                })}
               </div>
             ) : (
               <p className="muted">No sets yet. Create one for this icon.</p>

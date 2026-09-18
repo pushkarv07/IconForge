@@ -3209,9 +3209,111 @@ button { cursor: pointer; }
   margin-top: 0;
 }
 .set-choice-list { display: grid; gap: 6px; max-height: 220px; overflow: auto; margin: 2px 0 8px; }
-.set-choice { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; border: 1px solid var(--line); border-radius: 7px; padding: 10px 12px; background: var(--panel); color: var(--text); text-align: left; }
-.set-choice:hover { border-color: var(--accent); background: var(--accent-soft); }
-.set-choice small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+.set-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 10px 12px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  cursor: pointer;
+}
+.set-choice strong {
+  display: block;
+  color: var(--text);
+  font-weight: 600;
+}
+.set-choice small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.set-choice svg {
+  color: var(--text);
+  stroke: var(--text);
+  flex-shrink: 0;
+  transition: color .15s ease, stroke .15s ease;
+}
+
+/* Neutral Hover State: slightly lighter surface and border, NO orange, NOT green */
+.set-choice:hover:not(.is-selected):not([aria-pressed="true"]):not([aria-selected="true"]) {
+  background: color-mix(in srgb, var(--panel-soft) 85%, var(--panel));
+  border-color: color-mix(in srgb, var(--text) 30%, var(--line));
+  color: var(--text);
+}
+[data-theme="dark"] .set-choice:hover:not(.is-selected):not([aria-pressed="true"]):not([aria-selected="true"]) {
+  background: #252825;
+  border-color: color-mix(in srgb, #F3F3ED 28%, var(--line));
+  color: #ffffff;
+}
+.set-choice:hover:not(.is-selected):not([aria-pressed="true"]):not([aria-selected="true"]) svg {
+  color: var(--text);
+  stroke: var(--text);
+}
+[data-theme="dark"] .set-choice:hover:not(.is-selected):not([aria-pressed="true"]):not([aria-selected="true"]) svg {
+  color: #ffffff;
+  stroke: #ffffff;
+}
+
+/* Active / Selected State: global green #1DB389 with white text and icon */
+.set-choice:active,
+.set-choice.is-selected,
+.set-choice.active,
+.set-choice[aria-pressed="true"],
+.set-choice[aria-selected="true"] {
+  background: #1DB389 !important;
+  border-color: #1DB389 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px color-mix(in srgb, #1DB389 30%, transparent) !important;
+}
+.set-choice:active strong,
+.set-choice.is-selected strong,
+.set-choice.active strong,
+.set-choice[aria-pressed="true"] strong,
+.set-choice[aria-selected="true"] strong {
+  color: #ffffff !important;
+}
+.set-choice:active small,
+.set-choice.is-selected small,
+.set-choice.active small,
+.set-choice[aria-pressed="true"] small,
+.set-choice[aria-selected="true"] small {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+.set-choice:active svg,
+.set-choice.is-selected svg,
+.set-choice.active svg,
+.set-choice[aria-pressed="true"] svg,
+.set-choice[aria-selected="true"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+.set-choice.is-selected:hover,
+.set-choice[aria-pressed="true"]:hover,
+.set-choice[aria-selected="true"]:hover {
+  background: color-mix(in srgb, #1DB389 90%, #000) !important;
+  border-color: color-mix(in srgb, #1DB389 90%, #000) !important;
+  color: #ffffff !important;
+}
+.set-choice.is-selected:hover svg,
+.set-choice[aria-pressed="true"]:hover svg,
+.set-choice[aria-selected="true"]:hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+.set-choice:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--text) 45%, var(--line));
+  outline-offset: 1px;
+}
 .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; gap: 24px; }
 .detail-header-main { display: flex; flex-direction: column; gap: 8px; max-width: 680px; }
 .detail-header-eyebrow { display: flex; align-items: center; gap: 10px; }
