@@ -7,10 +7,12 @@ html, body { margin: 0 !important; padding: 0 !important; border: 0 !important; 
 html { background: var(--bg); }
 body { margin: 0 !important; padding: 0 !important; background: var(--bg); color: var(--text); font-family: "Avenir Next", "Helvetica Neue", sans-serif; }
 [hidden] { display: none !important; }
-body:has(.workspace-shell) {
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
+@media (min-width: 901px) {
+  body:has(.workspace-shell) {
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+  }
 }
 h1, h2, h3, h4, h5, h6 { font-weight: 600; }
 button, input, textarea, select { font: inherit; }
@@ -3937,35 +3939,56 @@ button { cursor: pointer; }
   .set-sidebar { position: static; max-height: none; overflow: visible; padding-right: 0; }
 }
 @media (max-width: 900px) {
+  html:has(.workspace-shell),
+  body:has(.workspace-shell) {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
   .app-shell.workspace-shell {
-    height: auto;
+    height: auto !important;
     min-height: 100vh;
-    overflow: visible;
+    min-height: 100dvh;
+    max-height: none !important;
+    overflow: visible !important;
   }
   .workspace {
     display: flex;
     flex-direction: column;
-    height: auto;
-    min-height: auto;
-    overflow: visible;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
   .panel, .panel:last-child {
     border: 0;
     border-bottom: 1px solid var(--line);
     padding: 18px 16px 28px;
-    height: auto;
-    max-height: none;
-    overflow: visible;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .panel.collapsed {
+    display: none !important;
   }
   .canvas {
     padding: 18px 14px 36px;
-    height: auto;
-    max-height: none;
-    overflow: visible;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
     order: 2;
   }
   .panel:first-child { order: 1; }
-  .properties { order: 3; display: flex; }
+  .properties {
+    order: 3;
+    display: flex;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
   .variation-grid { grid-template-columns: repeat(3, 1fr); }
   .hero { min-height: auto; }
   .hero-grid { grid-template-columns: 1fr; gap: 48px; padding: 56px 0 64px; }
