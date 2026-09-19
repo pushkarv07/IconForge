@@ -1203,29 +1203,20 @@ export default function Home() {
               Icon sets
             </Link>
 
-            <span className="landing-footer-dot" aria-hidden="true">·</span>
-
             <span className="landing-footer-credit">
               <span className="footer-sparkle" aria-hidden="true">✦</span>
               {" Made with "}
               <span className="footer-heart" aria-label="love">❤️</span>
               {" by "}
-              <span
+              <a
+                href="https://pushkarverma.framer.website/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`pushkar-trigger ${pushkarPhotoOpen ? "is-open" : ""}`}
-                tabIndex={0}
-                role="button"
-                aria-haspopup="dialog"
-                aria-expanded={pushkarPhotoOpen}
-                aria-label="Pushkar Verma - creator profile"
+                aria-label="Pushkar Verma - portfolio (opens in a new tab)"
                 onClick={(e) => {
                   e.stopPropagation();
                   setPushkarPhotoOpen((prev) => !prev);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setPushkarPhotoOpen((prev) => !prev);
-                  }
                 }}
               >
                 <strong className="pushkar-name">Pushkar</strong>
@@ -1242,7 +1233,7 @@ export default function Home() {
                   </span>
                   <span className="pushkar-popup-label">Pushkar Verma</span>
                 </span>
-              </span>
+              </a>
               {" "}
               <span className="footer-sparkle" aria-hidden="true">✦</span>
             </span>
