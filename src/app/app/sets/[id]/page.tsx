@@ -48,6 +48,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   const [previewOriginalMap, setPreviewOriginalMap] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLElement | null>(null);
   const checkedFingerprintRef = useRef<string>("");
+  const firstMismatchRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     function updateSidebarHeight() {
@@ -164,6 +165,21 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
         setChecking(false);
       }
     }, 120);
+  }
+  function scrollToMismatch() {
+    const el = firstMismatchRef.current;
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Pulse highlight: remove then re-add to restart animation if clicked again
+    el.classList.remove("icon-card-mismatch-focus");
+    // rAF ensures class removal is painted before re-adding
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.classList.add("icon-card-mismatch-focus");
+        // Clean up class after animation finishes (2 iterations × 1s)
+        window.setTimeout(() => el.classList.remove("icon-card-mismatch-focus"), 2100);
+      });
+    });
   }
   function renameSet() { const name = window.prompt("Rename icon set", currentSet.name); if (name?.trim()) persist({ ...currentSet, name: name.trim() }); }
   function renameIcon(icon: IconCandidate) { const name = window.prompt("Rename icon", icon.name); if (name?.trim()) persist({ ...currentSet, icons: currentSet.icons.map((item) => item.id === icon.id ? { ...item, name: name.trim() } : item) }); }
@@ -372,7 +388,11 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                   ? "btn-warning-state"
                   : "btn-success-state"
               }`}
-              onClick={runConsistency}
+              onClick={
+                result !== null && result.findings.some((f) => f.mismatch)
+                  ? scrollToMismatch
+                  : runConsistency
+              }
               disabled={checking}
             >
               {checking ? (
@@ -383,7 +403,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 </>
               ) : result !== null && result.findings.some((f) => f.mismatch) ? (
                 <>
-                  <AlertTriangle size={14} /> Mismatches found
+                  <AlertTriangle size={14} /> Go to mismatched icon
                 </>
               ) : (
                 "Check consistency"
@@ -396,7 +416,9 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
           <section className="icon-grid-section">
             {set.icons.length ? (
               <div className="icon-grid">
-                {set.icons.map((icon, index) => {
+                {(() => {
+                  const firstMismatchIconId = result?.findings.find((f) => f.mismatch)?.iconId ?? null;
+                  return set.icons.map((icon, index) => {
                   const finding = findings.find((item) => item.iconId === icon.id);
                   const isMismatch = Boolean(finding?.mismatch);
                   const isRegenerating = busy === icon.id;
@@ -409,6 +431,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                     <article
                       className={`icon-card ${isProposed ? "icon-card-proposed" : isMismatch ? "icon-card-mismatch" : ""}`}
                       key={icon.id}
+                      ref={icon.id === firstMismatchIconId ? (el) => { firstMismatchRef.current = el; } : undefined}
                     >
                       <div className="icon-card-preview-stage">
                         <div
@@ -558,7 +581,8 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                       ) : null}
                     </article>
                   );
-                })}
+                  });
+                })()}
               </div>
             ) : (
               <div className="sets-empty-state">
