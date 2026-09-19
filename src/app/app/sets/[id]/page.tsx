@@ -350,7 +350,17 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 {set.icons.length} {set.icons.length === 1 ? "icon" : "icons"}
               </span>
             </div>
-            <h1 className="detail-title">{set.name}</h1>
+            <div className="detail-title-row">
+              <h1 className="detail-title">{set.name}</h1>
+              <button
+                className="detail-title-rename-btn"
+                onClick={renameSet}
+                title="Rename icon set"
+                aria-label="Rename icon set"
+              >
+                <Pencil size={15} />
+              </button>
+            </div>
             {set.description && (
               <p className="detail-description">{set.description}</p>
             )}
@@ -365,13 +375,6 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
           </div>
 
           <div className="detail-header-actions">
-            <button
-              className="btn btn-ghost"
-              onClick={renameSet}
-              title="Rename icon set"
-            >
-              <Pencil size={13.5} /> Rename
-            </button>
             <button
               className="btn"
               onClick={handleExportSet}
