@@ -1224,7 +1224,7 @@ export default function Home() {
                 <span className="pushkar-popup" role="tooltip" aria-hidden={!pushkarPhotoOpen}>
                   <span className="pushkar-avatar-wrap">
                     <Image
-                      src="/pushkar.png"
+                      src="/pushkar-profile.png"
                       alt="Pushkar Verma"
                       width={76}
                       height={76}
