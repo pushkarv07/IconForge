@@ -610,30 +610,30 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 <span className="profile-name-badge">Forge Style</span>
               </div>
 
-              <div className="spec-table">
-                <div className="spec-row">
-                  <span className="spec-label">Canvas</span>
-                  <span className="spec-val">{profile.canvas} × {profile.canvas}</span>
+              <div className="spec-grid">
+                <div className="spec-grid-card">
+                  <span className="spec-grid-label">Canvas</span>
+                  <span className="spec-grid-val">{profile.canvas} × {profile.canvas}</span>
                 </div>
-                <div className="spec-row">
-                  <span className="spec-label">Stroke</span>
-                  <span className="spec-val">{profile.stroke} px</span>
+                <div className="spec-grid-card">
+                  <span className="spec-grid-label">Stroke</span>
+                  <span className="spec-grid-val">{profile.stroke} px</span>
                 </div>
-                <div className="spec-row">
-                  <span className="spec-label">Cap</span>
-                  <span className="spec-val">{profile.cap}</span>
+                <div className="spec-grid-card">
+                  <span className="spec-grid-label">Line cap</span>
+                  <span className="spec-grid-val">{profile.cap}</span>
                 </div>
-                <div className="spec-row">
-                  <span className="spec-label">Join</span>
-                  <span className="spec-val">{profile.join}</span>
+                <div className="spec-grid-card">
+                  <span className="spec-grid-label">Line join</span>
+                  <span className="spec-grid-val">{profile.join}</span>
                 </div>
-                <div className="spec-row">
-                  <span className="spec-label">Fill</span>
-                  <span className="spec-val">{profile.fillMode}</span>
+                <div className="spec-grid-card">
+                  <span className="spec-grid-label">Fill mode</span>
+                  <span className="spec-grid-val">{profile.fillMode}</span>
                 </div>
-                <div className="spec-row">
-                  <span className="spec-label">Complexity</span>
-                  <span className="spec-val">{profile.complexity}</span>
+                <div className="spec-grid-card">
+                  <span className="spec-grid-label">Complexity</span>
+                  <span className="spec-grid-val">{profile.complexity}</span>
                 </div>
               </div>
             </div>
