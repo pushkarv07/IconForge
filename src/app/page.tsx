@@ -1239,8 +1239,6 @@ export default function Home() {
               <span className="footer-sparkle" aria-hidden="true">✦</span>
             </span>
 
-            <span className="landing-footer-dot" aria-hidden="true">·</span>
-
             <span className="landing-footer-copy">© 2026 IconForge</span>
           </nav>
         </div>
