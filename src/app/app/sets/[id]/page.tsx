@@ -381,6 +381,10 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
                 <>
                   <Check size={14} /> Consistent
                 </>
+              ) : result !== null && result.findings.some((f) => f.mismatch) ? (
+                <>
+                  <AlertTriangle size={14} /> Mismatches found
+                </>
               ) : (
                 "Check consistency"
               )}
