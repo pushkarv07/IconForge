@@ -1181,74 +1181,78 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="landing-footer">
-          <div className="landing-footer-inner">
-            <nav className="landing-footer-nav" aria-label="Footer navigation">
-              <div className="landing-footer-group">
-                <Link href="/create" className="landing-footer-link">
-                  Create an icon
-                </Link>
-
-                <span className="landing-footer-dot" aria-hidden="true">·</span>
-
-                <Link href="/sets" className="landing-footer-link">
-                  Icon sets
-                </Link>
-              </div>
-
-              <span className="landing-footer-dot desktop-only" aria-hidden="true">·</span>
-
-              <div className="landing-footer-group">
-                <span className="landing-footer-credit">
-                  <span className="footer-sparkle" aria-hidden="true">✦</span>
-                  {" Made with "}
-                  <span className="footer-heart" aria-label="love">❤️</span>
-                  {" by "}
-                  <span
-                    className={`pushkar-trigger ${pushkarPhotoOpen ? "is-open" : ""}`}
-                    tabIndex={0}
-                    role="button"
-                    aria-haspopup="dialog"
-                    aria-expanded={pushkarPhotoOpen}
-                    aria-label="Pushkar Verma - creator profile"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setPushkarPhotoOpen((prev) => !prev);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setPushkarPhotoOpen((prev) => !prev);
-                      }
-                    }}
-                  >
-                    <strong className="pushkar-name">Pushkar</strong>
-                    <span className="pushkar-popup" role="tooltip" aria-hidden={!pushkarPhotoOpen}>
-                      <span className="pushkar-avatar-wrap">
-                        <Image
-                          src="/pushkar.png"
-                          alt="Pushkar Verma"
-                          width={76}
-                          height={76}
-                          className="pushkar-avatar-img"
-                          priority
-                        />
-                      </span>
-                      <span className="pushkar-popup-label">Pushkar Verma</span>
-                    </span>
-                  </span>
-                  {" "}
-                  <span className="footer-sparkle" aria-hidden="true">✦</span>
-                </span>
-
-                <span className="landing-footer-copy">© 2026 IconForge</span>
-              </div>
-            </nav>
-          </div>
-        </footer>
       </div>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="landing-footer-inner justify-between">
+          <div className="landing-footer-brand">
+            <Link href="/" className="brand landing-footer-logo">
+              <span className="brand-mark">IF</span> IconForge
+            </Link>
+          </div>
+
+          <nav className="landing-footer-nav" aria-label="Footer navigation">
+            <Link href="/create" className="landing-footer-link">
+              Create an icon
+            </Link>
+
+            <span className="landing-footer-dot" aria-hidden="true">·</span>
+
+            <Link href="/sets" className="landing-footer-link">
+              Icon sets
+            </Link>
+
+            <span className="landing-footer-dot" aria-hidden="true">·</span>
+
+            <span className="landing-footer-credit">
+              <span className="footer-sparkle" aria-hidden="true">✦</span>
+              {" Made with "}
+              <span className="footer-heart" aria-label="love">❤️</span>
+              {" by "}
+              <span
+                className={`pushkar-trigger ${pushkarPhotoOpen ? "is-open" : ""}`}
+                tabIndex={0}
+                role="button"
+                aria-haspopup="dialog"
+                aria-expanded={pushkarPhotoOpen}
+                aria-label="Pushkar Verma - creator profile"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPushkarPhotoOpen((prev) => !prev);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setPushkarPhotoOpen((prev) => !prev);
+                  }
+                }}
+              >
+                <strong className="pushkar-name">Pushkar</strong>
+                <span className="pushkar-popup" role="tooltip" aria-hidden={!pushkarPhotoOpen}>
+                  <span className="pushkar-avatar-wrap">
+                    <Image
+                      src="/pushkar.png"
+                      alt="Pushkar Verma"
+                      width={76}
+                      height={76}
+                      className="pushkar-avatar-img"
+                      priority
+                    />
+                  </span>
+                  <span className="pushkar-popup-label">Pushkar Verma</span>
+                </span>
+              </span>
+              {" "}
+              <span className="footer-sparkle" aria-hidden="true">✦</span>
+            </span>
+
+            <span className="landing-footer-dot" aria-hidden="true">·</span>
+
+            <span className="landing-footer-copy">© 2026 IconForge</span>
+          </nav>
+        </div>
+      </footer>
     </main>
   );
 }

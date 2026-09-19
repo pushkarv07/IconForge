@@ -3338,30 +3338,48 @@ button { cursor: pointer; }
   padding: 38px 0 46px;
   margin-top: 20px;
   position: relative;
+  width: 100%;
 }
 .landing-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
   width: 100%;
+  gap: 24px;
+}
+.landing-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.landing-footer-logo {
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.01em;
+  transition: opacity 0.18s ease;
+}
+.landing-footer-logo:hover {
+  opacity: 0.85;
 }
 .landing-footer-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 14px;
+  flex-wrap: nowrap;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1;
   color: var(--muted);
-}
-.landing-footer-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 .landing-footer-link {
   font-size: 13px;
@@ -3370,17 +3388,40 @@ button { cursor: pointer; }
   text-decoration: none;
   transition: color 0.18s ease;
   position: relative;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+.landing-footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--hero-mint);
+  border-radius: 1px;
+  opacity: 0;
+  transform: scaleX(0.7);
+  transform-origin: center;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .landing-footer-link:hover {
   color: var(--text);
+}
+.landing-footer-link:hover::after {
+  opacity: 0.85;
+  transform: scaleX(1);
 }
 .landing-footer-dot {
   color: color-mix(in srgb, #1DB389 65%, var(--muted));
   opacity: 0.75;
   font-size: 14px;
+  line-height: 1;
   user-select: none;
-  display: inline-block;
-  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .landing-footer-credit {
   display: inline-flex;
@@ -3390,6 +3431,7 @@ button { cursor: pointer; }
   color: var(--muted);
   font-size: 13px;
   font-weight: 400;
+  line-height: 1;
 }
 .footer-sparkle {
   color: #1DB389;
@@ -3421,7 +3463,9 @@ button { cursor: pointer; }
   color: var(--muted);
   opacity: 0.82;
   white-space: nowrap;
-  margin-left: 2px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Pushkar Profile Trigger & Popup */
@@ -3938,6 +3982,7 @@ button { cursor: pointer; }
   .sets-export-text { order: 1; }
   .sets-export-visual { order: 2; }
   .section-sets-export { padding: 72px 0 88px; }
+  .landing-footer-inner { padding: 0 20px; }
 }
 @media (max-width: 720px) {
   .topbar { padding: 0 14px; gap: 8px; }
@@ -3972,8 +4017,8 @@ button { cursor: pointer; }
   .sets-export-bar { flex-direction: column; align-items: stretch; gap: 12px; }
   .sets-export-btn { width: 100%; justify-content: center; }
   .landing-nav { padding: 14px 20px; }
-  .landing-footer-inner { justify-content: center; align-items: center; }
-  .landing-footer-nav { width: 100%; justify-content: center; gap: 10px 14px; flex-wrap: wrap; }
+  .landing-footer-inner { padding: 0 20px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .landing-footer-nav { width: 100%; justify-content: flex-start; gap: 10px 14px; flex-wrap: wrap; }
 }
 
 @media (max-width: 540px) {
@@ -4030,10 +4075,9 @@ button { cursor: pointer; }
   .sets-export-tile-artboard { width: 32px; height: 32px; }
   .sets-export-tile-artboard svg { width: 20px; height: 20px; }
   .sets-export-format-hint { display: none; }
-  .landing-footer { padding: 44px 0 36px; }
-  .landing-footer-inner { justify-content: center; align-items: center; }
-  .landing-footer-nav { flex-direction: column; justify-content: center; align-items: center; gap: 10px; }
-  .landing-footer-dot.desktop-only { display: none; }
+  .landing-footer { padding: 36px 0 36px; }
+  .landing-footer-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .landing-footer-nav { width: 100%; justify-content: flex-start; gap: 8px 12px; flex-wrap: wrap; }
   .landing-footer-credit { font-size: 12.5px; }
   .landing-footer-copy { font-size: 12px; }
   .hero-visual::before { max-width: 320px; max-height: 320px; filter: blur(36px); }
