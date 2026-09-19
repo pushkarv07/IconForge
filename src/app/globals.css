@@ -3810,6 +3810,34 @@ button { cursor: pointer; }
 .detail-header-actions .btn.btn-success-state { border-color: color-mix(in srgb, #1DB389 45%, var(--line)); color: #1DB389; background: color-mix(in srgb, #1DB389 8%, var(--panel)); }
 .detail-header-actions .btn.btn-success-state svg { color: #1DB389; stroke: #1DB389; }
 .detail-header-actions .btn.btn-success-state:hover:not(:disabled) { border-color: color-mix(in srgb, #1DB389 70%, transparent); background: color-mix(in srgb, #1DB389 14%, var(--panel)); color: #1DB389; }
+.detail-header-actions .btn.btn-warning-state {
+  border-color: color-mix(in srgb, #ea580c 45%, var(--line));
+  color: #ea580c;
+  background: color-mix(in srgb, #ea580c 8%, var(--panel));
+}
+.detail-header-actions .btn.btn-warning-state svg {
+  color: #ea580c;
+  stroke: #ea580c;
+}
+.detail-header-actions .btn.btn-warning-state:hover:not(:disabled) {
+  border-color: color-mix(in srgb, #ea580c 70%, transparent);
+  background: color-mix(in srgb, #ea580c 14%, var(--panel));
+  color: #ea580c;
+}
+[data-theme="dark"] .detail-header-actions .btn.btn-warning-state {
+  border-color: color-mix(in srgb, #f97316 45%, var(--line));
+  color: #f97316;
+  background: color-mix(in srgb, #f97316 8%, var(--panel));
+}
+[data-theme="dark"] .detail-header-actions .btn.btn-warning-state svg {
+  color: #f97316;
+  stroke: #f97316;
+}
+[data-theme="dark"] .detail-header-actions .btn.btn-warning-state:hover:not(:disabled) {
+  border-color: color-mix(in srgb, #f97316 70%, transparent);
+  background: color-mix(in srgb, #f97316 14%, var(--panel));
+  color: #f97316;
+}
 .set-detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; }
 .icon-grid-section { min-width: 0; }
 .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }

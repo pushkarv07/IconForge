@@ -47,6 +47,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   const [proposedReplacements, setProposedReplacements] = useState<Record<string, IconCandidate>>({});
   const [previewOriginalMap, setPreviewOriginalMap] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLElement | null>(null);
+  const checkedFingerprintRef = useRef<string>("");
 
   useEffect(() => {
     function updateSidebarHeight() {
@@ -106,14 +107,63 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   }
 
   useEffect(() => { setSet(loadSets().find((item) => item.id === id) ?? null); }, [id]);
+  useEffect(() => {
+    if (!set || !result || !checkedFingerprintRef.current) return;
+    const currentFingerprint = JSON.stringify({
+      icons: set.icons.map((i) => ({
+        id: i.id,
+        name: i.name,
+        stroke: i.stroke,
+        canvas: i.canvas,
+        style: i.style,
+        complexity: i.complexity,
+        svg: i.svg,
+      })),
+      profile: profileFor(set),
+    });
+    if (checkedFingerprintRef.current !== currentFingerprint) {
+      setResult(null);
+      checkedFingerprintRef.current = "";
+    }
+  }, [set, result]);
   if (!set) return <main className="app-shell"><div className="page-content"><p className="muted">Set not found.</p><Link href="/sets" className="btn">Back to sets</Link></div></main>;
   const currentSet = set;
   const profile = profileFor(currentSet);
-  function persist(next: IconSet) { const updated = { ...next, updatedAt: new Date().toISOString() }; setSet(updated); saveSets(loadSets().map((item) => item.id === updated.id ? updated : item)); setResult(null); }
+  function persist(next: IconSet) {
+    const updated = { ...next, updatedAt: new Date().toISOString() };
+    setSet(updated);
+    saveSets(loadSets().map((item) => (item.id === updated.id ? updated : item)));
+    setResult(null);
+    checkedFingerprintRef.current = "";
+  }
   function runConsistency() {
     if (checking) return;
-    setChecking(true); setAnalysisError("");
-    window.setTimeout(() => { try { setResult(consistencyScore(currentSet.icons, profile)); } catch { setResult(null); setAnalysisError("Consistency analysis could not be completed."); } finally { setChecking(false); } }, 120);
+    setChecking(true);
+    setAnalysisError("");
+    window.setTimeout(() => {
+      try {
+        const evaluated = consistencyScore(currentSet.icons, profile);
+        setResult(evaluated);
+        checkedFingerprintRef.current = JSON.stringify({
+          icons: currentSet.icons.map((i) => ({
+            id: i.id,
+            name: i.name,
+            stroke: i.stroke,
+            canvas: i.canvas,
+            style: i.style,
+            complexity: i.complexity,
+            svg: i.svg,
+          })),
+          profile,
+        });
+      } catch {
+        setResult(null);
+        checkedFingerprintRef.current = "";
+        setAnalysisError("Consistency analysis could not be completed.");
+      } finally {
+        setChecking(false);
+      }
+    }, 120);
   }
   function renameSet() { const name = window.prompt("Rename icon set", currentSet.name); if (name?.trim()) persist({ ...currentSet, name: name.trim() }); }
   function renameIcon(icon: IconCandidate) { const name = window.prompt("Rename icon", icon.name); if (name?.trim()) persist({ ...currentSet, icons: currentSet.icons.map((item) => item.id === icon.id ? { ...item, name: name.trim() } : item) }); }
@@ -233,10 +283,12 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
       return next;
     });
 
-    const newResult = consistencyScore(updatedIcons, profile);
-    setResult(newResult);
+    setResult(null);
+    checkedFingerprintRef.current = "";
     showToast(`Replaced and saved ${original.name}`, "success");
   }
+
+
 
   function discardProposal(iconId: string) {
     setProposedReplacements((prev) => {
@@ -313,16 +365,24 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
               <Download size={13.5} /> Export set
             </button>
             <button
-              className={`btn ${result?.score === 100 ? "btn-success-state" : "btn-primary"}`}
+              className={`btn ${
+                result === null
+                  ? ""
+                  : result.findings.some((f) => f.mismatch)
+                  ? "btn-warning-state"
+                  : "btn-success-state"
+              }`}
               onClick={runConsistency}
               disabled={checking}
             >
               {checking ? (
                 "Checking..."
-              ) : (
+              ) : result !== null && !result.findings.some((f) => f.mismatch) ? (
                 <>
-                  <Check size={14} /> {result?.score === 100 ? "Consistent" : "Check consistency"}
+                  <Check size={14} /> Consistent
                 </>
+              ) : (
+                "Check consistency"
               )}
             </button>
           </div>
