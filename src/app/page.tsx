@@ -1203,6 +1203,7 @@ export default function Home() {
               Icon sets
             </Link>
 
+            {/* Credit without separator dot before */}
             <span className="landing-footer-credit">
               <span className="footer-sparkle" aria-hidden="true">✦</span>
               {" Made with "}
