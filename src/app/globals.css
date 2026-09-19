@@ -207,6 +207,8 @@ button { cursor: pointer; }
   outline: none;
 }
 .prompt-textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
+/* iOS Safari auto-zooms when focused font-size < 16px; override only on mobile */
+@media (max-width: 900px) { .prompt-textarea { font-size: 16px; } }
 .prompt-helper { margin-top: 4px; font-size: 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .prompt-chip-btn {
   background: #1c1e1c;
