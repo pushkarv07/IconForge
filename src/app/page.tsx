@@ -491,8 +491,7 @@ export default function Home() {
             <div className="how-it-works-header">
               <div className="how-it-works-eyebrow">HOW IT WORKS</div>
               <h2 className="how-it-works-title">
-                <span className="how-it-works-title-line">From idea to complete set</span>
-                <span className="how-it-works-title-line">in three simple steps.</span>
+                From idea to complete set, in three simple steps.
               </h2>
               <p className="how-it-works-copy">
                 A streamlined workflow designed to turn ideas into production-ready, style-consistent vector icons.

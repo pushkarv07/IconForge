@@ -4199,14 +4199,6 @@ button { cursor: pointer; }
   .how-it-works-title {
     text-align: left;
   }
-  /* Let title lines wrap naturally instead of forced block stacking */
-  .how-it-works-title-line {
-    display: inline;
-  }
-  .how-it-works-title-line + .how-it-works-title-line::before {
-    content: "\a ";
-    white-space: pre;
-  }
   /* HOW IT WORKS CTA — left-align the CTA row */
   .how-it-works-cta-wrap {
     display: flex;
