@@ -4180,6 +4180,63 @@ button { cursor: pointer; }
   .hero-visual::before { max-width: 320px; max-height: 320px; filter: blur(36px); }
 }
 
+/* ─────────────────────────────────────────────────────────────────
+   MOBILE HOMEPAGE: left-align all section text (max-width: 720px)
+   Desktop and tablet are completely untouched.
+────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  /* HOW IT WORKS — override centered header block */
+  .how-it-works-header {
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+  }
+  .how-it-works-eyebrow,
+  .how-it-works-copy {
+    text-align: left;
+  }
+  .how-it-works-title {
+    text-align: left;
+  }
+  /* Let title lines wrap naturally instead of forced block stacking */
+  .how-it-works-title-line {
+    display: inline;
+  }
+  .how-it-works-title-line + .how-it-works-title-line::before {
+    content: "\a ";
+    white-space: pre;
+  }
+  /* HOW IT WORKS CTA — left-align the CTA row */
+  .how-it-works-cta-wrap {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* FROM WORDS TO SVG */
+  .prompt-icon-left { align-items: flex-start; }
+  .prompt-icon-eyebrow,
+  .prompt-icon-title,
+  .prompt-icon-subtext,
+  .prompt-icon-pills { text-align: left; }
+
+  /* KEEP THE STYLE */
+  .stylelock-text,
+  .stylelock-left { align-items: flex-start; }
+  .stylelock-eyebrow,
+  .stylelock-title,
+  .stylelock-subtext,
+  .stylelock-pills { text-align: left; }
+
+  /* BUILD & EXPORT */
+  .sets-export-text,
+  .sets-export-left { align-items: flex-start; }
+  .sets-export-eyebrow,
+  .sets-export-title,
+  .sets-export-subtext,
+  .sets-export-pills { text-align: left; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-content,
   .hero-visual {
