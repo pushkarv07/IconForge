@@ -1009,9 +1009,9 @@ button { cursor: pointer; }
   background: color-mix(in srgb, var(--bg) 92%, transparent);
   border-bottom-color: color-mix(in srgb, var(--line) 35%, transparent);
 }
-.hero { max-width: 1200px; margin: 0 auto; padding: 0 32px; min-height: calc(100vh - 72px); display: flex; flex-direction: column; }
+.hero { max-width: 1200px; margin: 0 auto; padding: 0 32px; display: flex; flex-direction: column; }
 .landing-nav { max-width: 1200px; margin: 0 auto; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
-.hero-grid { flex: 1; display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 56px; align-items: center; padding: 48px 0 64px; }
+.hero-grid { flex: 1; display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 56px; align-items: center; padding: 72px 0 80px; }
 .hero-content {
   display: flex;
   flex-direction: column;
@@ -1035,7 +1035,7 @@ button { cursor: pointer; }
   font-weight: 500;
   line-height: 1;
 }
-.hero h1, .hero-title { font-size: 75px; letter-spacing: -.035em; line-height: 1.04; max-width: 640px; margin: 24px 0 24px; font-weight: 400; color: var(--text); }
+.hero h1, .hero-title { font-size: clamp(52px, 5.8vw, 75px); letter-spacing: -.035em; line-height: 1.04; max-width: 640px; margin: 24px 0 24px; font-weight: 400; color: var(--text); }
 .hero-copy { font-size: clamp(16px, 1.7vw, 18px); line-height: 1.55; max-width: 480px; color: var(--muted); margin: 0 0 36px; font-weight: 400; }
 .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
 .hero-btn-primary,
