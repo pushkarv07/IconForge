@@ -4095,6 +4095,92 @@ button { cursor: pointer; }
     width: auto;
     white-space: nowrap;
   }
+  /* Mobile Consistency Checker Layout: unified container, alignment, and responsiveness */
+  .set-sidebar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-right: 0;
+    overflow: visible;
+  }
+  .style-system-card,
+  .consistency-card,
+  .consistency-prompt-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .consistency-score-hero {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+  }
+  .audit-checklist {
+    width: 100%;
+    box-sizing: border-box;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .audit-check-item {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    gap: 8px;
+  }
+  .audit-check-item .check-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .audit-check-item .check-outcome {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .findings-container {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding-top: 14px;
+  }
+  .findings-title {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-left: 0;
+  }
+  .findings-scroll {
+    max-height: none;
+    overflow: visible;
+    width: 100%;
+    gap: 6px;
+  }
+  .finding-item {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  .finding-msg {
+    word-break: break-word;
+  }
+  .finding-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .finding-tag {
+    word-break: break-word;
+  }
+  .sidebar-actions {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 16px;
+  }
+  .sidebar-actions .btn {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+  }
   .landing-nav .btn-quiet { display: none; }
   .theme-btn { padding: 0 6px; gap: 4px; font-size: 10.5px; height: 23px; }
   .how-it-works-title { font-size: 38px; line-height: 1.1; }
