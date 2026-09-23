@@ -895,42 +895,59 @@ button { cursor: pointer; }
   justify-content: center;
   gap: 8px;
   width: 100%;
-  background: #ebebe7;
-  border: 1px solid var(--line);
-  color: var(--text);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #F0F0ED;
+  border: 1px solid #DCDCD7;
+  color: #1C1C1C;
+  box-shadow: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
-[data-theme="dark"] .properties .actions .btn,
-[data-theme="dark"] .properties .actions .btn-add-set {
+.properties .actions .btn svg,
+.properties .actions .btn-add-set svg {
+  color: #1C1C1C;
+  stroke: #1C1C1C;
+  flex-shrink: 0;
+  transition: color 0.15s ease, stroke 0.15s ease;
+}
+
+[data-theme="dark"] .properties .actions .btn:not(.is-locked),
+[data-theme="dark"] .properties .actions .btn-add-set:not(.is-locked) {
   background: #242724;
   border: 1px solid var(--line);
   color: #F3F3ED;
 }
-.properties .actions .btn svg,
-.properties .actions .btn-add-set svg {
-  color: currentColor;
-  stroke: currentColor;
+[data-theme="dark"] .properties .actions .btn:not(.is-locked) svg,
+[data-theme="dark"] .properties .actions .btn-add-set:not(.is-locked) svg {
+  color: #F3F3ED;
+  stroke: #F3F3ED;
 }
 
-/* Secondary CTA Hover State: subtle background/border change, NO green fill, NO green glow */
+/* Secondary CTA Hover State: subtle mint tint #E6F5F0, subtle border, no strong shadow or glow */
 .properties .actions .btn:not(.is-locked):hover,
 .properties .actions .btn-add-set:not(.is-locked):hover {
-  background: color-mix(in srgb, var(--panel-soft) 85%, var(--panel)) !important;
-  border-color: color-mix(in srgb, var(--text) 30%, var(--line)) !important;
-  color: var(--text) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-}
-[data-theme="dark"] .properties .actions .btn:not(.is-locked):hover,
-[data-theme="dark"] .properties .actions .btn-add-set:not(.is-locked):hover {
-  background: #2e322e !important;
-  border-color: color-mix(in srgb, #F3F3ED 35%, var(--line)) !important;
-  color: #ffffff !important;
+  background: #E6F5F0 !important;
+  border-color: #D2DCD7 !important;
+  color: #1C1C1C !important;
+  transform: translateY(-0.5px);
+  box-shadow: none !important;
 }
 .properties .actions .btn:not(.is-locked):hover svg,
 .properties .actions .btn-add-set:not(.is-locked):hover svg {
-  color: currentColor !important;
-  stroke: currentColor !important;
+  color: #1C1C1C !important;
+  stroke: #1C1C1C !important;
+}
+
+[data-theme="dark"] .properties .actions .btn:not(.is-locked):hover,
+[data-theme="dark"] .properties .actions .btn-add-set:not(.is-locked):hover {
+  background: color-mix(in srgb, #1DB389 12%, #242724) !important;
+  border-color: color-mix(in srgb, #1DB389 30%, var(--line)) !important;
+  color: #ffffff !important;
+  transform: translateY(-0.5px);
+  box-shadow: none !important;
+}
+[data-theme="dark"] .properties .actions .btn:not(.is-locked):hover svg,
+[data-theme="dark"] .properties .actions .btn-add-set:not(.is-locked):hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
 }
 
 /* Clicked / Locked state: ONLY when locked, becomes #1DB389 green with white text/icon */
