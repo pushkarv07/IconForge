@@ -169,7 +169,7 @@ export default function SetDetail({ params }: { params: Promise<{ id: string }> 
   function scrollToMismatch() {
     const el = firstMismatchRef.current;
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     // Pulse highlight: remove then re-add to restart animation if clicked again
     el.classList.remove("icon-card-mismatch-focus");
     // rAF ensures class removal is painted before re-adding

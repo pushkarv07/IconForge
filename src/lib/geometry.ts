@@ -410,19 +410,20 @@ export function sortAndSelectBestMatch(
   return scored.map((s) => s.geom);
 }
 
-function styleValues(request: GenerationRequest, geometry: IconGeometry) {
+function styleValues(request: GenerationRequest) {
   const style = request.lockedStyle?.fillMode ?? request.style;
+  const fill = style === "Solid" ? "currentColor" : "none";
   return {
     style,
     stroke: request.lockedStyle?.stroke ?? request.stroke,
     canvas: request.lockedStyle?.canvas ?? request.canvas,
-    fill: style === "Solid" ? "currentColor" : geometry.fill,
+    fill,
     opacity: style === "Duotone" ? 0.16 : 1,
   };
 }
 
 export function geometryToSvg(geometry: IconGeometry, request: GenerationRequest): string {
-  const values = styleValues(request, geometry);
+  const values = styleValues(request);
   const paths = geometry.paths.map((p) => `<path d="${typeof p === "string" ? p : p.d}"/>`).join("");
   const body = values.style === "Duotone"
     ? `<g opacity="${values.opacity}" fill="currentColor">${paths}</g><g>${paths}</g>`

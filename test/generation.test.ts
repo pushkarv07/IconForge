@@ -251,4 +251,25 @@ describe("AI Generation Quality & Validation Suite", () => {
     ctaLabel = generating ? "Generating variations…" : hasGenerated ? "Generate Again" : "Generate AI Variations";
     assert.equal(ctaLabel, "Generate Again");
   });
+
+  it("11. Outline style icons (including coffee cup) always render with fill='none'", () => {
+    const rawCoffeeWithFill: IconGeometry = {
+      ...validCoffeeIcon,
+      fill: "currentColor" as unknown as "none",
+    };
+
+    const coffeeReq: GenerationRequest = {
+      prompt: "coffee cup with steam",
+      style: "Outline",
+      canvas: 24,
+      stroke: 1.5,
+      complexity: "Simple",
+      color: "Current Color",
+    };
+
+    const candidates = geometryCandidates([rawCoffeeWithFill], coffeeReq, "coffee cup with steam");
+    assert.equal(candidates.length, 1);
+    assert.match(candidates[0].svg, /fill="none"/, "Generated SVG must specify fill='none'");
+    assert.doesNotMatch(candidates[0].svg, /fill="currentColor"/, "Outline SVG must never specify fill='currentColor'");
+  });
 });
