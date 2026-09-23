@@ -209,34 +209,52 @@ button { cursor: pointer; }
 .prompt-textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
 /* iOS Safari auto-zooms when focused font-size < 16px; override only on mobile */
 @media (max-width: 900px) { .prompt-textarea { font-size: 16px; } }
-.prompt-helper { margin-top: 4px; font-size: 11px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.prompt-helper {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
 .prompt-chip-btn {
-  background: #1c1e1c;
-  border: 1px solid color-mix(in srgb, #F3F3ED 22%, transparent);
-  border-radius: 6px;
-  padding: 2.5px 8px;
-  font-size: 11px;
-  color: #F3F3ED;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all .15s ease;
   display: inline-flex;
   align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 3px 8.5px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel-soft);
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.35;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease, transform .1s ease;
+  user-select: none;
 }
 .prompt-chip-btn:hover {
-  background: #272a27;
-  border-color: color-mix(in srgb, #F3F3ED 45%, transparent);
-  color: #ffffff;
+  background: color-mix(in srgb, var(--text) 5%, var(--panel-soft));
+  border-color: color-mix(in srgb, var(--text) 22%, var(--line));
 }
-[data-theme="light"] .prompt-chip-btn {
-  background: #171817;
-  border: 1px solid color-mix(in srgb, #F3F3ED 25%, transparent);
-  color: #F3F3ED;
+.prompt-chip-btn:active {
+  transform: translateY(0.5px);
+  background: color-mix(in srgb, var(--text) 8%, var(--panel-soft));
 }
-[data-theme="light"] .prompt-chip-btn:hover {
-  background: #272a27;
-  border-color: color-mix(in srgb, #F3F3ED 50%, transparent);
-  color: #ffffff;
+.prompt-chip-btn:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--text) 40%, var(--line));
+  outline-offset: 1px;
+}
+.prompt-chip-label {
+  color: var(--muted);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+.prompt-chip-text {
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .generate-action-bar { margin-top: 8px; }
 .btn-generate-main {

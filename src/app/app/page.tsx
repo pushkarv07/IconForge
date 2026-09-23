@@ -429,16 +429,16 @@ export default function GeneratorPage() {
                 rows={3}
               />
               <div className="prompt-helper">
-                <span className="muted">Try</span>
                 <button
                   type="button"
                   className="prompt-chip-btn"
                   onClick={() =>
                     updateValue("prompt", "coffee cup with steam")
                   }
-                  title="Click to use this prompt"
+                  title="Try “coffee cup with steam”"
                 >
-                  &ldquo;coffee cup with steam&rdquo;
+                  <span className="prompt-chip-label">Try</span>
+                  <span className="prompt-chip-text">&ldquo;coffee cup with steam&rdquo;</span>
                 </button>
               </div>
 
