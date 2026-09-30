@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
 
 type ThemeMode = "light" | "system" | "dark";
 
 export function ThemeSwitcher() {
   const [theme, setTheme] = useState<ThemeMode>("system");
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const saved = (localStorage.getItem("iconforge-theme") as ThemeMode) ?? "system";
     const mode = saved === "dark" || saved === "light" ? saved : "system";
     setTheme(mode);
-    applyTheme(mode);
+    applyTheme(mode, false);
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const onMediaChange = () => {
       const current = (localStorage.getItem("iconforge-theme") as ThemeMode) ?? "system";
       if (current === "system") {
-        applyTheme("system");
+        applyTheme("system", true);
       }
     };
 
@@ -28,32 +29,59 @@ export function ThemeSwitcher() {
       if (e.key === "iconforge-theme") {
         const next = (e.newValue as ThemeMode) ?? "system";
         setTheme(next);
-        applyTheme(next);
+        applyTheme(next, true);
       }
     };
 
     window.addEventListener("storage", onStorage);
 
     return () => {
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
+      document.documentElement.classList.remove("theme-transitioning");
       mediaQuery.removeEventListener("change", onMediaChange);
       window.removeEventListener("storage", onStorage);
     };
   }, []);
 
-  function applyTheme(mode: ThemeMode) {
+  function applyTheme(mode: ThemeMode, animate = false) {
     const effective =
       mode === "system"
         ? window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light"
         : mode;
+
+    const currentEffective = document.documentElement.dataset.theme;
+
+    if (animate && currentEffective && currentEffective !== effective) {
+      const prefersReduced =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!prefersReduced) {
+        if (transitionTimerRef.current) {
+          clearTimeout(transitionTimerRef.current);
+        }
+        document.documentElement.classList.add("theme-transitioning");
+        // Force reflow so transition properties are active before dataset.theme changes
+        void document.documentElement.offsetHeight;
+
+        transitionTimerRef.current = setTimeout(() => {
+          document.documentElement.classList.remove("theme-transitioning");
+          transitionTimerRef.current = null;
+        }, 360);
+      }
+    }
+
     document.documentElement.dataset.theme = effective;
   }
 
   function updateTheme(next: ThemeMode) {
     setTheme(next);
     localStorage.setItem("iconforge-theme", next);
-    applyTheme(next);
+    applyTheme(next, true);
   }
 
   return (
