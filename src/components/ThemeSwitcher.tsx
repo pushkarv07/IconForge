@@ -65,13 +65,11 @@ export function ThemeSwitcher() {
           clearTimeout(transitionTimerRef.current);
         }
         document.documentElement.classList.add("theme-transitioning");
-        // Force reflow so transition properties are active before dataset.theme changes
-        void document.documentElement.offsetHeight;
 
         transitionTimerRef.current = setTimeout(() => {
           document.documentElement.classList.remove("theme-transitioning");
           transitionTimerRef.current = null;
-        }, 140);
+        }, 70);
       }
     }
 
