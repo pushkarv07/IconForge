@@ -71,7 +71,7 @@ export function ThemeSwitcher() {
         transitionTimerRef.current = setTimeout(() => {
           document.documentElement.classList.remove("theme-transitioning");
           transitionTimerRef.current = null;
-        }, 360);
+        }, 140);
       }
     }
 

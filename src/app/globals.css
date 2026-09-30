@@ -3,18 +3,15 @@
 :root, [data-theme="light"] { --bg: #f7f7f5; --panel: #ffffff; --panel-soft: #f1f1ee; --text: #171817; --muted: #6c6f6b; --line: #dedfda; --accent: #e35d3f; --accent-soft: #fff0eb; --hero-mint: #1DB389; --hero-mint-soft: rgba(29, 179, 137, 0.1); --hero-blue: #1DB389; --hero-blue-soft: rgba(29, 179, 137, 0.1); --good: #1DB389; --shadow: 0 18px 50px rgba(25, 27, 24, .08); }
 [data-theme="dark"] { --bg: #141514; --panel: #1c1e1c; --panel-soft: #242724; --text: #f3f3ed; --muted: #a4a9a2; --line: #363a35; --accent: #ff866b; --accent-soft: #3a2520; --hero-mint: #1DB389; --hero-mint-soft: rgba(29, 179, 137, 0.12); --hero-blue: #1DB389; --hero-blue-soft: rgba(29, 179, 137, 0.12); --good: #1DB389; --shadow: 0 18px 50px rgba(0,0,0,.25); }
 
-/* Smooth Theme Switching Transition (250-400ms range) */
+/* Fast & Crisp Theme Switching Transition (100-150ms range) */
 html.theme-transitioning,
 html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
   transition:
-    background-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    color 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    fill 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    stroke 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background-color 140ms ease-out,
+    border-color 140ms ease-out,
+    color 140ms ease-out !important;
   transition-delay: 0s !important;
 }
 
@@ -174,9 +171,9 @@ button { cursor: pointer; }
   flex-shrink: 0;
   position: relative;
   transition:
-    border-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 320ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 320ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-color 140ms ease-out,
+    background-color 140ms ease-out,
+    box-shadow 140ms ease-out;
 }
 html.theme-transitioning .theme-switcher {
   border-color: color-mix(in srgb, var(--hero-mint) 45%, var(--line));
@@ -201,10 +198,10 @@ html.theme-transitioning .theme-switcher {
   white-space: nowrap;
   user-select: none;
   transition:
-    color .2s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color .2s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow .2s cubic-bezier(0.4, 0, 0.2, 1),
-    transform .15s cubic-bezier(0.16, 1, 0.3, 1);
+    color 120ms ease-out,
+    background-color 120ms ease-out,
+    box-shadow 120ms ease-out,
+    transform 100ms ease-out;
 }
 .theme-btn:active {
   transform: scale(0.96);
@@ -225,9 +222,9 @@ html.theme-transitioning .theme-switcher {
   opacity: .7;
   display: block;
   transition:
-    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.2s ease,
-    color 0.2s ease;
+    transform 140ms ease-out,
+    opacity 120ms ease-out,
+    color 120ms ease-out;
 }
 .theme-btn:hover .theme-icon { opacity: .9; }
 .theme-btn.active .theme-icon {
