@@ -1,25 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
 
 type ThemeMode = "light" | "system" | "dark";
 
 export function ThemeSwitcher() {
   const [theme, setTheme] = useState<ThemeMode>("system");
-  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const saved = (localStorage.getItem("iconforge-theme") as ThemeMode) ?? "system";
     const mode = saved === "dark" || saved === "light" ? saved : "system";
     setTheme(mode);
-    applyTheme(mode, false);
+    applyTheme(mode);
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const onMediaChange = () => {
       const current = (localStorage.getItem("iconforge-theme") as ThemeMode) ?? "system";
       if (current === "system") {
-        applyTheme("system", true);
+        applyTheme("system");
       }
     };
 
@@ -29,57 +28,32 @@ export function ThemeSwitcher() {
       if (e.key === "iconforge-theme") {
         const next = (e.newValue as ThemeMode) ?? "system";
         setTheme(next);
-        applyTheme(next, true);
+        applyTheme(next);
       }
     };
 
     window.addEventListener("storage", onStorage);
 
     return () => {
-      if (transitionTimerRef.current) {
-        clearTimeout(transitionTimerRef.current);
-      }
-      document.documentElement.classList.remove("theme-transitioning");
       mediaQuery.removeEventListener("change", onMediaChange);
       window.removeEventListener("storage", onStorage);
     };
   }, []);
 
-  function applyTheme(mode: ThemeMode, animate = false) {
+  function applyTheme(mode: ThemeMode) {
     const effective =
       mode === "system"
         ? window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light"
         : mode;
-
-    const currentEffective = document.documentElement.dataset.theme;
-
-    if (animate && currentEffective && currentEffective !== effective) {
-      const prefersReduced =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      if (!prefersReduced) {
-        if (transitionTimerRef.current) {
-          clearTimeout(transitionTimerRef.current);
-        }
-        document.documentElement.classList.add("theme-transitioning");
-
-        transitionTimerRef.current = setTimeout(() => {
-          document.documentElement.classList.remove("theme-transitioning");
-          transitionTimerRef.current = null;
-        }, 70);
-      }
-    }
-
     document.documentElement.dataset.theme = effective;
   }
 
   function updateTheme(next: ThemeMode) {
     setTheme(next);
     localStorage.setItem("iconforge-theme", next);
-    applyTheme(next, true);
+    applyTheme(next);
   }
 
   return (
